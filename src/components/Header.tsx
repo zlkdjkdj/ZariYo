@@ -2,30 +2,28 @@ import { LayoutGrid } from 'lucide-react';
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-md bg-[#030712]/75 border-b border-slate-900 transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
+    <header className="sticky top-0 z-50 backdrop-blur-lg bg-black/70 border-b border-[#2c2c2e]/40 transition-all duration-300">
+      <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2.5 group cursor-pointer">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform duration-300">
-            <LayoutGrid className="w-5 h-5 text-white" />
-          </div>
-          <span className="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-300">
-            자리요 <span className="text-indigo-400 font-medium text-sm ml-0.5">ZariYo</span>
+        <div className="flex items-center gap-2 cursor-pointer group">
+          <LayoutGrid className="w-4 h-4 text-white group-hover:text-[#3182f6] transition-colors" />
+          <span className="font-semibold text-sm tracking-tight text-white">
+            자리요 <span className="text-[#86868b] font-normal text-xs ml-1">ZariYo</span>
           </span>
         </div>
 
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-8">
-          <a href="#features" className="text-sm text-slate-400 hover:text-white transition-colors duration-200 font-medium">서비스 특징</a>
-          <a href="#architecture" className="text-sm text-slate-400 hover:text-white transition-colors duration-200 font-medium">기술 스택</a>
-          <a href="#about" className="text-sm text-slate-400 hover:text-white transition-colors duration-200 font-medium">이용 안내</a>
-          <a href="#support" className="text-sm text-slate-400 hover:text-white transition-colors duration-200 font-medium">고객지원</a>
+          <a href="#features" className="text-xs text-[#a1a1a6] hover:text-[#f5f5f7] transition-colors duration-200 font-normal">서비스 특징</a>
+          <a href="#architecture" className="text-xs text-[#a1a1a6] hover:text-[#f5f5f7] transition-colors duration-200 font-normal">기술 스택</a>
+          <a href="#about" className="text-xs text-[#a1a1a6] hover:text-[#f5f5f7] transition-colors duration-200 font-normal">이용 안내</a>
+          <a href="#support" className="text-xs text-[#a1a1a6] hover:text-[#f5f5f7] transition-colors duration-200 font-normal">고객지원</a>
         </nav>
 
         {/* CTA Header Button */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center">
           <button 
-            className="px-4.5 py-2 text-xs font-semibold text-indigo-400 hover:text-white border border-indigo-500/30 hover:border-indigo-500 bg-indigo-500/5 hover:bg-indigo-500 rounded-lg cursor-pointer transition-all duration-300"
+            className="px-3.5 py-1.5 text-xs font-medium text-white bg-[#3182f6] hover:bg-[#1b64da] rounded-full cursor-pointer transition-all duration-200 shadow-sm"
           >
             대시보드 바로가기
           </button>

@@ -1,110 +1,103 @@
-import { ArrowRight, Monitor, Terminal } from 'lucide-react';
+import { ArrowRight, ChevronRight, Terminal } from 'lucide-react';
 
 export function Hero() {
   return (
-    <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 z-10 px-6 max-w-7xl mx-auto flex flex-col items-center text-center">
+    <section className="relative pt-24 pb-20 md:pt-32 md:pb-28 z-10 px-6 max-w-5xl mx-auto flex flex-col items-center text-center">
       
-      {/* Tech Badge */}
-      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-slate-800 text-xs text-indigo-300 mb-8 backdrop-blur-sm shadow-inner shadow-white/5">
-        <Terminal className="w-3.5 h-3.5" />
-        <span>Spring Boot & Redis 기반 고성능 동시성 제어</span>
+      {/* Mini Top Badge */}
+      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1c1c1e] border border-[#2c2c2e]/60 text-xs text-[#86868b] mb-6">
+        <Terminal className="w-3.5 h-3.5 text-[#3182f6]" />
+        <span className="font-medium">ZariYo Core Engine v1.0</span>
       </div>
 
       {/* Hero Title */}
-      <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-8 max-w-5xl leading-[1.15]">
-        <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-slate-100 to-slate-400">
-          공간의 효율을 극대화하는
-        </span>
+      <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-6 max-w-4xl leading-[1.1] text-white">
+        공간을 예약하는
         <br />
-        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500">
-          실시간 스마트 오피스 예약 플랫폼
-        </span>
+        <span className="text-[#3182f6]">가장 완벽한 방법.</span>
       </h1>
 
       {/* Hero Description */}
-      <p className="text-base sm:text-lg md:text-xl text-slate-400 max-w-3xl mb-12 leading-relaxed">
-        자리요(ZariYo)는 실시간 좌석 예약부터 대규모 트래픽 동시성 제어, 
-        그리고 직관적인 현장 관리자 관제 시스템까지 제공하는 통합 공유 오피스 및 도서관 관리 솔루션입니다.
+      <p className="text-base sm:text-lg md:text-xl text-[#86868b] max-w-2xl mb-10 leading-relaxed font-normal">
+        자리요(ZariYo)는 실시간 좌석 예약부터 대규모 트래픽 제어, 
+        그리고 한눈에 보이는 관리자 관제까지 제공하는 통합 공간 관리 솔루션입니다.
       </p>
 
-      {/* Main CTA Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4.5 justify-center items-center w-full sm:w-auto px-4 mb-24">
+      {/* Main CTA Buttons - Toss & Apple hybrid style */}
+      <div className="flex flex-col sm:flex-row gap-6 justify-center items-center w-full sm:w-auto px-4 mb-20">
         <button
-          className="w-full sm:w-auto px-8 py-4.5 font-semibold text-white rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 cursor-pointer transition-all duration-300 shadow-xl shadow-indigo-500/20 hover:shadow-indigo-500/35 hover:-translate-y-0.5 flex items-center justify-center gap-2 group"
+          className="w-full sm:w-auto px-7 py-3.5 font-semibold text-white rounded-2xl bg-[#3182f6] hover:bg-[#1b64da] cursor-pointer transition-all duration-200 shadow-md shadow-blue-500/10 flex items-center justify-center gap-1.5 group text-sm"
         >
           <span>실시간 좌석 배치도 보기</span>
-          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </button>
         
         <button
-          className="w-full sm:w-auto px-8 py-4.5 font-semibold text-slate-200 rounded-xl bg-slate-900/90 border border-slate-800 hover:bg-slate-800/80 hover:border-slate-700 cursor-pointer backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+          className="text-[#3182f6] hover:underline font-semibold flex items-center gap-1 text-sm cursor-pointer bg-transparent border-0"
         >
-          <Monitor className="w-5 h-5 text-slate-400" />
           <span>관리자 대시보드 진입</span>
+          <ChevronRight className="w-4 h-4" />
         </button>
       </div>
 
-      {/* Dashboard Preview Mockup Graphic */}
-      <div className="w-full max-w-5xl rounded-2xl border border-slate-800/80 bg-slate-900/30 p-2.5 backdrop-blur-md shadow-2xl shadow-indigo-500/5 relative overflow-hidden group">
-        <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent z-10 pointer-events-none" />
+      {/* Dashboard Preview Mockup Graphic - Apple device bezel inspired */}
+      <div className="w-full rounded-2xl border border-[#2c2c2e] bg-[#1c1c1e] p-2 shadow-2xl relative overflow-hidden">
         
-        {/* Top window control bar */}
-        <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-800/60 bg-slate-950/40 rounded-t-xl">
-          <div className="w-3 h-3 rounded-full bg-rose-500/60" />
-          <div className="w-3 h-3 rounded-full bg-amber-500/60" />
-          <div className="w-3 h-3 rounded-full bg-emerald-500/60" />
-          <div className="h-4.5 w-40 bg-slate-900/60 rounded-md ml-4 border border-slate-800/40" />
+        {/* Top window control bar (Flat Apple Style) */}
+        <div className="flex items-center gap-1.5 px-3 py-2 border-b border-[#2c2c2e]/50 bg-[#1c1c1e]">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+          <div className="h-4 w-32 bg-[#2c2c2e] rounded-full mx-auto" />
         </div>
 
-        {/* Dummy visual matrix representing workspace seats */}
-        <div className="aspect-[16/9] bg-[#050914] rounded-b-xl p-6 flex flex-col justify-between relative overflow-hidden">
-          {/* Inner Glowing Grid Overlay */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20" />
-
-          <div className="flex items-center justify-between z-10">
+        {/* Seat Layout Screen */}
+        <div className="aspect-[16/9] bg-black rounded-b-xl p-6 flex flex-col justify-between relative">
+          
+          <div className="flex items-center justify-between">
             <div className="text-left">
-              <span className="text-[10px] uppercase tracking-wider text-indigo-400 font-semibold">Live Monitor</span>
-              <h3 className="text-lg font-bold text-white mt-0.5">스마트 오피스 제1빌딩 3F</h3>
+              <span className="text-[10px] uppercase tracking-wider text-[#3182f6] font-semibold">Live status</span>
+              <h3 className="text-base font-semibold text-white mt-0.5">스마트 오피스 제1빌딩 3F</h3>
             </div>
-            <div className="flex gap-2">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/25">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                실시간 운영중
+            <div>
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                운영중
               </span>
             </div>
           </div>
 
-          {/* Seat Layout Simulation */}
-          <div className="grid grid-cols-4 sm:grid-cols-8 gap-3 my-8 z-10">
+          {/* Minimalist Flat Seat Matrix */}
+          <div className="grid grid-cols-4 sm:grid-cols-8 gap-2.5 my-6 sm:my-4">
             {Array.from({ length: 24 }).map((_, idx) => {
               const isReserved = idx % 3 === 0;
               const isSelected = idx === 7;
               
-              let cardClass = "bg-slate-900/60 border-slate-800 text-slate-500";
-              if (isReserved) cardClass = "bg-rose-500/10 border-rose-500/30 text-rose-400";
-              if (isSelected) cardClass = "bg-indigo-500/25 border-indigo-500 text-indigo-300 shadow-lg shadow-indigo-500/20";
+              let cardClass = "border-[#2c2c2e] text-[#86868b] bg-[#1c1c1e]/30";
+              if (isReserved) cardClass = "bg-[#2c2c2e] border-transparent text-[#86868b]/70";
+              if (isSelected) cardClass = "bg-[#3182f6]/10 border-[#3182f6] text-[#3182f6] shadow-sm shadow-blue-500/5";
               
               return (
                 <div 
                   key={idx} 
-                  className={`aspect-square rounded-xl border flex flex-col items-center justify-center transition-all duration-300 cursor-default hover:scale-105 ${cardClass}`}
+                  className={`aspect-square rounded-xl border flex flex-col items-center justify-center transition-all duration-200 cursor-default hover:scale-105 ${cardClass}`}
                 >
                   <span className="text-xs font-bold">{String(idx + 1).padStart(2, '0')}</span>
-                  <span className="text-[8px] mt-1 font-semibold uppercase">
-                    {isReserved ? "사용중" : isSelected ? "선점중" : "공석"}
+                  <span className="text-[7px] mt-0.5 font-semibold uppercase">
+                    {isReserved ? "점유" : isSelected ? "선점" : "공석"}
                   </span>
                 </div>
               );
             })}
           </div>
 
-          {/* Metrics footer inside mock graphic */}
-          <div className="flex items-center justify-between text-xs text-slate-500 pt-4 border-t border-slate-900 z-10">
-            <span>총 120석 중 82석 예약 가능</span>
-            <div className="flex gap-4">
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-rose-500/40" />사용중</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-indigo-500/40" />선점중</span>
-              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-slate-800" />공석</span>
+          {/* Legend and stats */}
+          <div className="flex items-center justify-between text-xs text-[#86868b] pt-3 border-t border-[#1c1c1e]">
+            <span>총 120석 중 82석 이용 가능</span>
+            <div className="flex gap-3">
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-[#2c2c2e]" />점유</span>
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-[#3182f6]" />선점</span>
+              <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-[#1c1c1e]/40 border border-[#2c2c2e]" />공석</span>
             </div>
           </div>
         </div>
