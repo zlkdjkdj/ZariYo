@@ -47,3 +47,52 @@
   - 노션 기획 페이지를 외부 렌더링 수집(Browser Subagent)하여 프로젝트 소개, 기대 효과, 주요 기능 정보를 추출했습니다.
   - 추출한 정보와 데이터베이스 ERD Cloud 링크 및 동시성 제어 핵심 4대 API(조회, 임시 선점 신청, 최종 확정, 반납) 명세서를 [README.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/README.md)에 상세히 가독성 높은 표와 JSON 스키마 코드로 기술 완료했습니다.
   - 문서 갱신 후 빌드 컴파일 이상 유무 검증을 마쳤습니다.
+
+### 7. 백엔드/DB 연동, 리팩토링 수준 및 보안성 분석 보고서 작성
+- **작업 내용**:
+  - 현재 정적 목업 상태와 기획 설계상 정의된 하이브리드 스토리지(Redis + MySQL) 및 실시간 동기화 아키텍처를 분석했습니다.
+  - 모듈 구조 분할 및 스타일 번들 최소화(Tailwind v4) 관점에서의 리팩토링 품질을 정성 평가했습니다.
+  - 향후 API 연동 시 마주할 수 있는 XSS, CORS, 분산 락 레이스 컨디션 및 API 우회 등의 보안 취약 영역과 그에 대한 선제적 아키텍처 대비책을 도출했습니다.
+  - 수립된 종합 분석 내역을 [ZariYo_Code_Analysis.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo_Code_Analysis.md)에 문서화하여 수록했습니다.
+
+### 8. 프론트엔드 및 백엔드 디렉토리 구조 이원화 구축
+- **작업 내용**:
+  - 프로젝트 루트의 React 소스코드 전체를 새로이 생성한 [ZariYo-FrontEnd](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd) 디렉토리로 이전 완료했습니다. (src, dist, node_modules, package.json, tsconfig.json, vite.config.ts 등)
+  - 향후 Spring Boot 백엔드 소스를 전담할 [ZariYo-BackEnd](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd) 폴더를 신규 생성하여 표준 디렉토리 트리(src/main/java, src/main/resources)를 수립했습니다.
+  - 백엔드 폴더 내에 Spring Boot 3.3.1 버전 및 JPA, MySQL, Redis, Redisson(분산 락), WebSocket 의존성이 정의된 `build.gradle` 및 `settings.gradle` 빌드 파일을 세팅하고 애플리케이션 진입점 `ZariYoApplication.java`와 환경 설정 `application.yml`을 배포용 기본 템플릿으로 구축했습니다.
+  - 이전이 완료된 `ZariYo-FrontEnd` 내부에서 `npm run build`를 재동작시켜 빌드 정합성을 유지 검증했습니다.
+  - 프로젝트 루트 문서(`README.md`, `work.md`, `trouble.md`, `ZariYo_Code_Analysis.md` 및 `.agents`)들은 최상위 루트에 그대로 보존하여 종합 통제를 지원합니다.
+
+### 9. 폴더 재배치 후 IDE 캐시 동기화 트러블슈팅
+- **작업 내용**:
+  - 이전 대상 파일을 `ZariYo-FrontEnd`로 이동한 후, IDE 린터 및 TypeScript 언어 서버가 삭제된 구 경로의 파일들을 물고 늘어져 가짜 컴파일 에러를 다수 표기하는 증상을 확인했습니다.
+  - 이 문제에 대해 구 경로의 열려있던 편집 탭 정리 및 TS Server 재기동 가이드 조치를 정리하여 [trouble.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/trouble.md)에 상세 원인과 해결 방법을 선제 기록했습니다.
+
+### 10. pnpm 패키지 매니저 마이그레이션 및 pnpm workspace 구축
+- **작업 내용**:
+  - 기존 npm 락파일(`package-lock.json`) 및 이전 시 잔존했던 `node_modules` 디렉토리를 완전히 일소하여 레거시 구성을 삭제했습니다.
+  - 프로젝트 루트 경로에 [pnpm-workspace.yaml](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/pnpm-workspace.yaml) 파일을 생성하고 `ZariYo-FrontEnd` 패키지를 워크스페이스 대상으로 선언했습니다.
+  - 루트 경로에 [package.json](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/package.json) 파일을 신규 주입하여 `pnpm dev`, `pnpm build` 입력 시 `--filter` 기능을 통해 하위 `ZariYo-FrontEnd`가 루트 디렉토리에서도 단축 명령어로 즉각 구동될 수 있는 통합 제어 환경을 수립했습니다.
+  - 루트에서 `pnpm install`을 실행하여 워크스페이스 전역 패키지 동기화 및 `pnpm-lock.yaml` 생성을 완료하였으며, 최종 `pnpm build` 번들 검증을 무사히 통과하였습니다.
+
+### 11. 로그인 및 회원가입 페이지 생성과 멀티 페이지 라우팅 적용
+- **작업 내용**:
+  - `ZariYo-FrontEnd` 패키지에 멀티 페이지 라우팅을 지원하기 위해 `react-router-dom` 패키지를 설치했습니다.
+  - [App.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/App.tsx)에 `BrowserRouter`를 연동하고 `/`, `/login`, `/signup` 경로에 따른 컴포넌트 매핑을 완료했습니다.
+  - [Header.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/Header.tsx) 컴포넌트를 리팩토링하여 로고 클릭 시 홈('/') 이동을 지원하고, 우측 네비게이션 영역에 로그인 및 회원가입 페이지로 즉각 이동할 수 있는 슬릭한 텍스트 링크 메뉴를 추가했습니다.
+  - [LoginPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LoginPage.tsx) 및 [SignupPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/SignupPage.tsx)를 신규 작성하여, Apple/Toss의 절제된 다크 모드 디자인 톤에 맞춘 로그인/회원가입 폼 화면을 구축하고 프론트엔드 유효성 검사 로직을 수립했습니다.
+  - 전체 소스코드 변경 이후 `pnpm build` 검증을 거쳐 에러 없이 빌드가 성공적으로 완료됨을 확인했습니다.
+
+### 12. 다크 모드 / 라이트 모드 테마 전역 전환 시스템 구축
+- **작업 내용**:
+  - `ZariYo-FrontEnd` 전체 웹 애플리케이션의 테마(다크/라이트) 상태를 전역 통제하기 위해 [ThemeContext.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/context/ThemeContext.tsx)를 신규 도입했습니다.
+  - 사용자의 이전 테마 선택 상태를 브라우저에 저장하고 영속적으로 복원하기 위해 `localStorage` 캐싱 연동을 추가하고, 기본 시스템 OS 테마(`prefers-color-scheme`)도 조화롭게 매핑했습니다.
+  - [App.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/App.tsx)를 `ThemeProvider`로 래핑하여 전 영역으로 범위를 확장하고, 랜딩 페이지의 헤더 및 핵심 섹션(`Hero`, `Features`, `Architecture`, `Footer`)들에 선언되어 있던 `bg-black`, `text-white` 계열의 다크 모드 고정 클래스들을 `bg-white dark:bg-black`, `text-black dark:text-white` 형태의 Tailwind `dark:` 반응형 스타일로 전면 개편했습니다.
+
+### 13. 인증 영역 공통 컴포넌트 분리 리팩토링 (auth/)
+- **작업 내용**:
+  - 로그인 및 회원가입 페이지에서 중복적으로 구현되어 쓰이던 입력 폼 구조와 인클루시브 카드 레이아웃을 전담할 [AuthCard.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/auth/AuthCard.tsx) 및 [AuthInput.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/auth/AuthInput.tsx) 공통 인증 컴포넌트군을 신규 생성했습니다.
+  - [LoginPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LoginPage.tsx)와 [SignupPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/SignupPage.tsx)에 산만하게 흩어져 있던 DOM 뼈대를 이 공통 컴포넌트들을 사용하여 재구축 및 조립함으로써 코드 가독성, 중복성, 재사용 품질을 획기적으로 개선했습니다.
+  - 모든 리팩토링 및 폼 이식 이후 `pnpm build`를 정상 가동하여 정적 컴파일 무결성을 확보했습니다.
+
+

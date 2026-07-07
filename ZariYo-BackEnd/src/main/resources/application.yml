@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: zariyo-backend
+
+  # Database Setup (MySQL)
+  datasource:
+    url: jdbc:mysql://localhost:3306/zariyo?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: yourpassword # 로컬 MySQL 패스워드 설정 필요
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # JPA & Hibernate Settings
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Redis Settings (Temporary session locks and broadcasts)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.springframework.web: info
