@@ -64,3 +64,149 @@
 ### [해결 방법]
 - 사용하지 않는(삭제/이전된) 이전 경로의 에디터 열린 파일 탭을 모두 닫고, 신규 경로인 `ZariYo-FrontEnd/src/App.tsx` 등의 파일을 재작업합니다.
 - IDE의 TypeScript 언어 서버 재시작(`TypeScript: Restart TS Server` 명령)을 실행하여 참조 정보를 리셋하여 해결하였습니다.
+
+---
+
+## 4. TypeScript 미사용 React 임포트 컴파일 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-08
+- **장애 요인**: `pnpm build` 수행 시 컴파일러 오류 발생.
+- **오류 메시지**:
+  ```text
+  src/pages/StartPage.tsx:1:8 - error TS6133: 'React' is declared but its value is never read.
+  ```
+
+### [원인 분석]
+- React 17 버전 이후의 JSX 새 변환(JSX Transform) 방식을 사용하는 환경이므로 더 이상 파일마다 `import React`를 명시적으로 선언하지 않아도 정상 렌더링이 가능합니다.
+- `StartPage.tsx` 내에서 `React` 변수를 임포트했으나 코드 상에서 참조하지 않아 엄격한 타입 검사 규칙(`TS6133`)에 의해 컴파일이 중단되었습니다.
+
+### [해결 방법]
+- `StartPage.tsx` 파일 내에서 사용되지 않는 `React` 임포트를 제거하고 `useState`만 단독 임포트하여 해결했습니다.
+  ```typescript
+  // 수정 전
+  import React, { useState } from 'react';
+  
+  // 수정 후
+  import { useState } from 'react';
+  ```
+
+---
+
+## 5. verbatimModuleSyntax 활성화로 인한 ReactNode 타입 임포트 컴파일 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-08
+- **장애 요인**: `pnpm build` 수행 시 컴파일러 오류 발생.
+- **오류 메시지**:
+  ```text
+  src/components/start/StartLayout.tsx:1:10 - error TS1484: 'ReactNode' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+  ```
+
+### [원인 분석]
+- TypeScript 설정에서 `verbatimModuleSyntax`가 활성화되어 있으면, 런타임에 소거되는 타입(Type) 임포트와 실제 값(Value) 임포트를 명확히 구분해야 합니다.
+- `StartLayout.tsx`에서 타입으로만 사용하는 `ReactNode`를 일반 값(Value) 임포트로 로드하여 컴파일러 정적 검사에 위배되었습니다.
+
+### [해결 방법]
+- `StartLayout.tsx` 내에서 `ReactNode` 임포트 구문에 `type` 한정자를 지정하여 명시적인 타입 임포트로 변경하여 해결했습니다.
+  ```typescript
+  // 수정 전
+  import { ReactNode } from 'react';
+  
+  // 수정 후
+  import type { ReactNode } from 'react';
+  ```
+
+---
+
+## 6. const assertion 객체 멤버로 인한 타입 호환성(TS2322) 컴파일 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-08
+- **장애 요인**: `pnpm build` 수행 시 컴파일러 오류 발생.
+- **오류 메시지**:
+  ```text
+  src/pages/owner/StoreBuilderPage.tsx:104:7 - error TS2322: Type '`T-${number}`' is not assignable to type '"2인 테이블" | "4인 테이블" | "바(Bar) 테이블" | "콘센트석 (1인)" | "주문 카운터" | "주 출입구" | "화장실"'.
+  ```
+
+### [원인 분석]
+- `ELEMENT_TEMPLATES` 배열이 `as const`로 단언되어 있어, `template.name` 값이 일반적인 `string`이 아니라 리터럴 유니온 타입으로 추론되었습니다.
+- `let label = template.name;` 과 같이 변수를 생성하여 값을 대입하는 도중, 타입스크립트 엔진이 `label`의 타입을 리터럴 유니온으로 제한함으로써 이후 동적 문자열 할당(`\`T-${tableCount}\``) 시 타입 호환성 에러가 발생했습니다.
+
+### [해결 방법]
+- 변수를 선언할 때 명시적으로 `string` 타입을 지정해 주어 리터럴 추론을 무력화시켰습니다.
+  ```typescript
+  // 수정 전
+  let label = template.name;
+  
+  // 수정 후
+  let label: string = template.name;
+  ```
+
+---
+
+## 7. 대시보드 미사용 Lucide 아이콘 변수 컴파일(TS6133) 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-08
+- **장애 요인**: `pnpm build` 수행 시 컴파일러 오류 발생.
+- **오류 메시지**:
+  ```text
+  src/pages/owner/DashboardPage.tsx:4:30 - error TS6133: 'HelpCircle' is declared but its value is never read.
+  ```
+
+### [원인 분석]
+- 대시보드 페이지 구현 과정에서 `lucide-react`로부터 들고 온 일부 아이콘들(`HelpCircle`, `ShieldAlert`, `AlertTriangle`, `ArrowLeft`) 및 `setPlacedElements`가 실제 코드 내에서 쓰이지 않아 `noUnusedLocals` 타입 엄격 검사에 걸린 상황입니다.
+
+### [해결 방법]
+- 사용하지 않는 아이콘 임포트를 정리하고, `setPlacedElements`를 구조분해 할당에서 제거하여 컴파일을 통과시켰습니다.
+
+---
+
+## 8. MockPages.tsx 리팩토링 중 함수 중복 선언(TS2323) 컴파일 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-08
+- **장애 요인**: `pnpm build` 수행 시 컴파일러 오류 발생.
+- **오류 메시지**:
+  ```text
+  src/pages/MockPages.tsx:87:17 - error TS2323: Cannot redeclare exported variable 'ReservePage'.
+  src/pages/MockPages.tsx:87:17 - error TS2393: Duplicate function implementation.
+  ```
+
+### [원인 분석]
+- `MockPages.tsx`에서 사용하지 않는 매장 신규 등록 및 대시보드 목업 페이지를 소거하고 고객용 예약 페이지만 남겨두는 과정에서, 편집 툴의 오차로 인해 `ReservePage` 함수 선언이 하단에 이중으로 삽입되어 중복 선언 오류가 발생했습니다.
+
+### [해결 방법]
+- `MockPages.tsx` 파일 하단부에 겹쳐서 기입된 중복된 `ReservePage` 블록을 완전히 삭제하여 정적 무결성을 확보했습니다.
+
+---
+
+## 9. StoreBuilderPage 리팩토링 중 매개변수 타입 유추(TS2322) 컴파일 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-08
+- **장애 요인**: `pnpm build` 수행 시 컴파일러 오류 발생.
+- **오류 메시지**:
+  ```text
+  src/pages/owner/StoreBuilderPage.tsx:83:7 - error TS2322: Type '`T-${number}`' is not assignable to type '"table-2" | "table-4" | "table-bar" | "socket" | "door" | "toilet" | "counter"'.
+  ```
+
+### [원인 분석]
+- `handleAddElement` 내부에서 `let label = type;` 구문을 작성함에 따라, `label` 변수의 타입이 매개변수인 `PlacedElement['type']` 리터럴 유니온으로 유추되었습니다.
+- 이후 `label` 변수에 동적 문자열(예: `\`T-${tableCount}\``)을 할당할 때 유니온 스키마에 부합하지 않아 정적 빌드가 중단되었습니다.
+
+### [해결 방법]
+- 변수를 선언할 때 명시적으로 `string` 타입을 지정해 리터럴 추론을 배제하고 유연하게 대입될 수 있게 해결했습니다.
+  ```typescript
+  // 수정 전
+  let label = type;
+  
+  // 수정 후
+  let label: string = type;
+  ```
+
+
+
+
+

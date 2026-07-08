@@ -95,4 +95,40 @@
   - [LoginPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LoginPage.tsx)와 [SignupPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/SignupPage.tsx)에 산만하게 흩어져 있던 DOM 뼈대를 이 공통 컴포넌트들을 사용하여 재구축 및 조립함으로써 코드 가독성, 중복성, 재사용 품질을 획기적으로 개선했습니다.
   - 모든 리팩토링 및 폼 이식 이후 `pnpm build`를 정상 가동하여 정적 컴파일 무결성을 확보했습니다.
 
+### 14. 로그인/회원가입 시점의 역할 분기 및 사장님 콘솔 리팩토링
+- **작업 내용**:
+  - **인증 화면 역할 분기 UI 이식**: [LoginPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/LoginPage.tsx)와 [SignupPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/SignupPage.tsx) 폼 상단에 애플/토스 풍의 세련된 캡슐 탭 전환 스위치를 도입했습니다.
+  - **리다이렉트 경로 이원화**: 손님 로그인 시 좌석 예약 화면 목업인 `/reserve`로 바로 진입하며, 사장님 로그인 시에는 관리자 콘솔인 `/owner` 페이지로 연결되도록 비즈니스 로직을 이원화 설계했습니다.
+  - **사장님 시작 페이지 슬림화**: 기존 [StartPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/StartPage.tsx)에 있던 손님/사장님 역할 선택 1단계를 전면 제거하여 사장님 전용 행동 게이트웨이로 다듬었습니다.
+  - **Start 공통 컴포넌트 폴더 분리**: 사장님 전용 콘솔 행동 카드를 담을 [StartCard.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/start/StartCard.tsx)와 공통 프레임 레이아웃인 [StartLayout.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/start/StartLayout.tsx)를 신설하고 조립함으로써 코드 재사용성과 폴더 구조 정합성을 최적화했습니다.
+  - **워크플로우 검증용 목업 페이지 추가**: `/reserve`, `/owner/store/new`, `/owner/dashboard`로의 자연스러운 페이지 전환을 유도하기 위해, 미려한 미니멀 디자인과 뒤로 가기 링크를 담은 안내용 [MockPages.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/MockPages.tsx)를 완성해 임시 라우터와 병합했습니다.
+  - **빌드 및 타입 무결성 검증**: verbatimModuleSyntax 타입 소거 정책에 부합하는 `type-only import` 수정 조치 등을 통해 `pnpm build` 번들 빌드를 완벽히 통과시켰습니다.
+
+### 15. 사장님 매장 빌더(Store Builder) 및 실시간 운영 대시보드(Dashboard) 연동
+- **작업 내용**:
+  - **매장 빌더 가이드 폼 및 드래그 앤 드롭 캔버스 구축**: [StoreBuilderPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/StoreBuilderPage.tsx)을 생성하여 매장 기본 정보 입력 마법사(Wizard)와 마우스 드래그를 이용해 2인석/4인석/바 테이블/카운터/출입구 등 가구를 배치할 수 있는 그리드 캔버스를 구현했습니다.
+  - **격자 스냅 및 속성 편집**: 20px 단위 격자 스냅(Grid Snap) 정렬 및 선택 가구 속성(식별 번호, 예약 가능 여부, 5분 선점 대상 지정) 편집 양방향 데이터 연동을 추가하고 `localStorage`에 데이터 영속화를 지원하도록 구축했습니다.
+  - **실시간 모니터링 대시보드 개발**: [DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx)를 통해 저장된 좌석 배치 데이터를 실시간 렌더링하고, 현재 사용 현황을 색상으로 보여주는 라이브 맵을 완성했습니다. 테이블 클릭 시 인라인 제어 팝업으로 수동 상태 갱신이 가능합니다.
+  - **임시 선점 타이머 및 예약 목록 관리**: 5분 임시 점유의 1초 단위 실시간 카운트다운 타이머 루프를 설계하여 1분 미만 시 적색 경고 펄스 전환 및 만료 시 자동 좌석 비움 롤백을 제어합니다. 대기 예약자의 입정 완료 및 노쇼 수동 조치 기능도 결합했습니다.
+  - **실시간 스트리밍 로그 및 라우팅 병합**: 모든 동작 시각에 대응하는 한 줄 로그 스트리밍을 대시보드 하단에 연동하였고, [App.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/App.tsx)의 라우터 매핑을 목업에서 신규 개발된 페이지 컴포넌트로 정상 전환 후 `pnpm build` 무결성을 검증하였습니다.
+
+### 16. 전체 코드 아키텍처 개선 및 관심사 분리 리팩토링
+- **작업 내용**:
+  - **도메인 공통 타입 중앙 집중화**: [store.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/types/store.ts) 타입을 신설하여 여러 모듈이 참조하던 코어 데이터 구조(`StoreInfo`, `PlacedElement`, `TempOccupiedItem`, `ReservationItem`)를 일원화 격리하고, [StoreBuilderPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/StoreBuilderPage.tsx)와 대시보드에서 이를 일괄 참조하도록 구조를 리팩토링했습니다.
+  - **대시보드 상태 및 비즈니스 로직 분리**: [DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx)에 집약되어 있던 타이머 작동 훅, KPI 실시간 계산기, 수동 상태 제어 흐름, 예약 입정/노쇼 트랜잭션, 스트리밍 타임라인 로그 적재 로직을 신규 작성한 커스텀 훅 [useDashboard.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/hooks/useDashboard.ts)로 완벽히 추출 완료하였습니다.
+  - **컴포넌트 복잡도 축소**: 비즈니스 코드가 배제된 대시보드 페이지 컴포넌트는 오직 HSL 테마 렌더링과 격자 레이아웃 구성에만 집중하게 슬림화하여 가독성을 비약적으로 향상시켰습니다.
+  - **데드 코드 정리**: 새로 구현된 실제 페이지들로 대체된 구 목업 컴포넌트들을 [MockPages.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/MockPages.tsx) 파일에서 완전히 삭제하여 코드 정합성을 다듬었습니다.
+  - **정적 무결성 검증**: 중복 정의된 임시 예약 함수 정리 및 타입 임포트 룰 조정을 거쳐 `pnpm build` 번들 빌드를 에러 없이 성공 완료했습니다.
+
+### 17. 사장님 핵심 페이지 컴포넌트 분할 폴더 구조화 및 조립 리팩토링
+- **작업 내용**:
+  - **매장 빌더 하위 컴포넌트 5종 분리**: [StoreBuilderPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/StoreBuilderPage.tsx) 내부에 산재하던 뷰들을 [components/owner/builder/](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/builder/) 하위에 `StoreInfoForm.tsx` (기본 정보 폼), `StoreMapGuide.tsx` (지도 프리뷰), `AssetSidebar.tsx` (가구 템플릿), `BuilderCanvas.tsx` (정렬 캔버스), `PropertyPanel.tsx` (속성 편집창)의 5개 전담 컴포넌트로 분리 생성하였습니다.
+  - **실시간 대시보드 하위 컴포넌트 5종 분리**: [DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx) 내부의 마크업들을 [components/owner/dashboard/](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/) 하위에 `DashboardKpi.tsx` (KPI 요약 카드), `DashboardCanvas.tsx` (라이브 테이블 맵), `TempOccupiedList.tsx` (카운트다운 타이머 목록), `ReservationList.tsx` (예약 제어 리스트), `TimelineLogs.tsx` (터미널 쉘 로그)의 5개 전담 컴포넌트로 분리 생성하였습니다.
+  - **엔트리 페이지 경량화 및 조립**: 기존 페이지 컴포넌트들(`StoreBuilderPage`, `DashboardPage`)은 비즈니스 상태 훅과 드래그 연산 상태만 통제하며, 새로 신설한 10종의 모듈 컴포넌트를 들고 와 조립 렌더링하는 형태로 뼈대를 대폭 간결화했습니다.
+  - **컴파일 무결성 검증**: 분할된 서브 컴포넌트 간 Props 데이터 터널링 및 타입 임포트 룰 교정을 완료하고 `pnpm build` 컴파일 무결성을 입증했습니다.
+
+
+
+
+
 

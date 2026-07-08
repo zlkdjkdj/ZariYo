@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, Lock } from 'lucide-react';
-import { AuthCard } from '../components/auth/AuthCard';
-import { AuthInput } from '../components/auth/AuthInput';
+import { AuthCard } from '../../components/auth/AuthCard';
+import { AuthInput } from '../../components/auth/AuthInput';
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const [role, setRole] = useState<'owner' | 'customer'>('owner');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
@@ -41,7 +42,7 @@ export function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const isEmailValid = validateEmail(email);
     const isPasswordValid = validatePassword(password);
 
@@ -51,7 +52,11 @@ export function LoginPage() {
       setTimeout(() => {
         setIsLoading(false);
         alert('로그인에 성공했습니다! (데모 모드)');
-        navigate('/');
+        if (role === 'owner') {
+          navigate('/owner');
+        } else {
+          navigate('/reserve');
+        }
       }, 1000);
     }
   };
@@ -87,6 +92,30 @@ export function LoginPage() {
         }
       >
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* 역할 선택 탭 (사장님 / 손님) */}
+          <div className="bg-black/5 dark:bg-[#2c2c2e]/50 border border-neutral-200 dark:border-neutral-800/80 rounded-xl p-1 flex gap-1 relative select-none">
+            <button
+              type="button"
+              onClick={() => setRole('owner')}
+              className={`flex-1 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-300 relative z-10 cursor-pointer ${role === 'owner'
+                  ? 'bg-white dark:bg-neutral-800 text-black dark:text-white shadow-[0_2px_8px_rgba(0,0,0,0.06)]'
+                  : 'text-neutral-500 hover:text-neutral-700 dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]'
+                }`}
+            >
+              사장님으로 로그인
+            </button>
+            <button
+              type="button"
+              onClick={() => setRole('customer')}
+              className={`flex-1 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-300 relative z-10 cursor-pointer ${role === 'customer'
+                  ? 'bg-white dark:bg-neutral-800 text-black dark:text-white shadow-[0_2px_8px_rgba(0,0,0,0.06)]'
+                  : 'text-neutral-500 hover:text-neutral-700 dark:text-[#a1a1a6] dark:hover:text-[#f5f5f7]'
+                }`}
+            >
+              손님으로 로그인
+            </button>
+          </div>
+
           {/* Email input field */}
           <AuthInput
             label="이메일 주소"
@@ -126,9 +155,8 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3.5 rounded-xl font-semibold text-xs tracking-wide bg-[#3182f6] hover:bg-[#1b64da] text-white cursor-pointer shadow-[0_4px_12px_rgba(49,130,246,0.3)] transition-all duration-200 active:scale-[0.98] flex items-center justify-center ${
-              isLoading ? 'opacity-80 cursor-not-allowed' : ''
-            }`}
+            className={`w-full py-3.5 rounded-xl font-semibold text-xs tracking-wide bg-[#3182f6] hover:bg-[#1b64da] text-white cursor-pointer shadow-[0_4px_12px_rgba(49,130,246,0.3)] transition-all duration-200 active:scale-[0.98] flex items-center justify-center ${isLoading ? 'opacity-80 cursor-not-allowed' : ''
+              }`}
           >
             {isLoading ? (
               <span className="inline-block w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
@@ -138,7 +166,7 @@ export function LoginPage() {
           </button>
         </form>
       </AuthCard>
-      
+
       {/* Bottom Copyright */}
       <p className="absolute bottom-6 text-[10px] text-[#48484a] dark:text-[#86868b] tracking-tight">
         © 2026 ZariYo. All rights reserved.
