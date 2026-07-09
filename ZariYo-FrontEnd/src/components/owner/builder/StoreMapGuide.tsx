@@ -6,46 +6,44 @@ interface StoreMapGuideProps {
 
 export function StoreMapGuide({ storeName }: StoreMapGuideProps) {
   return (
-    <div className="lg:col-span-2 bg-[#f5f5f7]/60 dark:bg-[#1c1c1e]/40 border border-neutral-200/50 dark:border-neutral-800/50 rounded-3xl p-8 flex flex-col justify-between min-h-[300px]">
+    <div className="lg:col-span-2 bg-neutral-900/40 border border-white/10 rounded-2xl p-7 flex flex-col justify-between min-h-[300px] select-none backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
       <div>
-        <span className="text-[10px] font-bold text-[#3182f6] px-2 py-0.5 rounded-full bg-[#3182f6]/10 mb-4 inline-block">
-          PREVIEW GUIDE
+        <span className="text-[10px] font-extrabold text-[#ff153c] px-3 py-1 rounded-full bg-[#e50914]/10 border border-[#e50914]/20 mb-4 inline-block font-mono tracking-wider">
+          GEOLOCATION FEEDBACK
         </span>
-        <h3 className="text-lg font-bold text-black dark:text-white mb-2 flex items-center gap-1.5">
-          <MapPin className="w-5 h-5 text-red-500" />
-          지도로 보는 매장 주소
+        <h3 className="text-sm font-extrabold text-white mb-2 flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-[#e50914]" />
+          지점 맵핑 시뮬레이션
         </h3>
-        <p className="text-xs text-neutral-500 dark:text-[#a1a1a6] leading-relaxed mb-6">
-          입력된 주소를 토대로 매장 주변 기물 및 지도가 활성화됩니다.
+        <p className="text-xs text-neutral-400 font-semibold leading-relaxed mb-6">
+          입력하신 상세 주소지를 해석해 기하학적 좌표 구조의 가상 지도 핀으로 선점합니다.
         </p>
 
         {/* Mock Map Layout Graphic */}
-        <div className="w-full h-48 bg-neutral-200 dark:bg-neutral-900 rounded-2xl border border-neutral-300 dark:border-neutral-800 relative flex items-center justify-center overflow-hidden">
-          {/* Grid Lines for style */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:16px_16px]" />
+        <div className="w-full h-48 bg-black/60 rounded-xl border border-white/5 relative flex items-center justify-center overflow-hidden">
+          {/* Grid Lines */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:16px_16px]" />
           
-          {/* Mock Map pin decoration */}
+          {/* Map pin with red pulse glows */}
           <div className="relative flex flex-col items-center z-10">
-            <div className="w-8 h-8 rounded-full bg-red-500 border-2 border-white flex items-center justify-center text-white animate-bounce shadow-md">
-              <Store className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#e50914] to-[#ff153c] text-white flex items-center justify-center shadow-[0_0_20px_rgba(229,9,20,0.5)] animate-bounce">
+              <Store className="w-4.5 h-4.5" />
             </div>
-            <span className="text-[10px] font-bold text-neutral-800 dark:text-neutral-200 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 px-2 py-0.5 rounded-md mt-2 shadow-sm">
+            <span className="text-[10px] font-bold text-white bg-neutral-900 border border-white/10 px-3 py-1 rounded-full mt-3 shadow-lg">
               {storeName || '나의 ZariYo 매장'}
             </span>
           </div>
-          <div className="absolute bottom-2 right-2 text-[9px] text-neutral-400 bg-neutral-100/80 dark:bg-black/60 px-1.5 py-0.5 rounded">
-            Mockup Map API
+          <div className="absolute bottom-2.5 right-2.5 text-[8px] text-neutral-500 bg-black/60 border border-white/5 px-2 py-0.5 rounded-full font-mono">
+            Mapbox Engine API
           </div>
         </div>
       </div>
 
-      <div className="mt-8 p-4 rounded-2xl bg-neutral-100/50 dark:bg-neutral-900/40 border border-neutral-200/50 dark:border-neutral-800/30">
-        <div className="flex gap-2">
-          <ShieldCheck className="w-5 h-5 text-[#3182f6] shrink-0 mt-0.5" />
-          <p className="text-[11px] leading-normal text-neutral-500 dark:text-[#a1a1a6]">
-            ZariYo는 사장님들의 소중한 고객 좌석 점유 데이터를 Redisson 분산 락 구조로 안전하게 제어하여, 동시성 오류 및 예약을 사전 차단합니다.
-          </p>
-        </div>
+      <div className="mt-8 p-4 rounded-xl bg-white/5 border border-white/5 flex gap-2.5">
+        <ShieldCheck className="w-5 h-5 text-[#ff153c] shrink-0 mt-0.5" />
+        <p className="text-[11px] leading-relaxed text-neutral-400 font-bold">
+          분산 트래픽 락을 획득하는 과정에서 중복 예약을 원천 방지하기 위해 5분 선점 잠금(distributed lock) 정책이 탑재되어 있습니다.
+        </p>
       </div>
     </div>
   );

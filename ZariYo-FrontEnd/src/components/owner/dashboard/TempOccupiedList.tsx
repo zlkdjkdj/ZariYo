@@ -19,47 +19,47 @@ export function TempOccupiedList({
   };
 
   return (
-    <div className="bg-white dark:bg-[#1c1c1e] border border-neutral-200/50 dark:border-neutral-800/80 rounded-3xl p-6 shadow-sm">
-      <h3 className="text-xs font-bold text-black dark:text-white flex items-center gap-1.5 mb-4 border-b border-neutral-100 dark:border-neutral-900 pb-2">
-        <Clock className="w-4 h-4 text-amber-500" />
-        5분 임시 선점 목록 ({tempOccupations.length}건)
+    <div className="bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-white/10 rounded-2xl p-5 shadow-[0_10px_25px_rgba(0,0,0,0.015)] dark:shadow-lg backdrop-blur-xl select-none font-sans">
+      <h3 className="text-xs font-extrabold text-neutral-900 dark:text-white flex items-center gap-2 mb-4 border-b border-neutral-200 dark:border-white/5 pb-2.5 uppercase font-mono tracking-wider">
+        <Clock className="w-4 h-4 text-[#3182f6]" />
+        Temp Occupancy List ({tempOccupations.length})
       </h3>
 
-      <div className="space-y-3 max-h-[160px] overflow-y-auto pr-1">
+      <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1">
         {tempOccupations.map((item) => {
           const isCritical = item.timeLeft <= 60;
           return (
             <div
               key={item.id}
-              className={`p-3 rounded-xl border flex items-center justify-between ${
+              className={`p-3 rounded-xl border flex items-center justify-between transition-all ${
                 isCritical 
-                  ? 'bg-red-500/5 border-red-500/40 text-red-500 animate-pulse' 
-                  : 'bg-neutral-50 dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800'
+                  ? 'bg-red-500/10 border-red-500/30 text-[#f6384d] animate-pulse shadow-[0_0_12px_rgba(246,56,77,0.15)]' 
+                  : 'bg-neutral-50 dark:bg-black/40 border-neutral-200 dark:border-white/5'
               }`}
             >
               <div className="flex flex-col">
-                <span className="text-xs font-bold text-black dark:text-white">
-                  좌석 {item.label} 선점중
+                <span className="text-xs font-black text-neutral-900 dark:text-white">
+                  좌석 {item.label}
                 </span>
-                <span className="text-[9px] text-neutral-400 mt-0.5">
-                  {isCritical ? '⏰ 만료 1분 전 경고!' : '선점 자동 해제 대기'}
+                <span className="text-[8px] text-[#4e5968] dark:text-neutral-400 font-extrabold mt-0.5 uppercase tracking-widest font-mono">
+                  {isCritical ? '🚨 Time Out soon' : 'Reservation Pending'}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold">
+              <div className="flex items-center gap-2 font-mono">
+                <span className="text-xs font-bold text-neutral-800 dark:text-white">
                   {formatTime(item.timeLeft)}
                 </span>
                 <button
                   onClick={() => onConfirm(item.elementId, item.label)}
-                  className="p-1 rounded bg-[#3182f6]/10 text-[#3182f6] hover:bg-[#3182f6] hover:text-white transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg bg-[#3182f6]/10 hover:bg-[#3182f6] dark:bg-[#3182f6]/10 dark:hover:bg-[#3182f6] text-[#3182f6] hover:text-white dark:hover:text-white transition-all cursor-pointer border border-transparent"
                   title="강제 확정(착석)"
                 >
-                  <Play className="w-3.5 h-3.5" />
+                  <Play className="w-3.5 h-3.5 fill-current" />
                 </button>
                 <button
                   onClick={() => onCancel(item.elementId, item.label)}
-                  className="p-1 rounded bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 dark:bg-white/5 dark:hover:bg-neutral-800 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-all cursor-pointer border border-transparent"
                   title="선점 취소"
                 >
                   <XCircle className="w-3.5 h-3.5" />
@@ -70,7 +70,7 @@ export function TempOccupiedList({
         })}
 
         {tempOccupations.length === 0 && (
-          <p className="text-[10px] text-neutral-400 text-center py-6">
+          <p className="text-[10px] text-neutral-500 font-bold text-center py-6">
             현재 대기중인 임시 선점 요청이 없습니다.
           </p>
         )}
@@ -78,3 +78,5 @@ export function TempOccupiedList({
     </div>
   );
 }
+
+

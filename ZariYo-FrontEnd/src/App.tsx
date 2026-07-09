@@ -4,9 +4,10 @@ import { LandingPage } from './pages/LandingPage';
 import { LoginPage } from './pages/auth/LoginPage';
 import { SignupPage } from './pages/auth/SignupPage';
 import { StartPage } from './pages/StartPage';
-import { ReservePage } from './pages/MockPages';
+import { ReservePage } from './pages/customer/ReservePage';
 import { StoreBuilderPage } from './pages/owner/StoreBuilderPage';
 import { DashboardPage } from './pages/owner/DashboardPage';
+import { AboutPage } from './pages/AboutPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/reserve" element={<ReservePage />} />
           <Route path="/owner/store/new" element={<StoreBuilderPage />} />
           <Route path="/owner/dashboard" element={<DashboardPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

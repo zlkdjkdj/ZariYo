@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css");
+@import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -9,33 +9,16 @@
 
 @layer base {
   :root {
-    --bg-main: #030712;
-    --bg-card: #0f172a;
-    --text-main: #f8fafc;
-    --border-main: #1e293b;
-    --brand-primary: #6366f1;
+    --bg-main: #f9fafb;
+    --bg-card: #ffffff;
+    --text-main: #191f28;
+    --text-muted: #4e5968;
+    --border-main: #f2f4f6;
+    --brand-primary: #3182f6;
+    --brand-glow: rgba(49, 130, 246, 0.15);
   }
 
-  html, body {
-    font-family: var(--font-sans);
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    -webkit-font-smoothing: antialiased;
-    scroll-behavior: smooth;
-  }
-
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(150, 150, 150, 0.2);
-    border-radius: 10px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(150, 150, 150, 0.4);
+  .dark {
+    --bg-main: #101012;
   }
 }

@@ -15,50 +15,50 @@ export function ReservationList({
   const pendingCount = reservations.filter((r) => r.status === 'pending').length;
 
   return (
-    <div className="bg-white dark:bg-[#1c1c1e] border border-neutral-200/50 dark:border-neutral-800/80 rounded-3xl p-6 shadow-sm">
-      <h3 className="text-xs font-bold text-black dark:text-white flex items-center gap-1.5 mb-4 border-b border-neutral-100 dark:border-neutral-900 pb-2">
+    <div className="bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-white/10 rounded-2xl p-5 shadow-[0_10px_25px_rgba(0,0,0,0.015)] dark:shadow-lg backdrop-blur-xl select-none font-sans">
+      <h3 className="text-xs font-extrabold text-neutral-900 dark:text-white flex items-center gap-2 mb-4 border-b border-neutral-200 dark:border-white/5 pb-2.5 uppercase font-mono tracking-wider">
         <UserCheck className="w-4 h-4 text-[#3182f6]" />
-        당일 예약 리스트 ({pendingCount}건 대기)
+        Reservations ({pendingCount} pending)
       </h3>
 
-      <div className="space-y-3 max-h-[180px] overflow-y-auto pr-1">
+      <div className="space-y-3 max-h-[190px] overflow-y-auto pr-1">
         {reservations.map((item) => (
           <div 
             key={item.id}
-            className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 flex flex-col gap-2"
+            className="p-3.5 rounded-xl border border-neutral-200 dark:border-white/5 bg-neutral-50 dark:bg-black/45 flex flex-col gap-2.5 transition-all hover:border-neutral-300 dark:hover:border-white/10"
           >
             <div className="flex items-center justify-between text-xs">
               <div>
-                <span className="font-bold text-black dark:text-white">{item.guestName}</span>
-                <span className="text-[10px] text-neutral-400 ml-1.5">({item.peopleCount}명)</span>
+                <span className="font-extrabold text-neutral-900 dark:text-white">{item.guestName}</span>
+                <span className="text-[9.5px] text-[#4e5968] dark:text-neutral-400 font-extrabold ml-1.5 font-mono">({item.peopleCount}명)</span>
               </div>
-              <span className="font-mono text-neutral-500 dark:text-[#a1a1a6]">{item.time}</span>
+              <span className="font-mono text-[10.5px] text-[#3182f6] font-bold">{item.time}</span>
             </div>
 
-            <div className="flex items-center justify-between mt-1 text-[10px]">
-              <span className="px-2 py-0.5 rounded bg-[#3182f6]/10 text-[#3182f6] font-bold">
+            <div className="flex items-center justify-between mt-1 text-[9.5px] font-extrabold font-mono">
+              <span className="px-2 py-0.5 rounded bg-[#3182f6]/10 text-[#3182f6] border border-[#3182f6]/20">
                 지정석: {item.label}
               </span>
 
               {item.status === 'pending' ? (
-                <div className="flex gap-1.5">
+                <div className="flex gap-1.5 font-sans">
                   <button
                     onClick={() => onComplete(item.id, item.elementId, item.label)}
-                    className="px-2.5 py-1 rounded-md bg-emerald-500 hover:bg-emerald-600 text-white font-semibold cursor-pointer transition-colors"
+                    className="px-3 py-1 rounded-full bg-gradient-to-r from-[#3182f6] to-[#4894fe] text-white font-extrabold cursor-pointer transition-opacity hover:opacity-90 shadow-[0_2px_8px_rgba(49,130,246,0.15)]"
                   >
-                    입정 완료
+                    입정
                   </button>
                   <button
                     onClick={() => onNoShow(item.id, item.elementId, item.label)}
-                    className="px-2.5 py-1 rounded-md bg-red-500 hover:bg-red-600 text-white font-semibold cursor-pointer transition-colors"
+                    className="px-3 py-1 rounded-full border border-neutral-250 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-neutral-100 dark:hover:bg-white/5 text-neutral-550 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white font-extrabold cursor-pointer transition-all"
                   >
-                    노쇼 처리
+                    노쇼
                   </button>
                 </div>
               ) : (
-                <span className={`font-semibold ${item.status === 'completed' ? 'text-emerald-500' : 'text-red-500'}`}>
-                  {item.status === 'completed' && '✓ 입정 완료됨'}
-                  {item.status === 'noshow' && '✗ 노쇼 취소됨'}
+                <span className={`font-bold font-sans text-[10px] uppercase tracking-wider ${item.status === 'completed' ? 'text-emerald-600 dark:text-emerald-400' : 'text-[#f6384d]'}`}>
+                  {item.status === 'completed' && '✓ Completed'}
+                  {item.status === 'noshow' && '✗ No-Show'}
                 </span>
               )}
             </div>
@@ -66,11 +66,13 @@ export function ReservationList({
         ))}
 
         {reservations.length === 0 && (
-          <p className="text-[10px] text-neutral-400 text-center py-6">
-            오늘 접수된 예약이 없습니다.
+          <p className="text-[10px] text-neutral-500 font-bold text-center py-6">
+            오늘 접수된 예약 명단이 없습니다.
           </p>
         )}
       </div>
     </div>
   );
 }
+
+

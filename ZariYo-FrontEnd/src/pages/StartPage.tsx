@@ -8,18 +8,18 @@ export function StartPage() {
 
   return (
     <StartLayout>
-      <div className="w-full max-w-3xl flex flex-col items-center animate-fadeIn">
+      <div className="w-full max-w-3xl flex flex-col items-center animate-fadeIn px-2">
         {/* Title Block */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#3182f6]/10 text-[#3182f6] text-[11px] font-semibold mb-4">
+        <div className="text-center mb-12 select-none">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#e50914]/10 border border-[#e50914]/25 text-[10px] text-[#ff153c] mb-5 font-bold font-mono">
             <Store className="w-3.5 h-3.5" />
-            사장님 전용 콘솔
+            <span>OWNER SYSTEM CONSOLE</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-black dark:text-white mb-3">
-            매장 관리 작업을 선택해 주세요
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+            매장 관리 프로세스를 시작하세요
           </h1>
-          <p className="text-sm md:text-base text-[#86868b] dark:text-[#a1a1a6]">
-            새로운 매장을 오픈하기 위한 등록 또는 기존 매장 실시간 좌석 현황 운영을 시작합니다.
+          <p className="text-xs md:text-sm text-neutral-400 font-bold max-w-lg mx-auto">
+            새로운 매장의 이름, 지리 정보 기입 및 좌석 배치도를 디자인하거나, 기존 운영 중인 실시간 통계 관제 대시보드 콘솔로 진입합니다.
           </p>
         </div>
 
@@ -28,19 +28,19 @@ export function StartPage() {
           {/* Setup New Store Action */}
           <StartCard
             title="새로운 매장 설정"
-            description="새로운 매장의 이름, 주소, 운영 시간을 설정하고 시각적인 매장 좌석 배치도를 제작해 실시간 선점 기능을 활성화할 준비를 합니다."
+            description="새로운 매장의 이름, 주소, 영업일지를 기입하고 시각적인 2D 드래그 앤 드롭 좌석 배치 설계도를 제작합니다."
             icon={PlusCircle}
             onClick={() => navigate('/owner/store/new')}
-            actionText="매장 빌더 열기"
+            actionText="매장 디자인 빌더 시작"
           />
 
           {/* Start Operational Dashboard Action */}
           <StartCard
             title="기존 매장 운영 시작"
-            description="현재 등록되어 활성화된 매장 운영 대시보드를 열어, 손님들의 좌석 예약 현황 및 5분 임시 점유 목록을 실시간 제어/대응합니다."
+            description="현재 활성화된 매장 운영 대시보드를 열어 실시간 5분 선점 타이머, 당일 예약 명단 통계 및 맵 상태를 조율합니다."
             icon={LayoutDashboard}
             onClick={() => navigate('/owner/dashboard')}
-            actionText="대시보드 시작하기"
+            actionText="관제 대시보드 바로가기"
           />
         </div>
       </div>

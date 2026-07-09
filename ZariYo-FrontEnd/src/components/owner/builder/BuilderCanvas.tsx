@@ -24,11 +24,11 @@ export function BuilderCanvas({
 }: BuilderCanvasProps) {
   return (
     <div className="lg:col-span-6 flex flex-col gap-3">
-      <div className="flex justify-between items-center px-2 text-xs">
-        <span className="text-neutral-500 dark:text-[#a1a1a6]">
+      <div className="flex justify-between items-center px-1 text-xs select-none">
+        <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold">
           격자 배치판 (마우스 드래그로 요소를 이동하세요)
         </span>
-        <span className="text-[10px] text-[#3182f6] font-semibold bg-[#3182f6]/10 px-2 py-0.5 rounded">
+        <span className="text-[9px] text-[#3182f6] font-bold font-mono bg-[#3182f6]/10 border border-[#3182f6]/20 px-2 py-0.5 rounded-full">
           Grid Snap: 20px
         </span>
       </div>
@@ -39,14 +39,20 @@ export function BuilderCanvas({
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
         onClick={() => onSelectId(null)}
-        className="w-full h-[520px] bg-neutral-50 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 rounded-3xl relative overflow-hidden select-none"
+        className="w-full h-[520px] bg-white dark:bg-neutral-900/30 border border-neutral-200 dark:border-white/10 rounded-2xl relative overflow-hidden select-none shadow-[0_20px_50px_rgba(0,0,0,0.02)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)]"
       >
         {/* 20px Grid Background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800d_1px,transparent_1px),linear-gradient(to_bottom,#8080800d_1px,transparent_1px)] bg-[size:20px_20px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000003_1px,transparent_1px),linear-gradient(to_bottom,#00000003_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:20px_20px]" />
 
         {placedElements.map((el) => {
           const isSelected = el.id === selectedId;
-          const templateColor = ELEMENT_TEMPLATES.find((t) => t.type === el.type)?.color || 'border-neutral-400 bg-neutral-100';
+          const template = ELEMENT_TEMPLATES.find((t) => t.type === el.type);
+          
+          // Apply responsive borders for templates based on theme
+          let templateColor = template?.color || 'border-neutral-200 dark:border-white/10 bg-white dark:bg-neutral-900';
+          if (el.type === 'counter') templateColor = 'bg-neutral-100 dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-300';
+          if (el.type === 'door') templateColor = 'bg-amber-100/50 dark:bg-amber-500/10 border-amber-300/40 dark:border-amber-500/20 text-amber-600 dark:text-amber-400';
+          if (el.type === 'toilet') templateColor = 'bg-neutral-100 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-850 text-neutral-400 dark:text-neutral-500';
 
           return (
             <div
@@ -63,18 +69,18 @@ export function BuilderCanvas({
                 width: el.width,
                 height: el.height,
               }}
-              className={`rounded-xl border flex flex-col items-center justify-center p-2 text-center transition-shadow shadow-sm cursor-move ${templateColor} ${
+              className={`rounded-xl border flex flex-col items-center justify-center p-2 text-center transition-all cursor-move shadow-sm ${templateColor} ${
                 isSelected 
-                  ? 'ring-2 ring-[#3182f6] ring-offset-2 dark:ring-offset-black border-[#3182f6] shadow-md z-20' 
+                  ? 'border-[#3182f6] ring-2 ring-[#3182f6]/40 dark:ring-[#3182f6]/40 z-20 shadow-[0_0_15px_rgba(49,130,246,0.15)] dark:shadow-[0_0_15px_rgba(49,130,246,0.25)]' 
                   : 'z-10'
               }`}
             >
-              <span className="text-[10px] font-bold tracking-tight truncate max-w-full">
+              <span className="text-[10px] font-black tracking-tight truncate max-w-full text-neutral-900 dark:text-white">
                 {el.label}
               </span>
               {el.isReservable && (
-                <span className="text-[8px] opacity-70 mt-0.5 bg-neutral-200/50 dark:bg-black/40 px-1 rounded">
-                  예약
+                <span className="text-[8px] mt-1 bg-[#3182f6]/10 border border-[#3182f6]/20 text-[#3182f6] px-1.5 py-0.5 rounded-full font-bold">
+                  예약석
                 </span>
               )}
             </div>
@@ -83,12 +89,13 @@ export function BuilderCanvas({
 
         {placedElements.length === 0 && (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
-            <Store className="w-10 h-10 text-neutral-300 dark:text-neutral-700 mb-3" />
-            <p className="text-xs text-neutral-400">배치된 물품이 없습니다.</p>
-            <p className="text-[10px] text-neutral-500 mt-1">좌측 가구 박스에서 요소를 선택해 배치해 보세요.</p>
+            <Store className="w-9 h-9 text-[#3182f6] mb-3 animate-pulse" />
+            <p className="text-xs text-neutral-900 dark:text-white font-extrabold">배치된 가구가 없습니다.</p>
+            <p className="text-[10px] text-neutral-400 dark:text-neutral-600 mt-1 font-bold">좌측 템플릿 항목을 눌러 캔버스에 추가해보세요.</p>
           </div>
         )}
       </div>
     </div>
   );
 }
+

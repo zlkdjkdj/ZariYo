@@ -10,16 +10,17 @@ interface AuthCardProps {
 
 export function AuthCard({ title, description, children, footer }: AuthCardProps) {
   return (
-    <div className="max-w-md w-full backdrop-blur-xl bg-[#f5f5f7]/60 dark:bg-[#1c1c1e]/40 border border-[#e5e5e7] dark:border-[#2c2c2e]/60 rounded-3xl p-8 md:p-10 shadow-[0_24px_50px_-12px_rgba(0,0,0,0.1)] dark:shadow-[0_24px_50px_-12px_rgba(0,0,0,0.7)] relative z-10 transition-all duration-300">
+    <div className="max-w-md w-full backdrop-blur-2xl bg-white dark:bg-neutral-900/60 border border-[#f2f4f6] dark:border-neutral-800 rounded-2xl p-8 md:p-10 shadow-[0_30px_60px_rgba(0,0,0,0.015)] dark:shadow-[0_30px_100px_rgba(0,0,0,0.8)] relative z-10 transition-all duration-300">
+      
       {/* Logo and Greeting */}
-      <div className="flex flex-col items-center mb-8 text-center">
-        <div className="flex items-center gap-2 mb-3 bg-black/5 dark:bg-[#2c2c2e]/50 border border-[#e5e5e7] dark:border-[#3a3a3c] rounded-full p-2.5">
-          <LayoutGrid className="w-5 h-5 text-[#3182f6]" />
+      <div className="flex flex-col items-center mb-8 text-center select-none">
+        <div className="flex items-center gap-2 mb-4 bg-gradient-to-tr from-[#3182f6] to-[#4894fe] p-2.5 rounded-xl shadow-[0_4px_15px_rgba(49,130,246,0.2)]">
+          <LayoutGrid className="w-5 h-5 text-white" />
         </div>
-        <h2 className="text-xl md:text-2xl font-bold tracking-tight text-black dark:text-white mb-1.5">
+        <h2 className="text-xl md:text-2xl font-black tracking-tight text-[#191f28] dark:text-white mb-2">
           {title}
         </h2>
-        <p className="text-xs text-[#86868b]">
+        <p className="text-xs text-[#4e5968] dark:text-neutral-400 font-semibold">
           {description}
         </p>
       </div>
@@ -29,10 +30,12 @@ export function AuthCard({ title, description, children, footer }: AuthCardProps
 
       {/* Footer Link Area */}
       {footer && (
-        <div className="mt-8 pt-6 border-t border-[#e5e5e7] dark:border-[#2c2c2e]/40 text-center">
+        <div className="mt-8 pt-6 border-t border-[#f2f4f6] dark:border-white/5 text-center">
           {footer}
         </div>
       )}
     </div>
   );
 }
+
+

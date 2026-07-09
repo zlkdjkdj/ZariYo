@@ -13,7 +13,6 @@ export function StoreBuilderPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState<1 | 2>(1);
 
-  // Step 1 State: 기본 정보
   const [info, setInfo] = useState<StoreInfo>({
     name: '',
     address: '',
@@ -26,7 +25,6 @@ export function StoreBuilderPage() {
     holiday: '연중무휴',
   });
 
-  // Step 2 State: 배치 요소 리스트
   const [placedElements, setPlacedElements] = useState<PlacedElement[]>(() => {
     const saved = localStorage.getItem('zariyo_store_layout');
     if (saved) {
@@ -48,7 +46,6 @@ export function StoreBuilderPage() {
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  // 드래그 제어 상태 레퍼런스
   const canvasRef = useRef<HTMLDivElement>(null);
   const dragInfo = useRef<{
     elementId: string;
@@ -56,16 +53,13 @@ export function StoreBuilderPage() {
     startOffsetY: number;
   } | null>(null);
 
-  // 기본 정보 입력 완료 검증
   const isInfoValid = info.name.trim().length > 0 && info.address.trim().length > 0;
 
   const handleInputChange = (field: keyof StoreInfo, value: string) => {
     setInfo((prev) => ({ ...prev, [field]: value }));
   };
 
-  // 요소 추가
   const handleAddElement = (type: PlacedElement['type']) => {
-    // 템플릿 크기 매핑 (AssetSidebar 정의와 매핑)
     const sizes: Record<PlacedElement['type'], { w: number; h: number }> = {
       'table-2': { w: 60, h: 60 },
       'table-4': { w: 100, h: 60 },
@@ -108,7 +102,6 @@ export function StoreBuilderPage() {
     setSelectedId(newElement.id);
   };
 
-  // 요소 제거
   const handleRemoveElement = (id: string) => {
     setPlacedElements((prev) => prev.filter((e) => e.id !== id));
     if (selectedId === id) {
@@ -116,14 +109,12 @@ export function StoreBuilderPage() {
     }
   };
 
-  // 요소 속성 변경
   const handleUpdateElement = (id: string, updates: Partial<PlacedElement>) => {
     setPlacedElements((prev) =>
       prev.map((e) => (e.id === id ? { ...e, ...updates } : e))
     );
   };
 
-  // 드래그 다운
   const handleMouseDown = (e: React.MouseEvent, id: string) => {
     if (step !== 2) return;
     e.stopPropagation();
@@ -146,7 +137,6 @@ export function StoreBuilderPage() {
     };
   };
 
-  // 드래그 무브 (스냅 기능 적용)
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!dragInfo.current || !canvasRef.current) return;
     e.preventDefault();
@@ -162,7 +152,6 @@ export function StoreBuilderPage() {
     let rawX = clientX - dragInfo.current.startOffsetX;
     let rawY = clientY - dragInfo.current.startOffsetY;
 
-    // 20px 격자 스냅
     const snappedX = Math.round(rawX / 20) * 20;
     const snappedY = Math.round(rawY / 20) * 20;
 
@@ -174,12 +163,10 @@ export function StoreBuilderPage() {
     handleUpdateElement(dragInfo.current.elementId, { x: finalX, y: finalY });
   };
 
-  // 드래그 업
   const handleMouseUp = () => {
     dragInfo.current = null;
   };
 
-  // 저장하기
   const handleSaveLayout = () => {
     localStorage.setItem('zariyo_store_info', JSON.stringify(info));
     localStorage.setItem('zariyo_store_layout', JSON.stringify(placedElements));
@@ -193,36 +180,36 @@ export function StoreBuilderPage() {
     <StartLayout>
       <div className="w-full max-w-6xl flex flex-col items-center animate-fadeIn px-2">
         {/* Top Header navbar */}
-        <div className="w-full flex items-center justify-between mb-8 pb-4 border-b border-neutral-100 dark:border-neutral-900/50">
-          <div className="flex items-center gap-2">
+        <div className="w-full flex items-center justify-between mb-8 pb-4 border-b border-white/5">
+          <div className="flex items-center gap-2 select-none">
             <button
               onClick={() => {
                 if (step === 2) setStep(1);
                 else navigate('/owner');
               }}
-              className="p-1.5 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-900 text-neutral-500 hover:text-black dark:hover:text-white transition-all cursor-pointer"
+              className="p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-[#e50914]/10 text-neutral-400 hover:text-white transition-all cursor-pointer"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4 text-[#e50914]" />
             </button>
-            <span className="text-xs font-semibold text-neutral-500 dark:text-[#a1a1a6]">
-              {step === 1 ? '기본 매장 프로필 작성' : '시각적 좌석 배치도 빌더'}
+            <span className="text-[10px] font-extrabold text-[#ff153c] font-mono uppercase bg-[#e50914]/10 px-2 py-0.5 rounded border border-[#e50914]/20 tracking-wider">
+              {step === 1 ? 'Step 1. Basic Profile' : 'Step 2. 2D Layout Design'}
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${step === 1 ? 'bg-[#3182f6]/10 text-[#3182f6]' : 'text-neutral-400 bg-neutral-100 dark:bg-neutral-900'}`}>
+          <div className="flex items-center gap-3 select-none text-[11px] font-extrabold font-mono">
+            <span className={`px-3 py-1 rounded-full border transition-all ${step === 1 ? 'border-[#e50914] text-white bg-[#e50914]/10 shadow-[0_0_10px_rgba(229,9,20,0.2)]' : 'text-neutral-500 border-transparent bg-transparent'}`}>
               1. 기본 정보
             </span>
-            <span className="text-neutral-300 dark:text-neutral-800 text-xs">/</span>
-            <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${step === 2 ? 'bg-[#3182f6]/10 text-[#3182f6]' : 'text-neutral-400 bg-neutral-100 dark:bg-neutral-900'}`}>
-              2. 좌석 배치도 디자인
+            <span className="text-neutral-700">/</span>
+            <span className={`px-3 py-1 rounded-full border transition-all ${step === 2 ? 'border-[#e50914] text-white bg-[#e50914]/10 shadow-[0_0_10px_rgba(229,9,20,0.2)]' : 'text-neutral-500 border-transparent bg-transparent'}`}>
+              2. 좌석 배치도
             </span>
           </div>
         </div>
 
         {/* STEP 1: 마법사 기본 양식 */}
         {step === 1 && (
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 w-full">
             <StoreInfoForm
               info={info}
               onInputChange={handleInputChange}

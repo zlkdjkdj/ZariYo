@@ -206,7 +206,111 @@
   let label: string = type;
   ```
 
+---
 
+## 10. 대시보드 서브 컴포넌트 리팩토링 중 중복 export 충돌(TS2323, TS2484)
+
+### [이슈 개요]
+- **일시**: 2026-07-08
+- **장애 요인**: `pnpm build` 시 tsc 컴파일 실패.
+- **오류 메시지**:
+  ```text
+  src/components/owner/dashboard/DashboardCanvas.tsx:134:10 - error TS2323: Cannot redeclare exported variable 'DashboardCanvas'.
+  src/components/owner/dashboard/DashboardCanvas.tsx:134:10 - error TS2484: Export declaration conflicts with exported declaration of 'DashboardCanvas'.
+  ```
+
+### [원인 분석]
+- 컴포넌트 선언부에 `export function ComponentName(...)` 처럼 인라인으로 내보내기를 정의했음에도 불구하고, 파일 가장 밑단에 `export { ComponentName };`을 한 번 더 기재하여 동일 식별자에 대한 다중 내보내기 정적 규칙 위반 충돌이 발생했습니다.
+
+### [해결 방법]
+- 대시보드 서브 컴포넌트 5개 파일 하단에 위치하던 중복 명시적 export 선언(`export { ... }`)을 일괄 제거하여 컴파일을 정상화하였습니다.
+
+---
+
+## 11. CSS @import 순서 위반으로 인한 Vite 빌드 최적화 경고
+
+### [이슈 개요]
+- **일시**: 2026-07-09
+- **장애 요인**: `pnpm run build` 수행 시 CSS 최적화 경고 발생.
+- **오류 메시지**:
+  ```text
+  @import rules must precede all rules aside from @charset and @layer statements
+  ```
+
+### [원인 분석]
+- `@import "tailwindcss";` 구문 아래에 외부 웹폰트 패키지 `@import url(...)`를 정의한 상태에서 컴파일이 진행되어, Tailwind 코어가 확장되며 발생한 CSS 일반 룰셋 뒤쪽으로 다른 `@import`가 밀리는 현상이 발생해 CSS 표준 스펙 경고가 활성화되었습니다.
+
+### [해결 방법]
+- 외부 Pretendard 웹폰트 로딩 `@import` 구문이 Tailwind 본문 `@import` 지시자보다 먼저 오도록 파일 최상단으로 순서를 변경하여 빌드 경고를 해제했습니다.
+
+---
+
+## 12. 로그인 역할군(손님/사장님) 리다이렉트 분기 오작동
+
+### [이슈 개요]
+- **일시**: 2026-07-09
+- **장애 요인**: 손님 역할로 로그인 시, 기획서의 의도인 예약 페이지(/reserve)가 아닌 사장님 관리실 대시보드(/owner/dashboard)로 잘못 랜딩되는 기능상 에러 발생.
+
+### [원인 분석]
+- `LoginPage.tsx` 내부 `handleSubmit` 내의 네비게이션 로직 상에서 분기 처리가 `role === 'owner'` 일 때는 `/owner`로 정상 이동하나, 손님(`customer`)일 때에는 `/reserve`가 아닌 대시보드 경로로 잘못 하드코딩 되어 있었습니다.
+
+### [해결 방법]
+- 리다이렉트 분기 조건의 else 블록 목적지 경로를 `/owner/dashboard`에서 실제 구현한 2D 실시간 예약 도면 화면인 `/reserve`로 변경 및 복원했습니다.
+
+---
+
+## 13. 컴포넌트 코드 병합 중 구문 중복 및 문자열 미종결 구문 오류 (ReservePage.tsx)
+
+### [이슈 개요]
+- **일시**: 2026-07-09
+- **장애 요인**: `pnpm run lint` 수행 시 컴파일러 오류 발생.
+- **오류 메시지**:
+  ```text
+  Unterminated string
+     ╭─[src/pages/customer/ReservePage.tsx:188:44]
+ 187 │     // 실시간 로그 스트리밍 업데이트
+ 188 │     const savedLogs = localStorage.getItem('zariyo_logs  const getSeatColorClass = (el: PlacedElement) => {
+  ```
+
+### [원인 분석]
+- 에이전트의 다중 코드 편집 병합 툴(replace_file_content) 동작 중, 인접 라인 병합 과정의 일부 코드가 부분적으로 유실되고 두 라인의 구문이 이상하게 겹치면서 문자열 따옴표가 닫히지 않는(`'zariyo_logs...`) 형태의 문법적 오류가 생성되었습니다. 이로 인해 타입 스크립트 컴파일러 파싱이 불가능해졌습니다.
+
+### [해결 방법]
+- 오류가 발생한 `ReservePage.tsx` 188행을 수동 조사하여, 꼬여있던 `handleConfirmReservation` 함수의 마무리 괄호들과 `getSeatColorClass` 함수 선언의 경계면을 정밀하게 분리 복원했습니다.
+- 수정 완료 후 `pnpm run lint`와 `pnpm run build`를 재수행하여 정적 빌드 오류가 깔끔하게 제로화되었음을 검증했습니다.
+
+---
+
+## 14. index.css @layer base 블록 닫는 중괄호(}) 누락 오류
+
+### [이슈 개요]
+- **일시**: 2026-07-09
+- **장애 요인**: 프론트엔드 빌드 및 코드 린트 수행 시 CSS 문법 구문 오류 표기.
+- **오류 메시지**:
+  ```text
+  } 필요 (startLine: 24, endLine: 24)
+  ```
+
+### [원인 분석]
+- `index.css` 파일 하단부에 `@layer base` 디렉티브를 선언하고 `:root`와 `.dark` 클래스에 대한 테마 변수 설정을 갱신하는 과정에서, `@layer base {` 블록 전체를 닫아주는 맨 마지막 중괄호(`}`)가 누락되었습니다.
+
+### [해결 방법]
+- `index.css` 파일 맨 하단에 닫는 중괄호(`}`)를 정상적으로 기입해 줌으로써 빌드 컴파일 에러를 즉각 해결했습니다.
+
+---
+
+## 15. 랜딩 페이지 하위 컴포넌트 화이트 모드 미작동 현상
+
+### [이슈 개요]
+- **일시**: 2026-07-09
+- **장애 요인**: 사용자가 라이트 모드로 진입했을 때, 헤더와 히어로만 하얗게 변하고 중간의 특징(Features), 아키텍처(Architecture), 카피라이트(Footer) 섹션은 여전히 어둡고 탁한 구 젯블랙(`bg-black`)으로 남아 레이아웃 전체 비주얼이 깨지던 문제.
+
+### [원인 분석]
+- 이전 모노크롬 리팩토링 및 테마 변환 작업 시, 랜딩 페이지의 메인 래퍼 컨테이너만 반응형 테마 스타일을 주입하고 하위 서브 컴포넌트인 `Features.tsx`, `Architecture.tsx`, `Footer.tsx` 파일 내부에 선언된 하드코딩 `bg-black` 및 다크 모드 텍스트 클래스들을 갱신하지 않고 방치하여 발생한 비주얼 잔재 오류였습니다.
+
+### [해결 방법]
+- 3개 컴포넌트(`Features.tsx`, `Architecture.tsx`, `Footer.tsx`) 파일 내부의 최상단 섹션 스타일을 `bg-white dark:bg-[#101012] border-t border-[#f2f4f6] dark:border-white/5` 형태로 테마 반응형 분기 처리했습니다.
+- 내부 텍스트 및 카드 래퍼, 다이어그램 등의 보더 명도도 조절하여 가독성을 높였고, 기존 넷플릭스 크림슨 레드 브랜딩 흔적을 토스 블루 테마로 수정했습니다.
 
 
 

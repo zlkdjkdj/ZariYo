@@ -127,8 +127,61 @@
   - **엔트리 페이지 경량화 및 조립**: 기존 페이지 컴포넌트들(`StoreBuilderPage`, `DashboardPage`)은 비즈니스 상태 훅과 드래그 연산 상태만 통제하며, 새로 신설한 10종의 모듈 컴포넌트를 들고 와 조립 렌더링하는 형태로 뼈대를 대폭 간결화했습니다.
   - **컴파일 무결성 검증**: 분할된 서브 컴포넌트 간 Props 데이터 터널링 및 타입 임포트 룰 교정을 완료하고 `pnpm build` 컴파일 무결성을 입증했습니다.
 
+### 18. 랜딩 페이지 전용 컴포넌트 폴더 분리 격리 및 임포트 정리
+- **작업 내용**:
+  - **랜딩 컴포넌트 전용 폴더 신설**: [components/landing/](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/) 폴더를 새로 만들고, 랜딩 뷰에서만 종속적으로 이용되던 `Header.tsx`, `Hero.tsx`, `Features.tsx`, `Architecture.tsx`, `Footer.tsx` 5종을 이관하였습니다.
+  - **경로 보정 및 레거시 삭제**: `Header.tsx` 내부의 테마 관리 콘텍스트 상대 참조 수준을 `../../context/ThemeContext`로 정합하였고, [LandingPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LandingPage.tsx) 상단의 임포트 경로를 갱신 완료했습니다. 이후 `components/` 최상위에 남아있던 구 파일 5종을 완전히 제거하여 폴더 청결도를 개선했습니다.
+  - **무결성 검사**: `pnpm build`를 구동해 파일 삭제 및 경로 변경 전후의 모듈 참조 안정성을 검증 완료했습니다.
+
+### 21. 전체 디자인 테마 미니멀리즘(Monochrome & Sharp Corners) 대개편
+- **작업 내용**:
+  - **곡률 통일 및 1px 보더 라인화**: 전체 코드베이스의 둥글둥글한 곡률(`rounded-3xl`/`rounded-2xl`)을 직각형에 가까운 `rounded-lg` (8px 카드) 및 `rounded-md` (6px 버튼/입력창)로 전면 직선화하고, 입체적 음영 그림자(`shadow-xl`/`shadow-2xl`)를 일괄 제거하여 평면 1px 단색 선 테두리(`border-neutral-200` / `dark:border-neutral-900`) 중심의 세련된 UI로 변경했습니다.
+  - **시각 피로도 소거**: 배경에 번져 있던 네온 블루 그라데이션 글로우 백그라운드를 차단하여 판독성을 향상시켰습니다.
+  - **정적 번들 용량 경량화**: Tailwind 클래스 최적화 및 미사용 데코레이터 소거를 통해 빌드 시 최종 CSS 번들 용량을 약 9kB(59.09kB ➔ 50.14kB) 가량 극적으로 경량화시켰습니다.
+  - **무결성 검증**: `pnpm build` 컴파일 무결성을 입증 완료했습니다.
 
 
+### 19. 랜딩 페이지 히어로 배너 CTA 버튼 라우팅 액션 추가
+- **작업 내용**:
+  - **라우팅 기능 이식**: [Hero.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Hero.tsx) 상단에 React Router의 `useNavigate` 훅을 결합하였습니다.
+  - **버튼 링크 매핑**: "실시간 좌석 배치도 보기" 버튼 클릭 시 손님 예약 목업 뷰인 `/reserve`로 연결되고, "관리자 대시보드 진입" 버튼 클릭 시 사장님 게이트웨이 화면인 `/owner`로 정상 리다이렉트되도록 매핑했습니다.
+  - **무결성 검증**: 빌드를 돌려 타입 안정성을 체크하였습니다.
+
+### 20. 이용안내 가이드 페이지 추가 및 헤더 네비게이션 연결
+- **작업 내용**:
+  - **이용안내 화면 신설**: [AboutPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/AboutPage.tsx) 가이드 페이지를 새로 제작하여, 5분 점유/2D 그리드 드래그 스냅 빌더/분산 락 매커니즘 등의 내용을 FAQ 아코디언 컴포넌트와 설명 카드 형태로 상세하게 작성했습니다.
+  - **라우터 매핑 등록**: [App.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/App.tsx) 규칙에 `/about` 경로와 `AboutPage` 매핑을 완료하였습니다.
+  - **헤더바 링크 수정**: [Header.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Header.tsx)의 `이용 안내` 메뉴 앵커 태그를 리액트 라우터의 `<Link to="/about">` 태그로 수정하여 연결했습니다.
+  - **컴파일 검증**: `pnpm build`를 성공하여 에러 없이 빌드가 정상 가동됨을 확인했습니다.
+
+## [2026-07-09]
+
+### 22. 프론트엔드 전체 디자인 개편 및 테마 연동, 손님 예약 페이지 실체화
+- **작업 내용**:
+  - **테마 시스템(Light/Dark) 전면 연동**: 기존에 다크 모드로 하드코딩 되어 있던 로그인(`LoginPage`), 회원가입(`SignupPage`), 매장 기본 설정(`StartPage`), 그리고 공통 카드/인풋 컴포넌트(`AuthCard`, `AuthInput`, `StartLayout`, `StartCard`)들에 `bg-white dark:bg-black`, `text-neutral-900 dark:text-[#f5f5f7]` 등 반응형 스타일을 이식하여 완벽한 테마 토글 전환을 지원합니다.
+  - **시네마틱 프리미엄 크림슨(Premium Crimson) & 글래스모피즘(Glassmorphism) 이식**: 기존의 투박하고 어두운 젯블랙의 직각 코너 디자인을 Toss/Apple 스타일의 부드러운 코너 곡률(`rounded-2xl` / `rounded-3xl`), 고급스러운 크림슨 레드 그라데이션, 백그라운드 블러 효과로 대개편했습니다.
+  - **손님 실시간 예약 2D 화면 실제 구현**: `MockPages.tsx`에 방치되어 있던 공사 중 목업 안내판을 제거하고, 사장님이 설계한 좌석 배치 데이터를 불러와 2D 도면으로 렌더링하는 고객 예약 진입점 [ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx)를 완벽 구현했습니다.
+  - **크로스 탭 실시간 예약 상태 동기화**: 브라우저의 `storage` 및 `storage_sync` 이벤트를 감지하여, 한 화면(고객 예약 탭)에서 좌석을 임시 선점/확정하면 다른 탭(사장님 대시보드)에 즉시 실시간으로 반영되는 데이터 동기화 파이프라인을 이식했습니다.
+  - **로그인 역할별 리다이렉트 버그 수정**: `LoginPage.tsx`에서 손님(`customer`) 역할 로그인 시 사장님 대시보드로 가던 오작동 오류를 `/reserve` 예약 신청 화면으로 가도록 정합했습니다.
+  - **Vite CSS 빌드 경고 제거**: `index.css`의 `@import` 선언 순서 위반으로 인한 경고를 수정하여 빌드 프로세스를 완벽히 정적 정합시켰습니다.
+
+### 23. 토스 블루(`#3182f6`) 브랜딩 및 가독성 극대화 화이트 모드 디자인 전면 개편
+- **작업 내용**:
+  - **디자인 컨셉 토스 & 애플 스타일 변경**: 기존 넷플릭스 크림슨 레드의 강한 원색 중심 디자인을 탈피하고, 신뢰감을 주는 **토스 블루(`#3182f6`)**와 극도로 깔끔하고 차분한 파스텔 상태 배지(soft emerald, soft red, soft amber) 디자인을 전체 코드베이스에 전면 이식했습니다.
+  - **화이트 모드(Light Mode) 가독성 극대화**: 라이트 모드의 배경을 부드러운 화이트 `#f9fafb`(토스 연그레이) 및 `#ffffff`로 설계하여 텍스트 번짐 현상을 원천 방지하고, 메인 글씨 색상을 `#191f28`(토스 딥블랙)로 조절하여 렌더링 명도를 극대화했습니다.
+  - **랜딩 및 인증/게이트웨이 페이지 개편**: 헤더([Header.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Header.tsx)), 히어로([Hero.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Hero.tsx)), 게이트웨이([StartLayout.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/start/StartLayout.tsx), [StartCard.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/start/StartCard.tsx)), 공통 폼([AuthCard.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/auth/AuthCard.tsx), [AuthInput.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/auth/AuthInput.tsx)), 로그인/회원가입([LoginPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/LoginPage.tsx), [SignupPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/SignupPage.tsx))의 모든 로고, 그라데이션 백그라운드 아우라, 보더, 체크박스 및 전송 버튼들을 토스 블루 테마로 수정했습니다.
+  - **예약 신청 및 대시보드 관제 개편**: 손님 예약 페이지([ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx)), 사장님 관제판([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx)) 및 대시보드 하위 컴포넌트 5종(`DashboardCanvas`, `DashboardKpi`, `TempOccupiedList`, `ReservationList`, `TimelineLogs`) 내의 좌석 점유 상태 색상(사용중, 선점대기, 예약됨, 공석)을 파스텔 배지 기반으로 개편하고, 2D 배치도 내 텍스트/테두리의 명도 대조를 대폭 상향했습니다.
+  - **매장 빌더 요소 개편**: [BuilderCanvas.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/builder/BuilderCanvas.tsx) 요소 배치 그리드 내의 선택 보더 스킴 및 아이콘들을 토스 블루 스타일로 변경했습니다.
+  - **빌드 및 린터 검증 완료**: `pnpm run lint` 및 `pnpm run build`를 완벽히 통과하여 타입 안정성과 정적 파일 무결성을 재검증했습니다.
+
+### 24. index.css 구문 오류 수정 (Base 레이어 닫는 중괄호 추가)
+- **작업 내용**:
+  - `index.css`의 `@layer base` 내부 스타일 변경 작업 도중 파일 맨 마지막에 누락되었던 닫는 중괄호(`}`)를 정상적으로 추가하여 빌드 컴파일 오류를 완전히 해결했습니다.
+
+### 25. 랜딩 페이지 하위 컴포넌트(Features, Architecture, Footer) 전면 테마화 및 토스 블루 개편
+- **작업 내용**:
+  - **테마 미지원 컴포넌트 발굴 및 전면 개편**: 랜딩 페이지 하위 영역 중 어두운 색상(`bg-black`)으로 고정 코딩되어 있어 화이트 모드 전환이 온전히 적용되지 않던 특징 목록([Features.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Features.tsx)), 아키텍처 다이어그램([Architecture.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Architecture.tsx)), 카피라이트 풋터([Footer.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Footer.tsx))를 반응형 테마 구조(`bg-white dark:bg-[#101012]`)로 전격 개선했습니다.
+  - **토스 블루 테마 및 명도 보완**: 각 컴포넌트의 넷플릭스 크림슨 레드 브랜딩 아이콘, 배지, 다이어그램 경계선들을 토스 블루(`#3182f6`) 스타일로 일원화하고, 라이트 모드 텍스트 컬러(`#191f28`, `#4e5968`) 명도를 보완하여 가독성을 극대화시켰습니다.
 
 
 

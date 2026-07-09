@@ -16,7 +16,7 @@ export function DashboardPage() {
   // 1. 매장 및 레이아웃 데이터 로드
   const [storeInfo, setStoreInfo] = useState<{ name: string; address: string }>(() => {
     const saved = localStorage.getItem('zariyo_store_info');
-    return saved ? JSON.parse(saved) : { name: 'ZariYo 프리미엄 카페', address: '서울특별시 강남구 테헤란로 123' };
+    return saved ? JSON.parse(saved) : { name: 'ZariYo 프리미엄 라운지', address: '서울특별시 강남구 테헤란로 123' };
   });
 
   const [placedElements] = useState<PlacedElement[]>(() => {
@@ -50,34 +50,38 @@ export function DashboardPage() {
       <div className="w-full max-w-7xl flex flex-col items-center animate-fadeIn px-2">
         
         {/* Dashboard Title Header */}
-        <div className="w-full flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-neutral-100 dark:border-neutral-900/50">
-          <div>
-            <h1 className="text-2xl font-bold text-black dark:text-white flex items-center gap-2">
-              <LayoutDashboard className="w-6 h-6 text-[#3182f6]" />
+        <div className="w-full flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-neutral-200 dark:border-white/5">
+          <div className="select-none">
+            <h1 className="text-xl font-black text-neutral-900 dark:text-white flex items-center gap-2">
+              <LayoutDashboard className="w-5.5 h-5.5 text-[#3182f6]" />
               {storeInfo.name} 대시보드
             </h1>
-            <p className="text-xs text-neutral-500 dark:text-[#a1a1a6] mt-0.5">
-              주소: {storeInfo.address}
+            <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-1 font-bold">
+              운영 지점: {storeInfo.address}
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3.5 select-none font-bold">
             <button
               onClick={() => navigate('/owner/store/new')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-xs font-semibold text-neutral-600 dark:text-[#a1a1a6] hover:bg-neutral-100 dark:hover:bg-neutral-900 cursor-pointer transition-all"
+              className="flex items-center gap-1.5 px-4.5 py-2 rounded-full border border-neutral-200 dark:border-white/10 text-xs text-neutral-600 dark:text-neutral-450 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5 cursor-pointer transition-all hover:scale-[1.02]"
             >
-              배치 수정하러 가기
+              배치 수정하기
             </button>
             <button
               onClick={() => {
-                setStoreInfo({ name: 'ZariYo 프리미엄 카페', address: '서울특별시 강남구 테헤란로 123' });
+                setStoreInfo({ name: 'ZariYo 프리미엄 라운지', address: '서울특별시 강남구 테헤란로 123' });
                 localStorage.removeItem('zariyo_store_layout');
+                localStorage.removeItem('zariyo_table_states');
+                localStorage.removeItem('zariyo_temp_occupations');
+                localStorage.removeItem('zariyo_reservations');
+                localStorage.removeItem('zariyo_logs');
                 window.location.reload();
               }}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-neutral-200 dark:border-neutral-800 text-xs font-semibold text-neutral-600 dark:text-[#a1a1a6] hover:bg-neutral-100 dark:hover:bg-neutral-900 cursor-pointer transition-all"
-              title="초기 상태로 리셋"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-full border border-neutral-200 dark:border-white/10 text-xs text-neutral-600 dark:text-neutral-450 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5 cursor-pointer transition-all"
+              title="대시보드 공장 초기화"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <RefreshCw className="w-4.5 h-4.5 text-[#3182f6]" />
             </button>
           </div>
         </div>

@@ -1,8 +1,8 @@
-import { Header } from '../components/Header';
-import { Hero } from '../components/Hero';
-import { Features } from '../components/Features';
-import { Architecture } from '../components/Architecture';
-import { Footer } from '../components/Footer';
+import { Header } from '../components/landing/Header';
+import { Hero } from '../components/landing/Hero';
+import { Features } from '../components/landing/Features';
+import { Architecture } from '../components/landing/Architecture';
+import { Footer } from '../components/landing/Footer';
 
 export function LandingPage() {
   return (
