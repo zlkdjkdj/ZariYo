@@ -180,28 +180,28 @@ export function StoreBuilderPage() {
     <StartLayout>
       <div className="w-full max-w-6xl flex flex-col items-center animate-fadeIn px-2">
         {/* Top Header navbar */}
-        <div className="w-full flex items-center justify-between mb-8 pb-4 border-b border-white/5">
+        <div className="w-full flex items-center justify-between mb-8 pb-4 border-b border-neutral-200 dark:border-white/5">
           <div className="flex items-center gap-2 select-none">
             <button
               onClick={() => {
                 if (step === 2) setStep(1);
                 else navigate('/owner');
               }}
-              className="p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-[#e50914]/10 text-neutral-400 hover:text-white transition-all cursor-pointer"
+              className="p-2 rounded-xl bg-white border border-neutral-200 dark:bg-white/5 dark:border-white/5 hover:bg-[#3182f6]/10 text-neutral-500 hover:text-[#191f28] dark:hover:text-white transition-all cursor-pointer"
             >
-              <ArrowLeft className="w-4 h-4 text-[#e50914]" />
+              <ArrowLeft className="w-4 h-4 text-[#3182f6]" />
             </button>
-            <span className="text-[10px] font-extrabold text-[#ff153c] font-mono uppercase bg-[#e50914]/10 px-2 py-0.5 rounded border border-[#e50914]/20 tracking-wider">
+            <span className="text-[10px] font-extrabold text-[#3182f6] font-mono uppercase bg-[#3182f6]/10 px-2 py-0.5 rounded border border-[#3182f6]/20 tracking-wider">
               {step === 1 ? 'Step 1. Basic Profile' : 'Step 2. 2D Layout Design'}
             </span>
           </div>
 
           <div className="flex items-center gap-3 select-none text-[11px] font-extrabold font-mono">
-            <span className={`px-3 py-1 rounded-full border transition-all ${step === 1 ? 'border-[#e50914] text-white bg-[#e50914]/10 shadow-[0_0_10px_rgba(229,9,20,0.2)]' : 'text-neutral-500 border-transparent bg-transparent'}`}>
+            <span className={`px-3 py-1 rounded-full border transition-all ${step === 1 ? 'border-[#3182f6] text-[#3182f6] dark:text-white bg-[#3182f6]/10 shadow-[0_0_10px_rgba(49,130,246,0.1)]' : 'text-neutral-450 border-transparent bg-transparent'}`}>
               1. 기본 정보
             </span>
-            <span className="text-neutral-700">/</span>
-            <span className={`px-3 py-1 rounded-full border transition-all ${step === 2 ? 'border-[#e50914] text-white bg-[#e50914]/10 shadow-[0_0_10px_rgba(229,9,20,0.2)]' : 'text-neutral-500 border-transparent bg-transparent'}`}>
+            <span className="text-neutral-300 dark:text-neutral-700">/</span>
+            <span className={`px-3 py-1 rounded-full border transition-all ${step === 2 ? 'border-[#3182f6] text-[#3182f6] dark:text-white bg-[#3182f6]/10 shadow-[0_0_10px_rgba(49,130,246,0.1)]' : 'text-neutral-450 border-transparent bg-transparent'}`}>
               2. 좌석 배치도
             </span>
           </div>

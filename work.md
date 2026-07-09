@@ -183,5 +183,12 @@
   - **테마 미지원 컴포넌트 발굴 및 전면 개편**: 랜딩 페이지 하위 영역 중 어두운 색상(`bg-black`)으로 고정 코딩되어 있어 화이트 모드 전환이 온전히 적용되지 않던 특징 목록([Features.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Features.tsx)), 아키텍처 다이어그램([Architecture.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Architecture.tsx)), 카피라이트 풋터([Footer.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Footer.tsx))를 반응형 테마 구조(`bg-white dark:bg-[#101012]`)로 전격 개선했습니다.
   - **토스 블루 테마 및 명도 보완**: 각 컴포넌트의 넷플릭스 크림슨 레드 브랜딩 아이콘, 배지, 다이어그램 경계선들을 토스 블루(`#3182f6`) 스타일로 일원화하고, 라이트 모드 텍스트 컬러(`#191f28`, `#4e5968`) 명도를 보완하여 가독성을 극대화시켰습니다.
 
+### 26. 사장님 기본 진입 페이지 및 매장 배치 빌더 화면 컴포넌트 전체 테마 일치 개편
+- **작업 내용**:
+  - **사장님 게이트웨이 개편**: [StartPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/StartPage.tsx) 내의 붉은 뱃지 하이라이트를 토스 블루로 정합하고 제목/설명 등의 텍스트 가독성을 최대로 높였습니다.
+  - **매장 빌더 마법사(Wizard) 폼 개편**: [StoreBuilderPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/StoreBuilderPage.tsx) 내 단계 헤더 및 뒤로가기 버튼들의 붉은 톤을 토스 블루로 변경하고, [StoreInfoForm.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/builder/StoreInfoForm.tsx) 내의 모든 상세 입력창(매장명, 주소, 시간 설정) 스타일을 반응형 테마 분기로 수정해 화이트 모드 가독성을 개선했습니다.
+  - **위치 프리뷰 및 속성 제어창 개편**: [StoreMapGuide.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/builder/StoreMapGuide.tsx) 지도 핀과 [PropertyPanel.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/builder/PropertyPanel.tsx) 요소 설정 영역, 그리고 가구 템플릿 목록 컴포넌트인 [AssetSidebar.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/builder/AssetSidebar.tsx) 버튼과 체크박스들을 모두 토스 블루와 화이트모드 규격으로 개편했습니다.
+
+
 
 

@@ -11,14 +11,14 @@ export function StartPage() {
       <div className="w-full max-w-3xl flex flex-col items-center animate-fadeIn px-2">
         {/* Title Block */}
         <div className="text-center mb-12 select-none">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#e50914]/10 border border-[#e50914]/25 text-[10px] text-[#ff153c] mb-5 font-bold font-mono">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#3182f6]/10 border border-[#3182f6]/25 text-[10px] text-[#3182f6] mb-5 font-bold font-mono">
             <Store className="w-3.5 h-3.5" />
             <span>OWNER SYSTEM CONSOLE</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#191f28] dark:text-white mb-4 leading-tight">
             매장 관리 프로세스를 시작하세요
           </h1>
-          <p className="text-xs md:text-sm text-neutral-400 font-bold max-w-lg mx-auto">
+          <p className="text-xs md:text-sm text-[#4e5968] dark:text-neutral-400 font-bold max-w-lg mx-auto">
             새로운 매장의 이름, 지리 정보 기입 및 좌석 배치도를 디자인하거나, 기존 운영 중인 실시간 통계 관제 대시보드 콘솔로 진입합니다.
           </p>
         </div>
