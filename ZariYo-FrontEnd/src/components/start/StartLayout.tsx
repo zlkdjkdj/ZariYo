@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, Sun, Moon, LayoutGrid } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 
 interface StartLayoutProps {
@@ -58,9 +59,14 @@ export function StartLayout({ children }: StartLayoutProps) {
       </header>
 
       {/* Main Selection Area */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 py-10 z-10">
+      <motion.main 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="flex-1 flex flex-col items-center justify-center px-6 py-10 z-10"
+      >
         {children}
-      </main>
+      </motion.main>
 
       {/* Footer copyright */}
       <footer className="w-full text-center py-6 text-[10px] text-neutral-400 dark:text-neutral-500 font-semibold font-mono border-t border-[#f2f4f6] dark:border-white/5 mt-auto">

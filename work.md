@@ -189,6 +189,24 @@
   - **매장 빌더 마법사(Wizard) 폼 개편**: [StoreBuilderPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/StoreBuilderPage.tsx) 내 단계 헤더 및 뒤로가기 버튼들의 붉은 톤을 토스 블루로 변경하고, [StoreInfoForm.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/builder/StoreInfoForm.tsx) 내의 모든 상세 입력창(매장명, 주소, 시간 설정) 스타일을 반응형 테마 분기로 수정해 화이트 모드 가독성을 개선했습니다.
   - **위치 프리뷰 및 속성 제어창 개편**: [StoreMapGuide.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/builder/StoreMapGuide.tsx) 지도 핀과 [PropertyPanel.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/builder/PropertyPanel.tsx) 요소 설정 영역, 그리고 가구 템플릿 목록 컴포넌트인 [AssetSidebar.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/builder/AssetSidebar.tsx) 버튼과 체크박스들을 모두 토스 블루와 화이트모드 규격으로 개편했습니다.
 
+### 27. 백엔드 로컬 DB 인프라 구축 (Docker Compose) 및 application.yml 세팅
+- **작업 내용**:
+  - **Docker Compose 세팅**: `docker-compose.yml` 파일을 작성하여 MySQL(포트 3306)과 Redis(포트 6379) 컨테이너를 가상 환경에서 실행 가능하도록 세팅했습니다. 이를 통해 로컬 환경의 복잡한 설치 과정 없이 격리된 DB 환경을 구성했습니다. (비용 효율적 배포를 위한 기초 단계)
+  - **Spring Boot 환경설정 연결**: `ZariYo-BackEnd/src/main/resources/application.yml` 파일 내 데이터소스(`datasource`)에 새로 생성한 MySQL 컨테이너 연결 정보(`zariyo_db`, `zariyo`)를 매핑하고, Redis 세션 포트를 연동하여 JPA 및 캐시 엔진 활성화 기반을 다졌습니다.
 
+### 28. 디자인 시스템 공통 UI 컴포넌트(Phase 2) 추출
+- **작업 내용**:
+  - `Button`, `Input`, `Card` 공통 컴포넌트를 `src/components/ui/` 하위에 추출하여 재사용성과 유지보수성을 극대화했습니다.
+  - `Button` 컴포넌트는 `framer-motion`을 사용하여 호버 및 탭 애니메이션을 내장하고 다양한 variant(primary, secondary 등)를 지원하도록 구현했습니다.
+  - `Input` 컴포넌트는 Zod 기반 에러 메시지를 애니메이션과 함께 출력할 수 있도록 구성했습니다.
+  - `Card` 컴포넌트는 Glassmorphism을 지원하도록 옵션을 추가했습니다.
 
+### 29. UX 및 프레임워크 애니메이션(Phase 3) 이식
+- **작업 내용**:
+  - **페이지 트랜지션**: `StartLayout.tsx`의 `main` 태그를 `framer-motion`의 `motion.main`으로 교체하여 페이지 진입 시 부드러운 페이드 인(Fade In) 애니메이션을 적용했습니다.
+  - **리스트 Stagger 애니메이션**: `Dashboard`의 `ReservationList`와 `TempOccupiedList` 내부 항목들이 순차적으로 나타나는 Stagger 애니메이션을 `framer-motion`의 `variants`를 통해 구현했습니다.
 
+### 30. 핵심 페이지(Auth, Builder) 리팩토링 및 훅 분리(Phase 4)
+- **작업 내용**:
+  - **Auth 폼 고도화**: `LoginPage.tsx`와 `SignupPage.tsx`에 `react-hook-form`과 `@hookform/resolvers/zod`를 적용하여 선언적이고 강력한 폼 유효성 검사 로직을 구축했습니다.
+  - **비즈니스 로직 훅 분리**: `StoreBuilderPage.tsx`의 방대한 상태 관리 및 드래그 앤 드롭 로직을 `useStoreBuilder.ts` 커스텀 훅으로 완전 분리하여, 뷰 컴포넌트와 비즈니스 로직의 결합도를 낮추었습니다.

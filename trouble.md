@@ -312,5 +312,20 @@
 - 3개 컴포넌트(`Features.tsx`, `Architecture.tsx`, `Footer.tsx`) 파일 내부의 최상단 섹션 스타일을 `bg-white dark:bg-[#101012] border-t border-[#f2f4f6] dark:border-white/5` 형태로 테마 반응형 분기 처리했습니다.
 - 내부 텍스트 및 카드 래퍼, 다이어그램 등의 보더 명도도 조절하여 가독성을 높였고, 기존 넷플릭스 크림슨 레드 브랜딩 흔적을 토스 블루 테마로 수정했습니다.
 
+---
 
+## 16. JSX 파일 중간에 삽입된 import 구문으로 인한 컴파일 실패
 
+### [이슈 개요]
+- **일시**: 2026-07-10
+- **장애 요인**: `framer-motion` 페이지 트랜지션 적용 중 컴파일러 오류 발생.
+- **오류 메시지**:
+  ```text
+  'import' and 'export' may only appear at the top level.
+  ```
+
+### [원인 분석]
+- `StartLayout.tsx` 컴포넌트 내부 JSX 코드(`</header>`와 `<main>` 사이)에 `import { motion } from 'framer-motion';` 구문이 삽입되면서, JavaScript 모듈 최상단 규칙(Top-level rule)을 위반하여 문법 에러가 발생했습니다.
+
+### [해결 방법]
+- 파일 내 중간에 위치했던 `import { motion } from 'framer-motion';` 구문을 파일의 최상단(Top-level)으로 이동시켜 컴파일을 정상화시켰습니다.

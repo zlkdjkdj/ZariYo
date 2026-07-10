@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { UserCheck } from 'lucide-react';
 import type { ReservationItem } from '../../../types/store';
 
@@ -6,6 +7,21 @@ interface ReservationListProps {
   onComplete: (resId: string, elementId: string, label: string) => void;
   onNoShow: (resId: string, elementId: string, label: string) => void;
 }
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0 }
+};
 
 export function ReservationList({
   reservations,
@@ -21,9 +37,15 @@ export function ReservationList({
         Reservations ({pendingCount} pending)
       </h3>
 
-      <div className="space-y-3 max-h-[190px] overflow-y-auto pr-1">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="space-y-3 max-h-[190px] overflow-y-auto pr-1"
+      >
         {reservations.map((item) => (
-          <div 
+          <motion.div 
+            variants={itemVariants}
             key={item.id}
             className="p-3.5 rounded-xl border border-neutral-200 dark:border-white/5 bg-neutral-50 dark:bg-black/45 flex flex-col gap-2.5 transition-all hover:border-neutral-300 dark:hover:border-white/10"
           >
@@ -62,7 +84,7 @@ export function ReservationList({
                 </span>
               )}
             </div>
-          </div>
+          </motion.div>
         ))}
 
         {reservations.length === 0 && (
@@ -70,7 +92,7 @@ export function ReservationList({
             오늘 접수된 예약 명단이 없습니다.
           </p>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -7,9 +7,9 @@ spring:
 
   # Database Setup (MySQL)
   datasource:
-    url: jdbc:mysql://localhost:3306/zariyo?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
-    password: yourpassword # 로컬 MySQL 패스워드 설정 필요
+    url: jdbc:mysql://localhost:3306/zariyo_db?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
+    username: zariyo
+    password: zariyo_password
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   # JPA & Hibernate Settings

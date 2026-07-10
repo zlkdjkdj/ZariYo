@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { Clock, Play, XCircle } from 'lucide-react';
 import type { TempOccupiedItem } from '../../../types/store';
 
@@ -6,6 +7,21 @@ interface TempOccupiedListProps {
   onConfirm: (elementId: string, label: string) => void;
   onCancel: (elementId: string, label: string) => void;
 }
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0 }
+};
 
 export function TempOccupiedList({
   tempOccupations,
@@ -25,11 +41,17 @@ export function TempOccupiedList({
         Temp Occupancy List ({tempOccupations.length})
       </h3>
 
-      <div className="space-y-2 max-h-[160px] overflow-y-auto pr-1">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className="space-y-2 max-h-[160px] overflow-y-auto pr-1"
+      >
         {tempOccupations.map((item) => {
           const isCritical = item.timeLeft <= 60;
           return (
-            <div
+            <motion.div
+              variants={itemVariants}
               key={item.id}
               className={`p-3 rounded-xl border flex items-center justify-between transition-all ${
                 isCritical 
@@ -65,7 +87,7 @@ export function TempOccupiedList({
                   <XCircle className="w-3.5 h-3.5" />
                 </button>
               </div>
-            </div>
+            </motion.div>
           );
         })}
 
@@ -74,7 +96,7 @@ export function TempOccupiedList({
             현재 대기중인 임시 선점 요청이 없습니다.
           </p>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }
