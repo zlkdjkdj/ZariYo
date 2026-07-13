@@ -294,3 +294,9 @@
   - **서비스 계층 헬퍼 메서드 추출**: `StoreService` 및 `SeatService`에서 반복적으로 유발되던 사장님 조회, 좌석 조회, 손님 조회 등의 DB 예외 락 검증 구문들을 `findSeatOrThrow`, `findUserOrThrow`, `findOwnerOrThrow` 등의 private 헬퍼 메서드로 격리하여 코드 가독성 및 유지보수 가치를 상향시켰습니다.
   - **빌드 및 컴파일 무결성 검증**: 리팩토링 완료 후 `./gradlew build -x test`를 수행해 10초 만에 빌드가 안정적으로 성공함을 확인했습니다.
 
+### 43. 깃허브 원격 저장소 대용량 빌드 파일 추적 소거 및 .gitignore 추가
+- **작업 내용**:
+  - `git push` 시 발생한 `ZariYo-BackEnd/build/` 내의 `.jar` 대용량 파일(70.56MB) 깃허브 용량 제한 경고 문제를 해결하기 위해, 프로젝트 루트에 `.gitignore` 파일을 작성했습니다.
+  - `ZariYo-BackEnd` 하위의 `build/`, `.gradle/`, `bin/`, `out/` 및 프론트엔드의 `node_modules/`, `dist/` 등을 추적 제외하도록 지정했습니다.
+  - `git rm -r --cached` 명령을 구동해 기존 깃 이력에 임시로 들어가 있던 빌드 파일들의 캐시를 소거하고 로컬에서 최종 커밋을 마쳤습니다.
+
