@@ -9,31 +9,61 @@ import lombok.AccessLevel;
 /**
  * 사장님이 소유한 매장 정보를 담는 데이터베이스 엔티티 클래스입니다.
  */
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "stores") // 1. 매장 테이블 이름을 stores로 지정합니다.
+@Table(name = "stores")
 public class Store {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 2. 자동 증가되는 기본키(PK)
+    private Long id;
 
     @Column(nullable = false, length = 100)
-    private String name; // 3. 필수값(NOT NULL) 지정
+    private String name;
 
-    private String address; // 4. 일반 주소 컬럼
+    private String address;
 
-    // 5. [핵심] 객체 연관관계 매핑 (다대일 관계)
-    // 여러 개의 매장(Many)은 한 명의 사장님(One)이 소유할 수 있습니다.
-    @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩: 매장 정보를 가져올 때 당장 유저 정보가 필요 없으면 나중에 가져오는 성능 최적화 옵션
-    @JoinColumn(name = "user_id")      // 실제 DB의 stores 테이블에 user_id 라는 이름의 컬럼(외래키, FK)을 생성합니다.
+    private String weekdayStart;
+    private String weekdayEnd;
+    private String weekendStart;
+    private String weekendEnd;
+    private String breakStart;
+    private String breakEnd;
+    private String holiday;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User owner;
 
-    public Store(String name, String address, User owner) {
+    public Store(String name, String address, String weekdayStart, String weekdayEnd,
+                 String weekendStart, String weekendEnd, String breakStart, String breakEnd,
+                 String holiday, User owner) {
         this.name = name;
         this.address = address;
+        this.weekdayStart = weekdayStart;
+        this.weekdayEnd = weekdayEnd;
+        this.weekendStart = weekendStart;
+        this.weekendEnd = weekendEnd;
+        this.breakStart = breakStart;
+        this.breakEnd = breakEnd;
+        this.holiday = holiday;
         this.owner = owner;
     }
+
+    // 매장 레이아웃 및 정보를 수정할 때 사용하는 편의 메서드
+    public void updateStoreInfo(String name, String address, String weekdayStart, String weekdayEnd,
+                                String weekendStart, String weekendEnd, String breakStart, String breakEnd,
+                                String holiday) {
+        this.name = name;
+        this.address = address;
+        this.weekdayStart = weekdayStart;
+        this.weekdayEnd = weekdayEnd;
+        this.weekendStart = weekendStart;
+        this.weekendEnd = weekendEnd;
+        this.breakStart = breakStart;
+        this.breakEnd = breakEnd;
+        this.holiday = holiday;
+    }
 }
+

@@ -209,4 +209,88 @@
 ### 30. 핵심 페이지(Auth, Builder) 리팩토링 및 훅 분리(Phase 4)
 - **작업 내용**:
   - **Auth 폼 고도화**: `LoginPage.tsx`와 `SignupPage.tsx`에 `react-hook-form`과 `@hookform/resolvers/zod`를 적용하여 선언적이고 강력한 폼 유효성 검사 로직을 구축했습니다.
-  - **비즈니스 로직 훅 분리**: `StoreBuilderPage.tsx`의 방대한 상태 관리 및 드래그 앤 드롭 로직을 `useStoreBuilder.ts` 커스텀 훅으로 완전 분리하여, 뷰 컴포넌트와 비즈니스 로직의 결합도를 낮추었습니다.
+  - **비즈니스 로직 훅 분리**: `StoreBuilderPage.tsx`의 방대한 상태 관리 및 드래그 앤 드롭 로직`useStoreBuilder.ts` 커스텀 훅으로 완전 분리하여, 뷰 컴포넌트와 비즈니스 로직의 결합도를 낮추었습니다.
+
+## [2026-07-13]
+
+### 31. 백엔드 핵심 도메인 구축 및 실시간 동시성 제어 API 개발
+- **작업 내용**:
+  - **도메인 엔티티 고도화**:
+    - [Store.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/store/entity/Store.java)에 프론트엔드 연동을 위한 운영 시간 및 휴무 시간 관련 세부 필드들을 추가하고 비즈니스 편의 메서드를 설계했습니다.
+    - [Seat.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/seat/entity/Seat.java) 엔티티 및 내부 `SeatType` Enum을 신설하여 2D 캔버스 가구/좌석 데이터를 영속화하도록 구성했습니다.
+    - [Reservation.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/reservation/entity/Reservation.java) 엔티티 및 `ReservationStatus` Enum을 신설하여 예약 최종 완료 상태를 영속 관리하도록 설계했습니다.
+  - **리포지토리 레이어 추가**:
+    - [UserRepository.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/repository/UserRepository.java), [StoreRepository.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/store/repository/StoreRepository.java), [SeatRepository.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/seat/repository/SeatRepository.java), [ReservationRepository.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/reservation/repository/ReservationRepository.java) 인터페이스를 신설하여 CRUD 데이터 처리를 연동했습니다.
+  - **회원 인증 및 매장 배치 API 구현**:
+    - [AuthController.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/controller/AuthController.java)와 [AuthService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/service/AuthService.java)를 생성하여 로그인 및 회원가입 검증 파이프라인을 구축했습니다.
+    - [StoreController.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/store/controller/StoreController.java)와 [StoreService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/store/service/StoreService.java)를 신설해 매장 정보 저장 및 2D 캔버스 드래그 앤 드롭 배치도 레이아웃 일괄 저장/조회 API를 완성했습니다.
+  - **실시간 좌석 예약 및 Redisson 분산 락(Distributed Lock) API 구현**:
+    - [SeatController.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/seat/controller/SeatController.java)와 [SeatService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/seat/service/SeatService.java)를 구현했습니다.
+    - 여러 사용자의 중복 예약을 원천 차단하기 위해 **Redisson RLock**을 이용해 5초 대기, 10초 임대 사양의 분산 락 로직을 설계했습니다.
+    - 락 획득 성공 후 Redis에 `seat:temp_occupied:{seatId}` 형태의 임시 점유 키를 TTL 300초(5분) 설정으로 적재하여 5분 임시 선점 기능을 이식했습니다.
+    - 임시 선점 시간 내 요청 시 RDB로 최종 예약을 확정(`confirm`)하고 선점 키를 지우며, 반납(`return`) 시 예약 상태를 `COMPLETED`로 변경하여 공석으로 처리하는 전체 흐름을 완성했습니다.
+
+### 32. API 아키텍처 및 동시성 제어 공부 자료 작성
+- **작업 내용**:
+  - 프로젝트 루트의 [study.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/study.md) 파일에 Spring Boot REST API의 4레이어 아키텍처 흐름 및 시퀀스 다이어그램(Mermaid), 그리고 Redisson 분산 락(`tryLock`)과 Redis TTL의 동작 메커니즘을 상세히 기록하여 사용자가 보며 공부할 수 있도록 자료를 추가했습니다.
+
+### 33. 날짜별 학습 노트 폴더 분할 및 보강
+- **작업 내용**:
+  - 프로젝트 루트에 [study-notes/](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/study-notes/) 폴더를 신설했습니다.
+  - 이전 작업들을 날짜별로 매칭하여 [2026-07-07.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/study-notes/2026-07-07.md), [2026-07-08.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/study-notes/2026-07-08.md), [2026-07-09.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/study-notes/2026-07-09.md), [2026-07-10.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/study-notes/2026-07-10.md) 파일을 생성하고 그날 구현한 기능과 동적 드래그 캔버스, 그리드 스냅 연산 등의 핵심 개념을 기재했습니다.
+  - 오늘 작업한 백엔드 API 설계, JPA 연동, DTO 설계와 동시성 제어 Redisson 분산 락 동작 매커니즘, Redis 5분 임시 선점 로직을 상세하게 수록한 [2026-07-13.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/study-notes/2026-07-13.md) 문서를 완성했습니다.
+
+### 34. IDE 컴파일 에러 및 경고 일괄 해결
+- **작업 내용**:
+  - **effectively final 에러**: [StoreService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/store/service/StoreService.java)에서 람다 식 내부의 외부 변수 참조 시 effectively final 규칙을 준수하기 위해 재할당 과정을 임시 변수로 치환한 후 최종 `final` 상수로 주입하여 컴파일 에러를 극복했습니다.
+  - **Null type safety 및 미사용 경고**: [SeatService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/seat/service/SeatService.java) 및 `StoreService.java` 내의 모든 널 가능 인자 형변환 경고들을 메서드 널 가드 설정 및 `@SuppressWarnings("null")` 어노테이션 주입을 통해 완전히 해결하였으며, 미사용 로컬 변수 `user` 선언을 제거해 경고를 무효화했습니다.
+  - **index.css 린트 에러**: [index.css](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/index.css)에 누락되었던 다크 모드용 세부 변수를 채워 넣고 중괄호 파싱을 보완하여 빌드 에러를 완벽히 통과시켰습니다.
+
+### 35. Spring Boot 3.2+ 컨트롤러 매개변수 명명 리플렉션 에러 조치
+- **작업 내용**:
+  - `StoreController.java` 와 `SeatController.java` 에서 발생한 `java.lang.IllegalArgumentException` 에러를 해결했습니다.
+  - Spring Boot 3.2+ 사양에서 컴파일 시 `-parameters` 플래그 유실 시 발생하는 매개변수 식별 유실 문제를 대응하기 위해, 컨트롤러 내의 `@PathVariable`과 `@RequestParam`에 명시적인 이름(`"ownerId"`, `"storeId"`)을 속성으로 부여해 API 매핑 안정성을 완벽히 확보했습니다.
+
+### 36. Swagger(Springdoc OpenAPI) 라이브러리 추가 및 API 문서 자동화 환경 구성
+- **작업 내용**:
+  - `build.gradle`에 `springdoc-openapi-starter-webmvc-ui` 의존성을 도입하여 Swagger UI 연동을 지원하도록 구성했습니다.
+  - `OpenApiConfig.java` 클래스를 새로 작성하여 Swagger UI 상단 명세서 제목("자리요 API 명세서") 및 세부 소개, 버전을 알맞게 커스터마이징했습니다.
+  - 전체 API 컨트롤러(`StoreController.java`, `SeatController.java`, `AuthController.java`)의 엔드포인트에 `@Tag`, `@Operation` 등 OpenAPI 3 사양의 문서화용 어노테이션 예제를 설계하여 Swagger 상에서 명세 정보가 명확하고 일목요연하게 표기되도록 리팩토링했습니다.
+
+### 37. Gradle 변경사항 IDE 동기화 조치 가이드 수립
+- **작업 내용**:
+  - `build.gradle` 수정 직후 IDE 내 자바 랭귀지 서버가 의존성을 자동으로 내려받지 못해 다량의 `io.swagger cannot be resolved` 에러가 감지된 상황에 대응하였습니다.
+  - 동기화 지연 원인을 분석하여, VS Code 및 개발 툴의 Gradle Reload/Import 동작 실행을 제안하는 가이드를 안내하고 관련 장애 내역을 `trouble.md`에 등재했습니다.
+
+### 38. 백엔드 Gradle Wrapper 구축 및 빌드 검증 성공
+- **작업 내용**:
+  - 프로젝트 내에 Gradle Wrapper 파일군(`gradlew`, `gradlew.bat`, `gradle/` 폴더)이 누락되어 로컬 빌드 명령어 사용 및 IDE의 자동 의존성 로드가 불가했던 현상을 해결했습니다.
+  - 임시 디렉토리를 생성하여 Gradle 8.8 바이너리를 다운로드 및 압축 해제한 뒤, 이를 활용해 `gradle wrapper --gradle-version 8.8` 태스크를 백엔드 프로젝트 루트에서 실행하여 필요한 Wrapper 파일들을 모두 안정적으로 생성했습니다.
+  - 임시 디렉토리 소거 후 기존 Gradle Daemon 프로세스들이 임시 JAR 경로를 잘못 가리켜 발생한 `NoSuchFileException` 빌드 예외를 `./gradlew --stop` 명령어로 데몬을 전부 중지해 제거했습니다.
+  - 최종적으로 `./gradlew build -x test`를 수행해 `io.swagger`를 포함한 모든 의존성 해소 및 백엔드 빌드 무결성을 입증했습니다.
+
+### 39. VS Code 에디터 CSS 린트 및 Gradle 연동 최적화
+- **작업 내용**:
+  - 프론트엔드의 `index.css`에서 발생하는 Tailwind CSS v4 사양 지시어(`@custom-variant`, `@theme`)에 대한 VS Code 에디터의 Unknown at rule 경고 표시를 없애기 위해 `.vscode/settings.json` 설정을 갱신했습니다.
+  - `"css.lint.unknownAtRules": "ignore"` 설정을 추가하여 무해한 린트 경고 노이즈를 제거했습니다.
+  - 백엔드 Gradle 빌드 프로젝트를 IDE가 로드할 때 래퍼를 즉각 신뢰하여 패키지를 가져오도록 `"java.import.gradle.enabled": true`, `"java.import.gradle.wrapper.enabled": true` 설정을 보강했습니다.
+
+### 40. Swagger OpenAPI API 명세 및 DTO 예제 데이터 고도화
+- **작업 내용**:
+  - API 문서의 퀄리티와 프론트엔드 연동 생산성을 높이기 위해 Swagger(OpenAPI 3) 기반 API 예제 명세를 대폭 강화했습니다.
+  - **DTO 스키마 명세화**: `UserDto.java`, `StoreDto.java`, `SeatReservationDto.java` 내의 모든 요청 및 응답 DTO 필드와 클래스 레벨에 `@Schema` 어노테이션을 적용하고, 필드 설명(`description`) 및 실제 모의 값(`example`)을 지정했습니다.
+  - **컨트롤러 응답 코드 구체화**: `AuthController.java`, `StoreController.java`, `SeatController.java` 내의 모든 엔드포인트 메서드들에 `@ApiResponses` 및 `@ApiResponse`를 부착하여 정상 처리(200 OK), 입력 검증 오류(400 Bad Request), 비즈니스 충돌(409 Conflict) 등의 예상 응답 상태 코드 설명과 데이터 형식을 정의했습니다.
+  - **빌드 무결성 입증**: 수정 후 `./gradlew build -x test`를 수행해 자바 컴파일 및 Gradle 빌드가 성공적으로 조치됨을 보장했습니다.
+
+### 41. 백엔드 Spring Boot (포트 8080) 로컬 실행 서버 기동
+- **작업 내용**:
+  - Swagger UI 및 API 테스트 서버 접근을 위해 백엔드 프로젝트 루트에서 `./gradlew bootRun` 명령을 통해 스프링 부트 서버를 가동했습니다.
+  - 내장 톰캣 서버가 8080 포트에서 정상적으로 실행되었으며, MySQL 및 Redis 도커 컨테이너 데이터소스 매핑에 오류가 없음(HikariPool 완료 및 Redisson 커넥션 풀 가동 완료)을 확인했습니다.
+
+### 42. 백엔드 아키텍처 리팩토링 및 클린 코드 고도화
+- **작업 내용**:
+  - **전역 예외 처리기(Global Exception Handler) 도입**: `@RestControllerAdvice` 기반의 `GlobalExceptionHandler.java`와 에러 공통 규격인 `ErrorResponse.java`를 신설하여 기존의 500 크래시 화면 대신 구조화된 400 Bad Request JSON 에러 형식을 프론트엔드로 통일되게 응답하도록 리팩토링했습니다.
+  - **정적 팩토리 메서드(Static Factory Method) 패턴 도입**: `UserDto.Response.from(User)` 및 `StoreDto.Response.from(Store)` 등의 정적 메서드를 정의하여 서비스 계층의 Entity ➔ DTO 수동 변환 코드를 대폭 걷어내고 단축했습니다.
+  - **서비스 계층 헬퍼 메서드 추출**: `StoreService` 및 `SeatService`에서 반복적으로 유발되던 사장님 조회, 좌석 조회, 손님 조회 등의 DB 예외 락 검증 구문들을 `findSeatOrThrow`, `findUserOrThrow`, `findOwnerOrThrow` 등의 private 헬퍼 메서드로 격리하여 코드 가독성 및 유지보수 가치를 상향시켰습니다.
+  - **빌드 및 컴파일 무결성 검증**: 리팩토링 완료 후 `./gradlew build -x test`를 수행해 10초 만에 빌드가 안정적으로 성공함을 확인했습니다.
+

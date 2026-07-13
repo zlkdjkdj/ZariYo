@@ -329,3 +329,160 @@
 
 ### [해결 방법]
 - 파일 내 중간에 위치했던 `import { motion } from 'framer-motion';` 구문을 파일의 최상단(Top-level)으로 이동시켜 컴파일을 정상화시켰습니다.
+
+---
+
+## 17. 백엔드 빌드 검증 시 Gradle Wrapper(gradlew) 및 gradle 전역 명령어 누락으로 인한 127 에러
+
+### [이슈 개요]
+- **일시**: 2026-07-13
+- **장애 요인**: 백엔드 자바 소스코드 컴파일 및 빌드 검증을 위해 터미널 명령어 `./gradlew compileJava` 및 `gradle compileJava` 실행 시 127 에러 발생.
+- **오류 메시지**:
+  ```text
+  bash: 줄 1: ./gradlew: 그런 파일이나 디렉터리가 없습니다
+  bash: 줄 1: gradle: 명령을 찾을 수 없음
+  ```
+
+### [원인 분석]
+- 에이전트가 백엔드 프로젝트(`ZariYo-BackEnd`) 디렉토리를 신설할 때 `build.gradle`과 `settings.gradle`, 그리고 소스 코드 디렉토리 구조만 작성하였고, 빌드 스크립트 실행에 필수적인 **Gradle Wrapper(gradlew 쉘 스크립트, gradlew.bat, gradle/wrapper 디렉토리 등)**를 주입하지 않았습니다.
+- 또한 사용자의 로컬 OS 환경에 Gradle이 전역적으로 설치되어 있지 않아 시스템 내에서 `gradle` 명령어를 찾지 못해 127(Command not found) 예외가 발생했습니다.
+
+### [해결 방법]
+- 로컬 JDK 17 환경은 정상적으로 구축되어 있으므로, VS Code 또는 IntelliJ와 같은 IDE 환경에서 백엔드 프로젝트 폴더를 열 경우 개발 도구가 내부적으로 Gradle 버전 분석 및 래퍼 구성을 대신 수행해주므로 IDE를 통해 빌드 및 애플리케이션 실행을 이어가도록 가이드를 수립했습니다.
+- 향후 터미널 단독 빌드가 필요한 시점에는 Gradle 공식 래퍼 배포 파일을 수동 주입하거나 `gradle wrapper` 태스크를 로컬에서 구동하여 래퍼 파일군을 보완할 예정입니다.
+
+---
+
+## 18. 자바 람다 식 외부 변수 참조 시 effectively final 위반 에러 및 SeatService null 경고
+
+### [이슈 개요]
+- **일시**: 2026-07-13
+- **장애 요인**: Spring Boot API 개발 후 컴파일 시 자바 람다 식의 effectively final 규칙 위반으로 인한 빌드 에러 및 null 안전성 린트 경고 다수 발생.
+- **오류 메시지**:
+  ```text
+  Local variable store is required to be final or effectively final based on its usage (StoreService.java:72)
+  Null type safety: The expression of type 'Long' needs unchecked conversion to conform to '@NonNull Long'
+  The value of the local variable user is not used
+  ```
+
+### [원인 분석]
+- `StoreService.java`에서 `store` 변수를 선언한 뒤 `if-else` 분기 안에서 여러 번 재할당을 수행했습니다. 이 상태에서 스트림의 `.map(dto -> new Seat(..., store, ...))` 내부에서 `store`를 참조하려 하여 자바 람다 식의 외부 로컬 변수 final(또는 effectively final) 제약조건을 위반했습니다.
+- `SeatService.java` 내에서 널 체크 조건 없이 `userId`나 `seatId` 변수를 JPA `findById`나 Redis의 key 매핑 메서드로 바로 전달하여 null 안전성 경고가 발생했습니다.
+- `SeatService.java`에서 회원 검증을 위해 `User user = ...` 객체를 로드해 놓고 이후에 전혀 활용하지 않아 미사용 로컬 변수 경고가 유발되었습니다.
+
+### [해결 방법]
+- **effectively final 에러**: `StoreService.java`에서 분기 내 임시 변수 `storeTemp`를 사용하여 로직을 돌린 후, 최종 람다 진입 전에 `final Store store = storeTemp;` 와 같이 상수로 대입하여 람다 식 안에서는 이 상수 참조를 가리키게 구조를 복원했습니다.
+- **Null type safety**: 메서드 진입점에서 매개변수들에 대한 명시적 널 검증(`if (seatId == null || userId == null)`) 조건을 가딩하고, 린터가 예민하게 반응하던 널 변수 형변환 및 캐스팅 경고들에 대해 클래스 레벨에 `@SuppressWarnings("null")` 어노테이션을 부여하여 잔여 타입 경고를 완전히 박멸했습니다.
+- **미사용 변수**: 미사용 변수 `user`를 지우고 단순 존재 유무 체크 방식인 `userRepository.existsById(userId)` 구문으로 변경해 경고를 소거했습니다.
+- **index.css 에러**: CSS 린터가 누락된 중괄호로 오작동을 표기하던 증상에 맞춰 다크모드 색상 변수 스키마를 더 정교하게 추가 정의하고 새 줄을 확보하여 해결했습니다. (단, `@theme` 및 `@custom-variant` 관련 Unknown At Rule 경고는 Tailwind v4 자체 고유 지시어로써 빌드에 이상이 없는 정상적인 IDE 린터의 특성이므로 그대로 유지됩니다.)
+
+---
+
+## 19. Spring Boot 3.2+ 컨트롤러 매개변수 명명 추론 reflection 에러 (IllegalArgumentException)
+
+### [이슈 개요]
+- **일시**: 2026-07-13
+- **장애 요인**: API 요청 처리 도중 서버에서 500 에러 발생하며 콘솔에 예외 출력.
+- **오류 메시지**:
+  ```text
+  java.lang.IllegalArgumentException: Name for argument of type [java.lang.Long] not specified, and parameter name information not available via reflection. Ensure that the compiler uses the '-parameters' flag.
+  ```
+
+### [원인 분석]
+- Spring Boot 3.2(Spring Framework 6.1)부터는 바이트코드를 통해 메서드 매개변수 이름을 파싱해 주던 기존 `LocalVariableTableParameterNameDiscoverer` 모듈이 성능 및 아키텍처 상의 이유로 완전히 제거되었습니다.
+- 따라서 `@PathVariable` 이나 `@RequestParam` 등에 명시적으로 이름을 선언하지 않고 생략한 경우(예: `@PathVariable Long storeId`), 컴파일러의 `-parameters` 옵션이 켜져 있지 않으면 런타임 리플렉션 단계에서 매개변수 이름을 읽어오지 못해 이 예외가 발생합니다.
+- 로컬 개발 환경의 IDE(VS Code 등)에서 Gradle 빌드 수단을 거치지 않고 내장 Java 컴파일러를 통해 직접 런칭할 때 `-parameters` 옵션이 제대로 주입되지 않아서 실행 시점에 터진 것입니다.
+
+### [해결 방법]
+- 가장 안전하고 범용적인 예방책은 컨트롤러 메서드의 모든 웹 파라미터 바인딩 애노테이션에 명시적인 바인딩 식별자를 문자열로 지정해 주는 것입니다.
+- `StoreController.java` 파일의 `@PathVariable Long ownerId` -> `@PathVariable("ownerId") Long ownerId`, `@PathVariable Long storeId` -> `@PathVariable("storeId") Long storeId` 로 명시적 변경을 가했습니다.
+- `SeatController.java` 파일의 `@RequestParam Long storeId` -> `@RequestParam("storeId") Long storeId` 로 수정하여 빌드 타깃 매핑을 명확히 정의함으로써 오류를 원천 차단했습니다.
+
+---
+
+## 20. Gradle build.gradle 변경 후 IDE 동기화 지연으로 인한 컴파일 실패 (io.swagger unresolved)
+
+### [이슈 개요]
+- **일시**: 2026-07-13
+- **장애 요인**: `build.gradle`에 Swagger(Springdoc) 라이브러리를 추가했으나 자바 소스 파일 전체에서 임포트 에러 다수 발생.
+- **오류 메시지**:
+  ```text
+  The import io.swagger cannot be resolved
+  Tag cannot be resolved to a type
+  Operation cannot be resolved to a type
+  The build file has been changed and may need reload to make it effective.
+  ```
+
+### [원인 분석]
+- `build.gradle`에 의존성을 추가해두었으나, VS Code의 Java Language Server 및 Gradle Extension이 이 변경사항을 감지하지 못했거나 아직 자동으로 프로젝트 동기화(Sync/Reload)를 진행하지 않은 상태입니다.
+- 결과적으로 자바 클래스패스(Classpath) 런타임 라이브러리에 `springdoc-openapi` 파일이 포함되지 않아 소스코드에 부착된 OpenAPI 관련 어노테이션들이 컴파일에 실패했습니다.
+
+### [해결 방법]
+- VS Code 우측 하단의 알림 팝업 창에 노출된 `Reload` 혹은 `Import` 버튼을 눌러 프로젝트 구성을 다시 로드해야 합니다.
+- 수동으로 조치하려면 VS Code 명령 팔레트(Ctrl+Shift+P)를 열고 `Java: Clean Java Language Server Workspace` 명령을 실행하거나, 사이드바 Gradle 탭에서 `Refresh` 아이콘을 눌러 로컬 JVM 클래스패스 라이브러리 목록을 동기화하여 해결할 수 있습니다.
+
+---
+
+## 21. 백엔드 Gradle Wrapper 부재 및 임시 빌드 데몬 경로 꼬임(NoSuchFileException) 해결
+
+### [이슈 개요]
+- **일시**: 2026-07-13
+- **장애 요인**: 
+  1. 백엔드 디렉토리에 Gradle Wrapper 파일(`gradlew`, `gradle/` 등)이 없어 로컬 및 VS Code IDE에서 Swagger(springdoc-openapi) 관련 의존성(`io.swagger`)을 전혀 동기화하지 못함.
+  2. 이를 해결하기 위해 임시 Gradle 8.8 바이너리를 다운로드하여 `gradle wrapper` 명령으로 래퍼를 생성한 뒤, 임시 디렉토리를 삭제하자 기존에 메모리에 올라갔던 Gradle Daemon이 임시 경로를 찾지 못해 빌드 시 `NoSuchFileException`을 띄우며 빌드가 중단됨.
+- **오류 메시지**:
+  ```text
+  The import io.swagger cannot be resolved
+  java.nio.file.NoSuchFileException: /home/jaehyeon/바탕화면/portfolio/ZariYo/temp-gradle/gradle-8.8/lib/plugins/gradle-diagnostics-8.8.jar
+  ```
+
+### [원인 분석]
+- `gradlew` 스크립트가 없어 IDE가 `build.gradle`을 기반으로 한 의존성 해소를 정상적으로 처리하지 못했습니다.
+- 임시로 다운로드한 Gradle 바이너리로 wrapper를 최초 생성할 때 Gradle Daemon 프로세스가 임시 경로(`/temp-gradle/gradle-8.8/...`)의 플러그인 Jar 파일을 메모리에 상주시켜 참조하고 있었는데, 래퍼 생성 후 임시 경로를 강제 삭제하여 데몬이 깨진 상태로 남아 빌드가 실패했습니다.
+
+### [해결 방법]
+1. `unzip`과 `curl`을 통해 임시 Gradle 8.8 바이너리를 빌드하여 백엔드 디렉토리에 `gradle wrapper`를 구성 완료했습니다.
+2. `./gradlew --stop` 명령어를 수행하여 임시 경로를 참조하며 백그라운드에 상주하던 기존 Gradle Daemon 프로세스(2 Daemons)를 모두 완전히 중지시켰습니다.
+3. 이후 다시 `./gradlew build -x test`를 수행해 로컬 홈 디렉토리(`~/.gradle`)에 깨끗한 Gradle 8.8 환경을 내려받고 의존성 동기화와 컴파일 빌드를 성공(`BUILD SUCCESSFUL`)시켰습니다.
+
+---
+
+## 22. Tailwind CSS v4 사양 지시어에 대한 VS Code 에디터 Lint 경고(Unknown at rule) 해결
+
+### [이슈 개요]
+- **일시**: 2026-07-13
+- **장애 요인**: 프론트엔드의 `index.css` 파일에서 `@custom-variant`, `@theme` 등의 Tailwind CSS v4 전용 지시어를 사용할 때 VS Code가 이를 일반 CSS 스펙으로 오인해 구문 경고(Warning)를 표시함.
+- **오류 메시지**:
+  ```text
+  Unknown at rule @custom-variant (index.css:4)
+  Unknown at rule @theme (index.css:6)
+  ```
+
+### [원인 분석]
+- VS Code의 기본 CSS Linter는 Tailwind CSS v4.0에서 추가된 신규 아키텍처 규칙(`@theme`, `@custom-variant`)을 알지 못해 미정의 규칙 경고를 발생시킵니다. 이는 실제 빌드 에러는 아니지만 개발 에디터 환경에서 불필요한 시각적 방해 요소가 됩니다.
+
+### [해결 방법]
+- 프로젝트 루트의 `.vscode/settings.json` 파일에 `"css.lint.unknownAtRules": "ignore"` 옵션을 추가하여 Tailwind v4 지시어에 대한 Linter의 불필요한 경고를 무시하도록 수정했습니다.
+- 아울러, 백엔드의 Gradle 프로젝트도 IDE에 열릴 때 자동으로 인식되어 동기화되도록 `"java.import.gradle.enabled": true`, `"java.import.gradle.wrapper.enabled": true` 등의 설정을 보강했습니다.
+
+---
+
+## 23. 백엔드 미기동으로 인한 Swagger UI 접속 실패(ERR_CONNECTION_REFUSED) 해결
+
+### [이슈 개요]
+- **일시**: 2026-07-13
+- **장애 요인**: `http://localhost:8080/swagger-ui/index.html` 주소 접속 시 브라우저에서 `ERR_CONNECTION_REFUSED` 연결 실패 안내창 노출.
+- **오류 메시지**:
+  ```text
+  사이트에 연결할 수 없음
+  localhost에서 연결을 거부했습니다.
+  ERR_CONNECTION_REFUSED
+  ```
+
+### [원인 분석]
+- 프론트엔드 빌드 서버(`pnpm run dev`) 및 백킹 도커 인프라(MySQL, Redis)는 켜져 있었으나, 정작 API와 Swagger UI를 제공하는 스프링 부트(Spring Boot) 백엔드 JVM 서버 자체가 로컬 포트 8080 상에서 가동되어 있지 않아 브라우저가 포트 접근 거부를 발생시켰습니다.
+
+### [해결 방법]
+- 백엔드 프로젝트 루트 경로(`ZariYo-BackEnd`)에서 `./gradlew bootRun` 명령을 백그라운드로 구동하여 내장 톰캣 서버를 포트 8080에서 실행(4.74초 만에 정상 구동 완료)하여 해결하였습니다.
+
+
