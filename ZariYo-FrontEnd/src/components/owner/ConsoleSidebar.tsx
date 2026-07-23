@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, ChefHat, TrendingUp, UtensilsCrossed, 
-  Receipt, PlusCircle, ArrowLeft, Store, Sun, Moon, Bike 
+  Receipt, PlusCircle, ArrowLeft, Store, Sun, Moon, Bike, BookOpen 
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -19,6 +19,7 @@ export function ConsoleSidebar() {
     { path: '/owner/menu-management', label: '메뉴 & 품절 관리', icon: UtensilsCrossed },
     { path: '/owner/order-history', label: '영수증 이력 & 환불', icon: Receipt },
     { path: '/owner/store/new', label: '2D 도면 빌더', icon: PlusCircle },
+    { path: '/guide', label: '시스템 사용설명서', icon: BookOpen },
   ];
 
   return (
@@ -59,41 +60,43 @@ export function ConsoleSidebar() {
         <nav className="space-y-1.5 pt-2">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = currentPathWithSearch === item.path || (item.path === '/owner/dashboard' && currentPathWithSearch === '/owner/dashboard');
+            
+            // 쿼리 파라미터가 포함된 경로 처리
+            const isActive = item.path.includes('?') 
+              ? currentPathWithSearch === item.path
+              : location.pathname === item.path && !location.search;
+
             return (
               <button
                 key={item.path}
                 onClick={() => navigate(item.path)}
-                className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-[3px] text-xs font-black transition-all cursor-pointer ${
+                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-none font-bold text-xs transition-all cursor-pointer text-left ${
                   isActive
-                    ? 'bg-black dark:bg-white text-white dark:text-black shadow-none font-bold'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/5'
+                    ? 'bg-black text-white dark:bg-white dark:text-black shadow-none font-black'
+                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-white/5 hover:text-black dark:hover:text-white'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-white dark:text-black' : 'text-neutral-400'}`} />
-                <span>{item.label}</span>
+                <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white dark:text-black' : 'text-neutral-500'}`} />
+                <span className="truncate">{item.label}</span>
               </button>
             );
           })}
         </nav>
       </div>
 
-      {/* Bottom Footer & Back Button */}
-      <div className="space-y-2 pt-4 border-t border-neutral-200 dark:border-white/10">
-        <button
-          onClick={() => navigate('/reserve')}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-[3px] border border-neutral-200 dark:border-white/10 text-xs font-extrabold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-white/5 cursor-pointer transition-all"
-        >
-          <ChefHat className="w-4 h-4 text-black dark:text-white" />
-          테이블 키오스크 모드
-        </button>
+      {/* Bottom Landing Link & Store Code Info */}
+      <div className="pt-4 border-t border-neutral-200 dark:border-white/10 space-y-3">
+        <div className="p-3 bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-none text-left">
+          <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-mono font-bold">ZARIYO STORE ENGINE v2.5</p>
+          <p className="text-xs font-black text-neutral-800 dark:text-neutral-200 truncate mt-0.5">강남 테헤란로 1호점</p>
+        </div>
 
         <button
           onClick={() => navigate('/')}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-[3px] text-xs font-extrabold text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white cursor-pointer transition-all"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-neutral-100 hover:bg-neutral-200 dark:bg-white/10 dark:hover:bg-white/20 text-neutral-700 dark:text-neutral-300 font-bold text-xs transition-colors cursor-pointer rounded-none"
         >
-          <ArrowLeft className="w-3.5 h-3.5 text-black dark:text-white" />
-          메인 랜딩 화면으로
+          <ArrowLeft className="w-4 h-4" />
+          <span>랜딩페이지로 이동</span>
         </button>
       </div>
 

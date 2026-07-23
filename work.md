@@ -559,6 +559,75 @@
     - 향후 백엔드 데이터베이스 및 API 서버 연결 시 데이터 모듈만 API 스티치로 즉시 전환할 수 있는 뛰어난 유지보수 구조를 확립했습니다.
   - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
 
+### 72. 기존 랜딩 콘텐츠 사용설명서(`AboutGuidePage.tsx`, `/guide`) 이관 및 신규 프리미엄 랜딩페이지(`LandingPage.tsx`) 전면 재구축
+- **작업 내용**:
+  - **기존 4대 세부 명세 & 2D 시뮬레이터 사용설명서 이관**:
+    - 기존의 4대 세부 기능 명세(`DetailedFeatureShowcase`), 2D 인터랙티브 라이브 시뮬레이터, 16개 스펙 카드 및 FAQ 질문답변 섹션을 **`AboutGuidePage.tsx` (`/guide`, `/about`)** 전용 사용설명서 & 시스템 매뉴얼 페이지로 이관했습니다.
+  - **차세대 프리미엄 `LandingPage.tsx` 전면 재디자인**:
+    - **Hero Section**: 꽉 찬 풀스크린 그래픽 미디어 배경과 현대카드 고대비 타이포그래피, `[사장님 관제 체험하기]` + `[📖 사용설명서 & 세부 기능명세]` 이중 CTA 단추를 마운트했습니다.
+    - **Live Impact Metrics**: 전국 제휴 매장 수(1,420+개), 처리 주문 건수(3,850,000+건), 회전율 상승(+38.5%), 실시간 전파 속도(0.1초) 메트릭 바 구축.
+    - **Before & After Comparison Matrix**: 기존 아날로그/수동 POS vs ZariYo 2D 실시간 관제 OS 비교 대조표 수립.
+    - **3px Square Aesthetic Feature Cards**: 2D 관제, 5분선점 락, 주방 KDS, 배달 릴레이 4대 모듈 비주얼 카드를 재정돈했습니다.
+  - **라우팅 & 네비게이션 동기화**:
+    - `App.tsx` 라우터에 `/guide` 및 `/about` 경로를 등록하고 사장님 사이드바 및 헤더에 "📖 시스템 사용설명서" 메뉴를 추가했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 73. 랜딩페이지 & 사용설명서 전면 스크롤 트리거 & 좌우 슬라이드 애니메이션 고도화
+- **작업 내용**:
+  - **Framer Motion 스크롤 트리거 모션 (`whileInView`)**:
+    - 랜딩페이지와 사용설명서 페이지의 모든 요소가 스크롤 진입 시(`viewport={{ once: true }}`) 부드럽고 역동적으로 미끄러지며 등장하도록 전면 적용했습니다.
+  - **좌우 교차 슬라이드 (Left/Right Slide-In)**:
+    - Core Features 4대 카드 및 Before/After 비교 대조표가 각각 좌측(`x: -60px`)과 우측(`x: 60px`)에서 무대 중앙으로 드라마틱하게 스크롤 슬라이딩 진입하도록 다듬었습니다.
+  - **스태거 팝업 & 3D 호버 인터랙션**:
+    - Live Impact Metrics 4개 카드가 0.1초 시차를 두고 스태거(Stagger) 팝업되며, 호버 시 3D 스케일 업(`scale: 1.03 ~ 1.05`)과 테두리 발광 반응 효과를 구축했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 74. 손님 키오스크 라우트(`/kiosk`) 버그 수정 및 좌우 촤르르륵 연속 슬라이더 마운트
+- **작업 내용**:
+  - **손님 키오스크 라우팅 결함 수정 ([App.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/App.tsx))**:
+    - `App.tsx` 라우터에 `/kiosk` 라우트 매핑이 누락되어 랜딩페이지 단추 클릭 시 404 화면 출력이 안 되었던 버그를 완전하게 수정하여 손님 테이블 키오스크 화면(`ReservePage.tsx`)이 정상 렌더링되도록 처리했습니다.
+  - **좌우 촤르르륵 무한 슬라이더 구축 ([HorizontalCardSwiper.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/HorizontalCardSwiper.tsx))**:
+    - 랜딩페이지 메인에 관제 엔진 카드들이 옆으로 촤르르륵 순차 자동 스와이프되는 좌우 캐러셀 슬라이딩 모션을 신설하고 이전/다음 수동 컨트롤 화살표 인터랙션을 부여했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 75. 촤르륵 텍스트 정돈, 이중 이모티콘 제거 및 사용설명서 5단계 매장 셋업 매뉴얼 신설
+- **작업 내용**:
+  - **임시/디버그 텍스트 정돈 ([HorizontalCardSwiper.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/HorizontalCardSwiper.tsx))**:
+    - `HorizontalCardSwiper` 헤더의 `"LIVE 촤르르륵 INTERACTIVE CAROUSEL"` 임시 문구를 전문적인 `"ZARIYO CORE ENGINE CAROUSEL"`로 정돈했습니다.
+  - **사이드바 및 헤더 이중 이모지 제거 ([ConsoleSidebar.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/ConsoleSidebar.tsx))**:
+    - 관제 사이드바 메뉴 및 헤더 버튼의 `"📖 시스템 사용설명서"` 항목에서 📖 이모티콘을 제거하여 `BookOpen` 아이콘과 단정한 텍스트로 시각 유효성을 높였습니다.
+  - **사용설명서 5단계 매장 셋업 매뉴얼 신설 ([AboutGuidePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/AboutGuidePage.tsx))**:
+    - 매장 사장님이 2D 도면 배치, 키오스크 5분 락 설정, 주방 KDS 연동, 배달 플랫폼 라이더 호출, 메뉴 품절 및 곱빼기/토핑 커스텀 옵션 등록을 10분 만에 완료할 수 있는 5단계 Step-by-Step 셋업 가이드북을 신설했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 76. 비대 코드 2차 모듈화 리팩토링 및 10개 서브 컴포넌트 분리 구축
+- **작업 내용**:
+  - **`LandingPage.tsx` 서브 컴포넌트 분리 (450+ 라인 ➔ 70 라인 감량)**:
+    - `LandingHeroSection.tsx`, `LandingMetricsSection.tsx`, `LandingCoreFeaturesSection.tsx`, `LandingBeforeAfterSection.tsx`, `LandingCtaSection.tsx` 5대 컴포넌트로 완전 분리.
+  - **`AboutGuidePage.tsx` 서브 컴포넌트 분리 (300+ 라인 ➔ 50 라인 감량)**:
+    - `GuideHeroBanner.tsx`, `GuideSetupManualSection.tsx`, `GuideFaqSection.tsx` 3대 서브 모듈 분리.
+  - **`ReservePage.tsx` (손님 키오스크) 서브 컴포넌트 분리 (980+ 라인 ➔ 200 라인대 감량)**:
+    - `KioskHeaderBar.tsx`, `KioskCartPanel.tsx` 모듈 분리.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 77. 손님 키오스크 11종 메뉴 데이터 대폭 확장 및 고화질 푸드 비주얼 이미지 생성 마운트
+- **작업 내용**:
+  - **독립 키오스크 메뉴 모듈 신설 ([mockKioskMenus.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/data/mockKioskMenus.ts))**:
+    - 기존 4개 메뉴에서 메인 요리 5종, 사이드 디쉬 3종, 음료/디저트 3종 등 **총 11종의 프리미엄 다이닝 메뉴 데이터**로 대폭 확장 구축했습니다.
+  - **AI 고화질 푸드 이미지 생성 & 마운트**:
+    - `generate_image` AI 도구로 프리미엄 토마호크 스테이크, 생 트러플 파스타, 참나무 화덕 피자 등의 고화질 다이닝 푸드 이미지를 생성하여 키오스크 카탈로그에 실시간 바인딩했습니다.
+  - **`KioskMenuGrid.tsx` 서브 컴포넌트 신설 및 현대카드 미학 바인딩**:
+    - 3D 호버 스케일 업 및 현대카드 직각 3px 뱃지 비주얼을 포함한 메뉴 그리드 컴포넌트를 분리 구축했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 78. 키오스크 음료/샐러드 이미지 엑박 수정 및 직원 편의 서비스 모달 완전 복구
+- **작업 내용**:
+  - **음료 & 샐러드 이미지 엑박 수정 ([mockKioskMenus.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/data/mockKioskMenus.ts))**:
+    - `generate_image` AI 도구로 시그니처 자몽 모히또 에이드 및 리코타 치즈 샐러드 고화질 이미지를 새로 생성하여 `public/images/menu/ade.png`, `salad.png`에배치하여 이미지 깨짐 현상을 원천 차단했습니다.
+  - **직원 호출 & 편의 서비스 모달 구축 ([KioskStaffCallModal.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/kiosk/KioskStaffCallModal.tsx))**:
+    - 시원한 얼음물, 일회용 앞치마, 앞접시/집기 추가, 물티슈/티슈, 얼음컵, 직원 직접 호출 등 6대 편의 서비스 다중 선택 요청 모달을 신설하고 관제 POS 실시간 릴레이 발송을 연동했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
 
 
 
