@@ -42,6 +42,11 @@ export function DashboardPage() {
   // 할인 상태
   const [discountAmount, setDiscountAmount] = useState<number>(0);
 
+  // 매장 유튜브 BGM 라이브 비디오 상태
+  const [youtubeVideoId, setYoutubeVideoId] = useState<string>('jfKfPfyJRdk');
+  const [customYoutubeInput, setCustomYoutubeInput] = useState<string>('');
+
+
   // 각 테이블별 실시간 주문 수선서 상태
   const [tableBills, setTableBills] = useState<Record<string, { items: BillItem[]; paymentMethod: string }>>({
     '3': {
@@ -229,7 +234,105 @@ export function DashboardPage() {
                     onNoShow={handleNoShowReservation}
                   />
                 </div>
+
+                {/* Store Ambience YouTube BGM Video Player Panel */}
+                <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-6 shadow-xl text-left select-none space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-black text-[#3182f6] uppercase font-mono flex items-center gap-1.5">
+                      📺 STORE YOUTUBE BGM LIVE PLAYER
+                    </span>
+                    <span className="text-[10px] text-red-500 font-mono font-bold bg-red-500/10 px-2.5 py-0.5 rounded-full border border-red-500/20">
+                      LIVE YOUTUBE STREAMING
+                    </span>
+                  </div>
+                  
+                  {/* YouTube Embedded Video Iframe */}
+                  <div className="w-full aspect-video rounded-2xl overflow-hidden border border-neutral-200 dark:border-white/10 bg-black shadow-inner">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={`https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&mute=0`}
+                      title="ZariYo Store BGM YouTube Player"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  </div>
+
+                  {/* Preset BGM Video Buttons */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-neutral-500 dark:text-neutral-400 mb-2">
+                      인기 매장 BGM 비디오 추천 트랙:
+                    </label>
+                    <div className="grid grid-cols-3 gap-2 text-xs font-bold">
+                      <button 
+                        onClick={() => setYoutubeVideoId('jfKfPfyJRdk')} 
+                        className={`py-2 px-3 rounded-xl border transition-all cursor-pointer text-center ${
+                          youtubeVideoId === 'jfKfPfyJRdk'
+                            ? 'bg-[#3182f6] border-[#3182f6] text-white shadow-md'
+                            : 'bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10 text-neutral-700 dark:text-neutral-300 hover:border-[#3182f6]'
+                        }`}
+                      >
+                        재즈 라운지 🎷
+                      </button>
+                      
+                      <button 
+                        onClick={() => setYoutubeVideoId('mPZkdNFkNps')} 
+                        className={`py-2 px-3 rounded-xl border transition-all cursor-pointer text-center ${
+                          youtubeVideoId === 'mPZkdNFkNps'
+                            ? 'bg-[#3182f6] border-[#3182f6] text-white shadow-md'
+                            : 'bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10 text-neutral-700 dark:text-neutral-300 hover:border-[#3182f6]'
+                        }`}
+                      >
+                        클래식 다이닝 🎻
+                      </button>
+                      
+                      <button 
+                        onClick={() => setYoutubeVideoId('1ZYbU85NO6w')} 
+                        className={`py-2 px-3 rounded-xl border transition-all cursor-pointer text-center ${
+                          youtubeVideoId === '1ZYbU85NO6w'
+                            ? 'bg-[#3182f6] border-[#3182f6] text-white shadow-md'
+                            : 'bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10 text-neutral-700 dark:text-neutral-300 hover:border-[#3182f6]'
+                        }`}
+                      >
+                        어쿠스틱 팝 🎸
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Custom YouTube Link Input */}
+                  <div className="flex gap-2 pt-1">
+                    <input
+                      type="text"
+                      placeholder="원하시는 유튜브 영상 ID 또는 링크 입력 (예: jfKfPfyJRdk)"
+                      value={customYoutubeInput}
+                      onChange={(e) => setCustomYoutubeInput(e.target.value)}
+                      className="flex-1 px-3 py-2 text-xs rounded-xl bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-neutral-900 dark:text-white focus:outline-none focus:border-[#3182f6]"
+                    />
+                    <button
+                      onClick={() => {
+                        if (!customYoutubeInput.trim()) return;
+                        let extractedId = customYoutubeInput.trim();
+                        if (extractedId.includes('v=')) {
+                          extractedId = extractedId.split('v=')[1].split('&')[0];
+                        } else if (extractedId.includes('youtu.be/')) {
+                          extractedId = extractedId.split('youtu.be/')[1].split('?')[0];
+                        }
+                        setYoutubeVideoId(extractedId);
+                        setCustomYoutubeInput('');
+                        alert(`유튜브 매장 BGM 비디오가 변경되었습니다. (ID: ${extractedId})`);
+                      }}
+                      className="px-4 py-2 bg-[#3182f6] hover:bg-[#286fd7] text-white text-xs font-black rounded-xl cursor-pointer transition-all"
+                    >
+                      적용
+                    </button>
+                  </div>
+
+                </div>
               </div>
+
+
 
               {/* Right 4 cols: Side-by-Side Bill & POS Action Bar */}
               <div className="lg:col-span-4 space-y-6">

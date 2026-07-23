@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Clock, UtensilsCrossed, Plus, Minus, ShoppingBag, 
-  Check, X, MapPin, ChevronRight, BellRing, Droplet, Utensils, Shield, Sparkles 
+  Check, X, MapPin, ChevronRight, BellRing, Droplet, Utensils, Shield, Sparkles, QrCode, Calculator 
 } from 'lucide-react';
 import type { PlacedElement, TempOccupiedItem } from '../../types/store';
 
@@ -81,11 +81,17 @@ export function ReservePage() {
     return saved ? JSON.parse(saved) : [assignedSeat.id];
   });
 
-  // 모달 팝업 상태들
+  // 모달 상태들 (테이블 변경, 직원 호출, QR 스캔, 더치페이)
   const [isTableModalOpen, setIsTableModalOpen] = useState(false);
   const [isServiceCallModalOpen, setIsServiceCallModalOpen] = useState(false);
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
+  const [isDutchPayModalOpen, setIsDutchPayModalOpen] = useState(false);
+  const [dutchPeopleCount, setDutchPeopleCount] = useState<number>(2);
 
-  // 3. 다채로운 음료 포함 메뉴 8종 대폭 확충
+  // 실시간 주방 조리 힐링 프로그레스 바 상태 (0: 미주문, 1: 접수완료, 2: 조리중, 3: 서빙완료)
+  const [orderCookingStage, setOrderCookingStage] = useState<number>(0);
+
+  // 3. 다채로운 음료 포함 메뉴 라인업
   const menuList: MenuItem[] = [
     { 
       id: 'm1', 
@@ -175,7 +181,7 @@ export function ReservePage() {
       badge: '시원함', 
       description: '깊은 풍미의 홉 향이 톡 쏘는 청량하고 시원한 수제 라거 생맥주',
       options: [
-        { id: 'o7-1', name: '차가운 얼음잔 잔 교체', price: 0 }
+        { id: 'o7-1', name: '차가운 얼음잔 교체', price: 0 }
       ]
     },
     { 
@@ -252,13 +258,12 @@ export function ReservePage() {
     return () => clearInterval(interval);
   }, []);
 
-  // 서비스 스마트 팝업 모달 호출 처리
+  // 서비스 스마트 팝업 모달 처리
   const handleServiceCallRequest = (requestType: string) => {
     setIsServiceCallModalOpen(false);
-    alert(`[${assignedSeat.label}] 테이블에서 [${requestType}] 요청이 완료되었습니다. 카운터 관제 POS 및 주방으로 수신 전달되었습니다.`);
+    alert(`[${assignedSeat.label}] 테이블에서 [${requestType}] 요청이 완료되었습니다. 관제 POS 및 주방으로 전파됩니다.`);
   };
 
-  // 테이블 수동 변경
   const handleChangeTable = (seat: PlacedElement) => {
     setAssignedSeat(seat);
     setIsTableModalOpen(false);
@@ -313,6 +318,7 @@ export function ReservePage() {
 
   const totalCartPrice = cartItems.reduce((sum, item) => sum + item.itemTotalPrice, 0);
 
+  // 실시간 조리 프로그레스 타임라인 시뮬레이션
   const handleHoldAndOrder = () => {
     if (cartItems.length === 0) {
       alert('장바구니에 담긴 메뉴가 없습니다. 드시고 싶은 요리를 먼저 선택해 주세요!');
@@ -332,7 +338,12 @@ export function ReservePage() {
     setMyHeldIds(newMyHeld);
     syncToLocalStorage(newStates, newOccs, newMyHeld);
 
-    alert(`[${assignedSeat.label}] 테이블로 ₩${totalCartPrice.toLocaleString()} 주문 및 5분 타임아웃 선점 락이 활성화되었습니다! 주방 KDS와 관제판으로 전달됩니다.`);
+    // 3단계 조리 프로그레스 바 기동
+    setOrderCookingStage(1);
+    setTimeout(() => setOrderCookingStage(2), 2500);
+    setTimeout(() => setOrderCookingStage(3), 6500);
+
+    alert(`[${assignedSeat.label}] 테이블로 ₩${totalCartPrice.toLocaleString()} 주문 및 5분 선점 락이 활성화되었습니다! 조리 프로그레스 타임라인이 시작됩니다.`);
   };
 
   return (
@@ -366,11 +377,21 @@ export function ReservePage() {
           </div>
         </div>
 
-        {/* Center One-Touch Service Request Modal Button (헤더 복잡함 제거 -> 단일 팝업 버튼) */}
-        <div className="flex items-center gap-3">
+        {/* Center Mobile QR & Service Request Modal Buttons */}
+        <div className="flex items-center gap-2.5">
+          {/* Mobile BYOD QR Code Modal Button */}
+          <button
+            onClick={() => setIsQrModalOpen(true)}
+            className="px-3.5 py-2 rounded-full bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/20 text-xs font-black cursor-pointer transition-all flex items-center gap-1.5 shadow-sm"
+          >
+            <QrCode className="w-4 h-4" />
+            <span>테이블 QR 스캔 📲</span>
+          </button>
+
+          {/* Smart Service Call Modal Button */}
           <button
             onClick={() => setIsServiceCallModalOpen(true)}
-            className="px-4 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 text-xs font-black cursor-pointer transition-all flex items-center gap-2 shadow-sm animate-pulse"
+            className="px-4 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 text-xs font-black cursor-pointer transition-all flex items-center gap-1.5 shadow-sm animate-pulse"
           >
             <BellRing className="w-4 h-4" />
             <span>직원 / 편의 서비스 요청</span>
@@ -393,7 +414,7 @@ export function ReservePage() {
       {/* 2. MENU-FIRST FULL TABLET MAIN CONTENT */}
       <main className="flex-1 max-w-7xl mx-auto px-6 py-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
         
-        {/* Left 8 cols: Large Interactive Digital Menu Cards Gallery (Expanded Drinks & Foods) */}
+        {/* Left 8 cols: Large Interactive Digital Menu Cards Gallery */}
         <div className="lg:col-span-8 space-y-6 text-left">
           
           {/* Top Category Filter */}
@@ -405,7 +426,6 @@ export function ReservePage() {
               <h2 className="text-xl font-black text-neutral-900 dark:text-white mt-2">쉐프 특선 요리 & 인기 음료 라인업</h2>
             </div>
 
-            {/* Dynamic Category Tabs */}
             <div className="flex gap-1.5 bg-neutral-100 dark:bg-white/5 p-1.5 rounded-full border border-neutral-200 dark:border-white/10 text-xs font-black">
               <button 
                 onClick={() => setActiveCategory('all')} 
@@ -454,7 +474,6 @@ export function ReservePage() {
                     className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 hover:border-[#3182f6]/50 rounded-3xl p-5 shadow-xl hover:shadow-[0_15px_30px_rgba(49,130,246,0.15)] transition-all cursor-pointer group flex flex-col justify-between"
                   >
                     <div>
-                      {/* Image */}
                       <div className="h-44 w-full rounded-2xl overflow-hidden relative mb-4">
                         <img 
                           src={menu.image} 
@@ -491,12 +510,12 @@ export function ReservePage() {
 
         </div>
 
-        {/* Right 4 cols: Side-by-Side Floating Receipt Panel */}
+        {/* Right 4 cols: Side-by-Side Floating Receipt & Live Cooking Timeline */}
         <div className="lg:col-span-4 space-y-6 text-left select-none sticky top-24">
           
           <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-3xl p-6 shadow-2xl">
             
-            <div className="flex justify-between items-center mb-4 pb-3 border-b border-neutral-200 dark:border-white/5">
+            <div className="flex justify-between items-center mb-3 pb-3 border-b border-neutral-200 dark:border-white/5">
               <span className="text-xs font-black text-[#3182f6] uppercase font-mono flex items-center gap-1.5">
                 <ShoppingBag className="w-4 h-4" /> 테이블 주문 수선서
               </span>
@@ -505,8 +524,37 @@ export function ReservePage() {
               </span>
             </div>
 
+            {/* Live Cooking Progress Bar Timeline (조리 힐링 타임라인) */}
+            {orderCookingStage > 0 && (
+              <div className="bg-orange-500/10 border border-orange-500/20 p-3 rounded-2xl mb-4 text-xs select-none">
+                <span className="text-[10px] font-black text-orange-500 uppercase font-mono block mb-1.5">
+                  REALTIME COOKING PROGRESS
+                </span>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-extrabold">
+                    <span className={orderCookingStage >= 1 ? 'text-orange-500' : 'text-neutral-400'}>
+                      {orderCookingStage === 1 && '📝 1단계: 주방 접수 완료'}
+                      {orderCookingStage === 2 && '🔥 2단계: 쉐프 직화 조리 중 (예상 8분)'}
+                      {orderCookingStage === 3 && '🍽️ 3단계: 테이블 서빙 완료!'}
+                    </span>
+                    <span className="font-mono text-orange-500 font-black">
+                      {orderCookingStage === 1 ? '33%' : orderCookingStage === 2 ? '66%' : '100%'}
+                    </span>
+                  </div>
+
+                  <div className="w-full bg-neutral-200 dark:bg-white/10 h-2 rounded-full overflow-hidden">
+                    <div 
+                      className="bg-gradient-to-r from-orange-500 to-amber-500 h-full transition-all duration-700" 
+                      style={{ width: orderCookingStage === 1 ? '33%' : orderCookingStage === 2 ? '66%' : '100%' }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Cart Items List */}
-            <div className="space-y-3 max-h-[280px] overflow-y-auto scrollbar-hide mb-4">
+            <div className="space-y-3 max-h-[220px] overflow-y-auto scrollbar-hide mb-4">
               {cartItems.length === 0 ? (
                 <div className="text-center text-neutral-400 py-8 text-xs font-bold">
                   원하시는 메뉴를 터치하여 장바구니에 담아보세요.
@@ -549,7 +597,17 @@ export function ReservePage() {
               )}
             </div>
 
-            <div className="flex justify-between items-center my-4 pt-3 border-t border-neutral-200 dark:border-white/5">
+            {/* Dutch Pay Button */}
+            {cartItems.length > 0 && (
+              <button
+                onClick={() => setIsDutchPayModalOpen(true)}
+                className="w-full py-2.5 mb-3 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/20 text-xs font-extrabold cursor-pointer transition-all flex items-center justify-center gap-1.5"
+              >
+                <Calculator className="w-4 h-4" /> 더치페이 / N분의 1 계산기 🧮
+              </button>
+            )}
+
+            <div className="flex justify-between items-center my-3 pt-3 border-t border-neutral-200 dark:border-white/5">
               <span className="text-xs font-bold text-neutral-500">총 결제 예정 금액</span>
               <span className="text-xl font-black text-[#3182f6]">₩ {totalCartPrice.toLocaleString()}</span>
             </div>
@@ -566,7 +624,133 @@ export function ReservePage() {
 
       </main>
 
-      {/* 3. OPTION SELECTOR MODAL */}
+      {/* 3. DUTCH PAY CALCULATOR MODAL (더치페이 계산기 모달) */}
+      <AnimatePresence>
+        {isDutchPayModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md select-none">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl relative text-left"
+            >
+              <button 
+                onClick={() => setIsDutchPayModalOpen(false)}
+                className="absolute top-6 right-6 p-2 rounded-full bg-neutral-100 dark:bg-white/5 hover:bg-neutral-200 text-neutral-600 dark:text-white cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 rounded-2xl bg-purple-500/10 text-purple-500">
+                  <Calculator className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-neutral-900 dark:text-white">
+                    더치페이 / N분의 1 뿜빠이 계산기
+                  </h3>
+                  <span className="text-[10.5px] text-neutral-400 font-mono font-bold">
+                    총 주문 금액: ₩ {totalCartPrice.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+
+              {/* People Count Selectors */}
+              <div className="space-y-4 mb-6">
+                <label className="block text-xs font-bold text-neutral-500 dark:text-neutral-400">
+                  식사 함께 하신 인원수를 선택해 주세요:
+                </label>
+                
+                <div className="grid grid-cols-4 gap-2">
+                  {[2, 3, 4, 5].map((cnt) => (
+                    <button
+                      key={cnt}
+                      onClick={() => setDutchPeopleCount(cnt)}
+                      className={`py-3 rounded-2xl text-xs font-black border transition-all cursor-pointer ${
+                        dutchPeopleCount === cnt 
+                          ? 'bg-purple-500 border-purple-500 text-white shadow-md' 
+                          : 'bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10 text-neutral-700 dark:text-neutral-300'
+                      }`}
+                    >
+                      {cnt}명
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Split calculation result */}
+              <div className="bg-purple-500/10 border border-purple-500/20 p-5 rounded-2xl text-center mb-6">
+                <span className="text-xs font-bold text-purple-500 block mb-1">
+                  1인당 부담 결제 금액 ({dutchPeopleCount}인 분할)
+                </span>
+                <span className="text-2xl font-black text-purple-600 dark:text-purple-400 font-mono">
+                  ₩ {Math.round(totalCartPrice / dutchPeopleCount).toLocaleString()}
+                </span>
+              </div>
+
+              <button
+                onClick={() => {
+                  setIsDutchPayModalOpen(false);
+                  alert(`1인당 ₩${Math.round(totalCartPrice / dutchPeopleCount).toLocaleString()} 분할 결제 요청 패킷이 각자 QR 카드로 기동되었습니다.`);
+                }}
+                className="w-full py-3.5 rounded-full bg-purple-500 hover:bg-purple-600 text-white text-xs font-extrabold cursor-pointer shadow-lg transition-all"
+              >
+                1인당 금액으로 분할 결제 시작
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* 4. MOBILE BYOD QR KIOSK MODAL (모바일 QR 스마트폰 키오스크 모달) */}
+      <AnimatePresence>
+        {isQrModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md select-none">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-8 max-w-sm w-full shadow-2xl relative text-center"
+            >
+              <button 
+                onClick={() => setIsQrModalOpen(false)}
+                className="absolute top-6 right-6 p-2 rounded-full bg-neutral-100 dark:bg-white/5 hover:bg-neutral-200 text-neutral-600 dark:text-white cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-500 flex items-center justify-center mx-auto mb-4">
+                <QrCode className="w-6 h-6" />
+              </div>
+
+              <h3 className="text-base font-black text-neutral-900 dark:text-white mb-1">
+                스마트폰 테이블 QR 스캔 주문
+              </h3>
+              <p className="text-xs text-neutral-400 font-bold mb-6">
+                카메라로 스캔하면 내 스마트폰 브라우저로 1초 만에 키오스크가 기동됩니다.
+              </p>
+
+              {/* QR Graphics Placeholder */}
+              <div className="w-48 h-48 mx-auto bg-white p-4 rounded-3xl border-2 border-purple-500/30 shadow-md flex items-center justify-center mb-6">
+                <QrCode className="w-36 h-36 text-purple-600" />
+              </div>
+
+              <span className="text-[10px] text-neutral-500 font-mono font-bold block mb-4">
+                TABLE IDENTIFIER: ZARIYO-{assignedSeat.label}-2026
+              </span>
+
+              <button
+                onClick={() => setIsQrModalOpen(false)}
+                className="w-full py-3 rounded-full bg-neutral-100 dark:bg-white/10 hover:bg-neutral-200 text-neutral-700 dark:text-white text-xs font-bold cursor-pointer transition-all"
+              >
+                닫기
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* 5. OPTION SELECTOR MODAL */}
       <AnimatePresence>
         {activeMenuForOption && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md select-none">
@@ -645,7 +829,7 @@ export function ReservePage() {
         )}
       </AnimatePresence>
 
-      {/* 4. SMART SERVICE REQUEST POPUP MODAL (스마트 서비스 요청 모달 팝업) */}
+      {/* 6. SERVICE CALL MODAL */}
       <AnimatePresence>
         {isServiceCallModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md select-none">
@@ -676,11 +860,6 @@ export function ReservePage() {
                 </div>
               </div>
 
-              <p className="text-xs text-neutral-500 dark:text-neutral-400 font-bold mb-6">
-                필요하신 항목을 선택하시면 카운터 관제 POS 및 주방으로 즉시 신호가 전달됩니다.
-              </p>
-
-              {/* Service Grid Cards */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
                 <button
                   onClick={() => handleServiceCallRequest('시원한 물 요청 🧊')}
@@ -727,14 +906,14 @@ export function ReservePage() {
                 onClick={() => setIsServiceCallModalOpen(false)}
                 className="w-full py-3 rounded-full bg-neutral-100 dark:bg-white/10 hover:bg-neutral-200 text-neutral-700 dark:text-white text-xs font-bold cursor-pointer transition-all"
               >
-                취소 / 닫기
+                닫기
               </button>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-      {/* 5. TABLE SWITCHER MODAL */}
+      {/* 7. TABLE SWITCHER MODAL */}
       <AnimatePresence>
         {isTableModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md select-none">
@@ -793,7 +972,7 @@ export function ReservePage() {
 
       <footer className="w-full bg-white dark:bg-[#09090b] border-t border-neutral-200 dark:border-white/5 py-3 px-6 text-center select-none z-20">
         <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-mono font-bold">
-          © 2026 ZariYo Smart Tablet Kiosk & Service Modal Engine. All rights reserved.
+          © 2026 ZariYo Kiosk Engine with Dutch Pay & Cooking Progress. All rights reserved.
         </p>
       </footer>
 

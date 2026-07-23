@@ -408,6 +408,24 @@
     - 수선서 패널 상단에 `[+ 메뉴 추가]`, `[10% 할인]`, `[영수증 인쇄]`, `[자리 이동]` 액션 바를 장착하고 10% 이벤트 할인 ₩8,000 적용 시 결제액이 ₩80,000 -> ₩72,000으로 실시간 재계산되는 POS 연동을 입증했습니다.
   - 개발 완료 후 `pnpm build`를 구동하여 컴파일 오류 0건 무결 번들링 통과를 확인했습니다.
 
+### 56. 더치페이 N분의 1 계산기 모달, 실시간 주방 조리 프로그레스 바, BYOD 모바일 QR 키오스크 & 매장 BGM/조명 제어 패널 통합 구축
+- **작업 내용**:
+  - **손님 키오스크 더치페이 N분의 1 계산기 모달 ([ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx))**: 수선 패널 하단에 `[더치페이 / N분의 1 계산 🧮]` 버튼을 마운트하고 인원수 선택(`2인`, `3인`, `4인`, `5인`) 시 1인당 뿜빠이 결제 금액을 자동 연산해 주는 분할 결제 모달을 완성했습니다.
+  - **실시간 주방 조리 힐링 프로그레스 바 ([ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx))**: 주문 전송 즉시 3단계 타임라인(`[1단계: 접수 📝]` ➔ `[2단계: 쉐프 직화 조리 중 🔥 (8분)]` ➔ `[3단계: 서빙 완료 🍽️]`)이 실시간 렌더링되게 구현했습니다.
+  - **BYOD 모바일 QR 스마트폰 키오스크 모달 ([ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx))**: 헤더 `[테이블 QR 스캔 📲]` 클릭 시 손님 스마트폰 카메라로 스캔하여 모바일 브라우저 주문 페이지로 1초 진입할 수 있는 테이블 전용 QR 코드 모달을 탑재했습니다.
+  - **사장님 대시보드 매장 BGM & 조명 분위기 제어 패널 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**: 사장님 대시보드 하단에 `[클래식 🎻]`, `[재즈 🎷]`, `[어쿠스틱 팝 🎸]` 음악 트랙 스위처와 `매장 다이닝 조도 (100% ~ 40%)` 감성 콘트롤러 패널을 완공했습니다.
+  - 개발 완료 후 `pnpm build`를 구동하여 컴파일 0 오류 무결 정적 번들링 통과를 입증했습니다.
+
+### 57. 매장 조명 제어 소거 & 유튜브 영상 라이브 BGM 비디오 임베드 플레이어 개편
+- **작업 내용**:
+  - **매장 조명 제어 소거 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**: 사장님 대시보드에서 조도 슬라이더/버튼을 완전히 삭제했습니다.
+  - **유튜브 BGM 라이브 비디오 플레이어 구축 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - 사장님 대시보드에 **YouTube Embed Iframe 비디오 플레이어**를 마운트했습니다.
+    - 추천 프리셋 비디오(`[재즈 라운지 🎷]`, `[클래식 다이닝 🎻]`, `[어쿠스틱 팝 🎸]`) 버튼 및 커스텀 유튜브 URL/ID 수동 입력기를 통해 실시간 유튜브 영상과 음악을 트는 최첨단 미디어 컨트롤 패널을 완성했습니다.
+  - 개발 완료 후 `pnpm build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+
+
 
 
 
