@@ -87,7 +87,7 @@ export function OrderHistoryPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-neutral-200 dark:border-white/5 select-none">
           <div className="text-left">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#3182f6]/10 text-[#3182f6] text-[10px] font-bold font-mono mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#000000]/10 text-[#000000] text-[10px] font-bold font-mono mb-2">
               <Receipt className="w-3.5 h-3.5" /> ORDER HISTORY & PAYMENT METHODS
             </div>
             <h1 className="text-2xl font-black text-neutral-900 dark:text-white">영수증 이력 & 결제 수단 명세</h1>
@@ -104,13 +104,13 @@ export function OrderHistoryPage() {
               placeholder="영수증 번호 또는 테이블 검색..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-xs font-bold focus:outline-none focus:border-[#3182f6]"
+              className="w-full pl-10 pr-4 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-xs font-bold focus:outline-none focus:border-[#000000]"
             />
           </div>
         </div>
 
         {/* Receipt Table List */}
-        <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-3xl overflow-hidden shadow-md select-none text-left">
+        <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none overflow-hidden shadow-none select-none text-left">
           <table className="w-full text-xs">
             <thead className="bg-neutral-100/70 dark:bg-white/[0.02] border-b border-neutral-200 dark:border-white/5 font-extrabold text-neutral-500 uppercase font-mono">
               <tr>
@@ -130,12 +130,12 @@ export function OrderHistoryPage() {
                     {r.billCode}
                   </td>
                   <td className="p-4">
-                    <span className="px-2.5 py-1 rounded bg-[#3182f6]/10 text-[#3182f6] font-black">
+                    <span className="px-2.5 py-1 rounded bg-[#000000]/10 text-[#000000] font-black">
                       {r.tableLabel}
                     </span>
                   </td>
                   <td className="p-4 text-neutral-600 dark:text-neutral-300 font-semibold flex items-center gap-1.5 pt-4">
-                    <CreditCard className="w-3.5 h-3.5 text-[#3182f6]" />
+                    <CreditCard className="w-3.5 h-3.5 text-[#000000]" />
                     <span>{r.paymentMethod}</span>
                   </td>
                   <td className="p-4 text-neutral-500 font-mono">{r.time}</td>
@@ -172,7 +172,7 @@ export function OrderHistoryPage() {
       {/* Receipt Detail & Refund Modal */}
       {selectedReceipt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm select-none">
-          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl relative text-left">
+          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none p-8 max-w-md w-full shadow-none relative text-left">
             
             <button 
               onClick={() => setSelectedReceipt(null)}
@@ -182,7 +182,7 @@ export function OrderHistoryPage() {
             </button>
 
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 rounded-2xl bg-[#3182f6]/10 text-[#3182f6]">
+              <div className="p-3 rounded-none bg-[#000000]/10 text-[#000000]">
                 <Receipt className="w-6 h-6" />
               </div>
               <div>
@@ -196,9 +196,9 @@ export function OrderHistoryPage() {
             </div>
 
             {/* Payment Method Badge */}
-            <div className="bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 p-3 rounded-2xl mb-4 flex items-center justify-between text-xs font-bold">
+            <div className="bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 p-3 rounded-none mb-4 flex items-center justify-between text-xs font-bold">
               <span className="text-neutral-400 flex items-center gap-1">
-                <Wallet className="w-3.5 h-3.5 text-[#3182f6]" /> 결제 수단:
+                <Wallet className="w-3.5 h-3.5 text-[#000000]" /> 결제 수단:
               </span>
               <span className="text-neutral-900 dark:text-white">{selectedReceipt.paymentMethod}</span>
             </div>
@@ -215,14 +215,14 @@ export function OrderHistoryPage() {
 
             <div className="flex justify-between items-center mb-6">
               <span className="text-xs font-bold text-neutral-400">합계 결제액</span>
-              <span className="text-xl font-black text-[#3182f6]">₩ {selectedReceipt.amount.toLocaleString()}</span>
+              <span className="text-xl font-black text-[#000000]">₩ {selectedReceipt.amount.toLocaleString()}</span>
             </div>
 
             {/* Refund Action */}
             {selectedReceipt.status === 'paid' ? (
               <button
                 onClick={() => handleRefund(selectedReceipt.id, selectedReceipt.billCode)}
-                className="w-full py-3.5 rounded-full bg-red-500 hover:bg-red-600 text-white text-xs font-extrabold cursor-pointer shadow-md transition-all flex items-center justify-center gap-1.5"
+                className="w-full py-3.5 rounded-full bg-red-500 hover:bg-red-600 text-white text-xs font-extrabold cursor-pointer shadow-none transition-all flex items-center justify-center gap-1.5"
               >
                 <RotateCcw className="w-4 h-4" />
                 결제 승인 취소 & 전액 환불

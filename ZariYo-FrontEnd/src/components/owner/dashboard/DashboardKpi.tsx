@@ -20,7 +20,7 @@ export function DashboardKpi({
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full mb-6 select-none font-sans">
       {/* Active seats */}
-      <div className="relative overflow-hidden bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-5 shadow-xl backdrop-blur-2xl group hover:border-red-500/40 transition-all">
+      <div className="relative overflow-hidden bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none p-5 shadow-none backdrop-blur-2xl group hover:border-red-500/40 transition-all">
         <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/10 rounded-full blur-2xl pointer-events-none" />
         <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400 mb-2">
           <span className="text-[10px] font-mono font-black uppercase tracking-wider text-red-500">REALTIME OCCUPIED</span>
@@ -33,7 +33,7 @@ export function DashboardKpi({
       </div>
 
       {/* Temp Occupations */}
-      <div className="relative overflow-hidden bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-5 shadow-xl backdrop-blur-2xl group hover:border-orange-500/40 transition-all">
+      <div className="relative overflow-hidden bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none p-5 shadow-none backdrop-blur-2xl group hover:border-orange-500/40 transition-all">
         <div className="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-full blur-2xl pointer-events-none" />
         <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400 mb-2">
           <span className="text-[10px] font-mono font-black uppercase tracking-wider text-orange-500">5-MIN TEMP HELD</span>
@@ -46,11 +46,11 @@ export function DashboardKpi({
       </div>
 
       {/* Reservations */}
-      <div className="relative overflow-hidden bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-5 shadow-xl backdrop-blur-2xl group hover:border-[#3182f6]/40 transition-all">
-        <div className="absolute top-0 right-0 w-24 h-24 bg-[#3182f6]/10 rounded-full blur-2xl pointer-events-none" />
+      <div className="relative overflow-hidden bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none p-5 shadow-none backdrop-blur-2xl group hover:border-[#000000]/40 transition-all">
+        <div className="absolute top-0 right-0 w-24 h-24 bg-[#000000]/10 rounded-full blur-2xl pointer-events-none" />
         <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400 mb-2">
-          <span className="text-[10px] font-mono font-black uppercase tracking-wider text-[#3182f6]">RESERVED QUEUE</span>
-          <UserCheck className="w-5 h-5 text-[#3182f6]" />
+          <span className="text-[10px] font-mono font-black uppercase tracking-wider text-[#000000]">RESERVED QUEUE</span>
+          <UserCheck className="w-5 h-5 text-[#000000]" />
         </div>
         <div className="flex items-baseline gap-2">
           <span className="text-3xl font-black text-neutral-900 dark:text-white tracking-tight">{reservedCount}</span>
@@ -59,7 +59,7 @@ export function DashboardKpi({
       </div>
 
       {/* Empty seats */}
-      <div className="relative overflow-hidden bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-5 shadow-xl backdrop-blur-2xl group hover:border-emerald-500/40 transition-all">
+      <div className="relative overflow-hidden bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none p-5 shadow-none backdrop-blur-2xl group hover:border-emerald-500/40 transition-all">
         <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
         <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400 mb-2">
           <span className="text-[10px] font-mono font-black uppercase tracking-wider text-emerald-500">AVAILABLE SEATS</span>

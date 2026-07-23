@@ -40,7 +40,7 @@ export function SpaceShowcase() {
       title: "VIP Lounge & Bar",
       description: "부드러운 조명과 세련된 분위기를 갖춘 고품격 프라이빗 비즈니스 휴게 구역.",
       code: "TYPE #LOUNGE-02",
-      color: "from-blue-500/20 to-indigo-500/20"
+      color: "from-[#000000]/20 to-indigo-500/20"
     },
     {
       src: "/images/spaces/shared_office.png",
@@ -69,16 +69,16 @@ export function SpaceShowcase() {
     <section className="py-24 bg-white dark:bg-black text-neutral-900 dark:text-[#f5f5f7] transition-colors duration-300 relative overflow-hidden">
       
       {/* Background decoration */}
-      <div className="absolute top-[20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/3 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#000000]/3 blur-[120px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-6 flex flex-col items-center">
         
         {/* Skiper27: Rolling Text Title Block */}
         <div className="text-center mb-16 select-none h-32 flex flex-col justify-center">
-          <span className="text-[10px] font-extrabold tracking-widest text-[#3182f6] uppercase font-mono bg-[#3182f6]/10 px-3 py-1 rounded-full mb-3 self-center">
+          <span className="text-[10px] font-extrabold tracking-widest text-black dark:text-white uppercase font-mono bg-black/10 dark:bg-white/10 border border-black/20 dark:border-white/20 px-3 py-1 rounded-full mb-3 self-center">
             SPACE SHOWCASE
           </span>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight flex items-center justify-center gap-3">
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight flex items-center justify-center gap-3 text-black dark:text-white">
             <span>ZariYo Powers</span>
             
             {/* Rolling area */}
@@ -90,7 +90,7 @@ export function SpaceShowcase() {
                   animate={{ y: "0%", opacity: 1 }}
                   exit={{ y: "-100%", opacity: 0 }}
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute text-[#3182f6] bg-gradient-to-r from-[#3182f6] to-[#4894fe] bg-clip-text text-transparent flex gap-0.5 justify-center"
+                  className="absolute text-black dark:text-white flex gap-0.5 justify-center font-black"
                 >
                   {currentWord.split("").map((char, charIdx) => (
                     <motion.span
@@ -106,7 +106,7 @@ export function SpaceShowcase() {
               </AnimatePresence>
             </span>
           </h2>
-          <p className="text-neutral-500 dark:text-[#a1a1a6] text-xs md:text-sm font-semibold mt-3">
+          <p className="text-neutral-700 dark:text-neutral-300 text-xs md:text-sm font-semibold mt-3">
             어떤 공간 구조라도, ZariYo의 2D 격자 빌더와 원자성 선점 락을 결합해 스마트하게 제어됩니다.
           </p>
         </div>
@@ -121,10 +121,10 @@ export function SpaceShowcase() {
                   key={index}
                   onHoverStart={() => setActiveCard(index)}
                   onClick={() => setActiveCard(index)}
-                  className={`relative cursor-pointer overflow-hidden rounded-[2rem] border transition-all duration-300 w-full ${
+                  className={`relative cursor-pointer overflow-hidden rounded-[3px] border transition-all duration-300 w-full ${
                     isActive 
-                      ? "border-[#3182f6]/40 shadow-xl dark:shadow-[0_15px_40px_rgba(49,130,246,0.15)]" 
-                      : "border-neutral-200 dark:border-white/5 hover:border-neutral-300 hover:dark:border-white/10 shadow-sm"
+                      ? "border-[#000000]/40 shadow-none dark:shadow-none" 
+                      : "border-neutral-200 dark:border-white/5 hover:border-neutral-300 hover:dark:border-white/10 shadow-none"
                   }`}
                   animate={{
                     // Desktop width: active is wide, others are narrow. Mobile height changes instead.
@@ -148,7 +148,7 @@ export function SpaceShowcase() {
                     {/* Top Row: Code Badge */}
                     <div className="flex justify-between items-start">
                       <span className={`text-[8px] font-black font-mono tracking-widest px-2 py-0.5 rounded-full border bg-black/60 text-white ${
-                        isActive ? "border-[#3182f6]/30 text-[#3182f6]" : "border-white/10"
+                        isActive ? "border-[#000000]/30 text-[#000000]" : "border-white/10"
                       }`}>
                         {space.code}
                       </span>

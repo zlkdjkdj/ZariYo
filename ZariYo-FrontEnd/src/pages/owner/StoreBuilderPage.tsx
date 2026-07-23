@@ -47,21 +47,21 @@ export function StoreBuilderPage() {
                 if (step === 2) setStep(1);
                 else navigate('/owner');
               }}
-              className="p-2 rounded-xl bg-white border border-neutral-200 dark:bg-white/5 dark:border-white/5 hover:bg-[#3182f6]/10 text-neutral-500 hover:text-[#191f28] dark:hover:text-white transition-all cursor-pointer"
+              className="p-2 rounded-none bg-white border border-neutral-200 dark:bg-white/5 dark:border-white/5 hover:bg-[#000000]/10 text-neutral-500 hover:text-[#191f28] dark:hover:text-white transition-all cursor-pointer"
             >
-              <ArrowLeft className="w-4 h-4 text-[#3182f6]" />
+              <ArrowLeft className="w-4 h-4 text-[#000000]" />
             </button>
-            <span className="text-[10px] font-extrabold text-[#3182f6] font-mono uppercase bg-[#3182f6]/10 px-2 py-0.5 rounded border border-[#3182f6]/20 tracking-wider">
+            <span className="text-[10px] font-extrabold text-[#000000] font-mono uppercase bg-[#000000]/10 px-2 py-0.5 rounded border border-[#000000]/20 tracking-wider">
               {step === 1 ? 'Step 1. Basic Profile' : 'Step 2. 2D Layout Design'}
             </span>
           </div>
 
           <div className="flex items-center gap-3 select-none text-[11px] font-extrabold font-mono">
-            <span className={`px-3 py-1 rounded-full border transition-all ${step === 1 ? 'border-[#3182f6] text-[#3182f6] dark:text-white bg-[#3182f6]/10 shadow-[0_0_10px_rgba(49,130,246,0.1)]' : 'text-neutral-450 border-transparent bg-transparent'}`}>
+            <span className={`px-3 py-1 rounded-full border transition-all ${step === 1 ? 'border-[#000000] text-[#000000] dark:text-white bg-[#000000]/10 shadow-none' : 'text-neutral-450 border-transparent bg-transparent'}`}>
               1. 기본 정보
             </span>
             <span className="text-neutral-300 dark:text-neutral-700">/</span>
-            <span className={`px-3 py-1 rounded-full border transition-all ${step === 2 ? 'border-[#3182f6] text-[#3182f6] dark:text-white bg-[#3182f6]/10 shadow-[0_0_10px_rgba(49,130,246,0.1)]' : 'text-neutral-450 border-transparent bg-transparent'}`}>
+            <span className={`px-3 py-1 rounded-full border transition-all ${step === 2 ? 'border-[#000000] text-[#000000] dark:text-white bg-[#000000]/10 shadow-none' : 'text-neutral-450 border-transparent bg-transparent'}`}>
               2. 좌석 배치도
             </span>
           </div>

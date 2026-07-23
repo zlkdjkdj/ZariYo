@@ -60,7 +60,7 @@ export function AppleCardsCarousel() {
         {/* Header section with scroll buttons */}
         <div className="flex justify-between items-end mb-10">
           <div className="text-left">
-            <span className="text-[10px] font-extrabold tracking-widest text-[#3182f6] uppercase font-mono bg-[#3182f6]/10 px-3 py-1 rounded-full">
+            <span className="text-[10px] font-extrabold tracking-widest text-[#000000] uppercase font-mono bg-[#000000]/10 px-3 py-1 rounded-full">
               Core Stack Specs
             </span>
             <h2 className="text-2xl md:text-4xl font-black mt-4 tracking-tight">
@@ -94,7 +94,7 @@ export function AppleCardsCarousel() {
               layoutId={`card-container-${card.title}`}
               key={idx}
               onClick={() => setActiveCard(card)}
-              className="relative w-[280px] md:w-[320px] h-[380px] md:h-[420px] rounded-[2.2rem] overflow-hidden cursor-pointer group shadow-lg dark:shadow-[0_15px_30px_rgba(0,0,0,0.4)] border border-neutral-200 dark:border-neutral-900 shrink-0 snap-start"
+              className="relative w-[280px] md:w-[320px] h-[380px] md:h-[420px] rounded-[3px] overflow-hidden cursor-pointer group shadow-none dark:shadow-none border border-neutral-200 dark:border-neutral-900 shrink-0 snap-start"
             >
               {/* Background gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-10" />
@@ -108,11 +108,11 @@ export function AppleCardsCarousel() {
 
               {/* Text Context */}
               <div className="absolute inset-0 z-20 p-8 flex flex-col justify-between items-start text-left">
-                <span className="text-[10px] font-black tracking-widest text-[#3182f6] uppercase font-mono bg-[#3182f6]/10 px-2.5 py-1 rounded-full border border-[#3182f6]/20 backdrop-blur-md">
+                <span className="text-[10px] font-black tracking-widest text-[#000000] uppercase font-mono bg-[#000000]/10 px-2.5 py-1 rounded-full border border-[#000000]/20 backdrop-blur-md">
                   {card.category}
                 </span>
                 
-                <h3 className="text-base md:text-lg font-black text-white leading-snug drop-shadow-md">
+                <h3 className="text-base md:text-lg font-black text-white leading-snug drop-shadow-none">
                   {card.title}
                 </h3>
               </div>
@@ -130,12 +130,12 @@ export function AppleCardsCarousel() {
             {/* Modal Container */}
             <motion.div
               layoutId={`card-container-${activeCard.title}`}
-              className="relative w-full max-w-3xl h-[85vh] md:h-[80vh] bg-neutral-50 dark:bg-[#09090b] rounded-[2.5rem] border border-neutral-200 dark:border-white/5 overflow-y-auto scrollbar-hide shadow-2xl flex flex-col"
+              className="relative w-full max-w-3xl h-[85vh] md:h-[80vh] bg-neutral-50 dark:bg-[#09090b] rounded-[3px] border border-neutral-200 dark:border-white/5 overflow-y-auto scrollbar-hide shadow-none flex flex-col"
             >
               {/* Close Button */}
               <button
                 onClick={() => setActiveCard(null)}
-                className="absolute top-6 right-6 p-2.5 rounded-full bg-black/45 border border-white/10 hover:bg-black/70 text-white z-30 transition-all cursor-pointer shadow-lg"
+                className="absolute top-6 right-6 p-2.5 rounded-full bg-black/45 border border-white/10 hover:bg-black/70 text-white z-30 transition-all cursor-pointer shadow-none"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -150,10 +150,10 @@ export function AppleCardsCarousel() {
                 />
                 
                 <div className="absolute bottom-6 left-8 z-20 text-left">
-                  <span className="text-[10px] font-black tracking-widest text-[#3182f6] uppercase font-mono bg-[#3182f6]/10 px-2.5 py-1 rounded-full border border-[#3182f6]/20 backdrop-blur-md">
+                  <span className="text-[10px] font-black tracking-widest text-[#000000] uppercase font-mono bg-[#000000]/10 px-2.5 py-1 rounded-full border border-[#000000]/20 backdrop-blur-md">
                     {activeCard.category}
                   </span>
-                  <h3 className="text-lg md:text-2xl font-black text-white mt-3 drop-shadow-md leading-tight max-w-xl">
+                  <h3 className="text-lg md:text-2xl font-black text-white mt-3 drop-shadow-none leading-tight max-w-xl">
                     {activeCard.title}
                   </h3>
                 </div>
@@ -178,8 +178,8 @@ export function AppleCardsCarousel() {
 function LockDetailContent() {
   return (
     <div className="space-y-6">
-      <div className="flex gap-4 items-start bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/5 rounded-2xl p-6">
-        <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center shrink-0">
+      <div className="flex gap-4 items-start bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/5 rounded-none p-6">
+        <div className="w-10 h-10 rounded-none bg-purple-500/10 text-purple-500 flex items-center justify-center shrink-0">
           <Key className="w-5 h-5" />
         </div>
         <div>
@@ -206,8 +206,8 @@ function LockDetailContent() {
 function LayoutDetailContent() {
   return (
     <div className="space-y-6">
-      <div className="flex gap-4 items-start bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/5 rounded-2xl p-6">
-        <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
+      <div className="flex gap-4 items-start bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/5 rounded-none p-6">
+        <div className="w-10 h-10 rounded-none bg-[#000000]/10 text-[#000000] flex items-center justify-center shrink-0">
           <LayoutGrid className="w-5 h-5" />
         </div>
         <div>
@@ -234,8 +234,8 @@ function LayoutDetailContent() {
 function StreamDetailContent() {
   return (
     <div className="space-y-6">
-      <div className="flex gap-4 items-start bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/5 rounded-2xl p-6">
-        <div className="w-10 h-10 rounded-xl bg-[#3182f6]/10 text-[#3182f6] flex items-center justify-center shrink-0">
+      <div className="flex gap-4 items-start bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/5 rounded-none p-6">
+        <div className="w-10 h-10 rounded-none bg-[#000000]/10 text-[#000000] flex items-center justify-center shrink-0">
           <Server className="w-5 h-5" />
         </div>
         <div>

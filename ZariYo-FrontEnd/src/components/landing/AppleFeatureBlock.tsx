@@ -34,7 +34,7 @@ export function AppleFeatureBlock() {
       badge: "GRID BUILDER",
       icon: Grid,
       description: "20px 격자 스냅 안내선과 실시간 드래그 앤 드롭 캔버스를 통해 매장의 인테리어를 직관적으로 디자인합니다.",
-      color: "from-blue-500 to-indigo-600"
+      color: "from-[#000000] to-[#000000]"
     },
     {
       id: 2,
@@ -60,22 +60,22 @@ export function AppleFeatureBlock() {
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 select-none">
-          <span className="text-[10px] font-extrabold tracking-widest text-[#3182f6] uppercase font-mono bg-[#3182f6]/10 px-3 py-1 rounded-full">
+          <span className="text-[10px] font-extrabold tracking-widest text-[#000000] uppercase font-mono bg-[#000000]/10 px-3 py-1 rounded-full">
             INTERACTIVE SYSTEM
           </span>
-          <h2 className="text-3xl md:text-5xl font-extrabold mt-4 mb-5 tracking-tight leading-tight">
+          <h2 className="text-3xl md:text-5xl font-extrabold mt-4 mb-5 tracking-tight leading-tight text-black dark:text-white">
             기술로 혁신하는 공간 예약.
           </h2>
-          <p className="text-neutral-500 dark:text-[#a1a1a6] text-xs md:text-sm font-semibold leading-relaxed">
+          <p className="text-neutral-700 dark:text-neutral-300 text-xs md:text-sm font-semibold leading-relaxed">
             클릭 한 번으로 이루어지는 직관적인 인터랙션 아래 작동하는 ZariYo만의 실시간 동시성 보장 핵심 매커니즘을 체험해 보세요.
           </p>
         </div>
 
         {/* Apple Feature Container (Side-by-Side Alternating Grid) */}
-        <div className="w-full bg-[#f8f9fa] dark:bg-[#09090b] text-neutral-900 dark:text-white rounded-[2.5rem] border border-neutral-200 dark:border-white/10 p-6 md:p-12 relative overflow-hidden shadow-2xl dark:shadow-[0_30px_70px_rgba(0,0,0,0.6)] flex flex-col lg:flex-row gap-12 items-center justify-between">
+        <div className="w-full bg-white dark:bg-[#111111] text-black dark:text-white rounded-[3px] border border-neutral-300 dark:border-neutral-800 p-6 md:p-12 relative overflow-hidden shadow-none flex flex-col lg:flex-row gap-12 items-center justify-between">
           
           {/* Decorative Radial Background light */}
-          <div className="absolute top-0 right-0 w-[50%] h-[50%] rounded-full bg-gradient-to-br from-[#3182f6]/10 dark:from-[#3182f6]/15 to-transparent blur-[140px] pointer-events-none" />
+          <div className="absolute top-0 right-0 w-[50%] h-[50%] rounded-full bg-gradient-to-br from-[#000000]/10 dark:from-[#000000]/15 to-transparent blur-[140px] pointer-events-none" />
 
 
           {/* Left Column: Pill tab selectors */}
@@ -87,9 +87,9 @@ export function AppleFeatureBlock() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full text-left p-5 rounded-2xl transition-all duration-300 relative overflow-hidden group cursor-pointer border ${
+                  className={`w-full text-left p-5 rounded-none transition-all duration-300 relative overflow-hidden group cursor-pointer border ${
                     isActive 
-                      ? "bg-white dark:bg-white/10 border-neutral-350 dark:border-white/20 shadow-md dark:shadow-[0_10px_25px_rgba(255,255,255,0.02)]" 
+                      ? "bg-white dark:bg-white/10 border-neutral-350 dark:border-white/20 shadow-none dark:shadow-none" 
                       : "bg-black/[0.01] dark:bg-white/[0.02] border-neutral-200/50 dark:border-white/[0.03] hover:bg-black/[0.03] hover:dark:bg-white/[0.05] hover:border-neutral-350 hover:dark:border-white/10"
                   }`}
                 >
@@ -102,7 +102,7 @@ export function AppleFeatureBlock() {
                   )}
                   
                   <div className="flex items-center gap-4">
-                    <div className={`p-2.5 rounded-xl transition-colors duration-300 ${
+                    <div className={`p-2.5 rounded-none transition-colors duration-300 ${
                       isActive 
                         ? "bg-neutral-900 dark:bg-white text-white dark:text-black" 
                         : "bg-neutral-200/60 dark:bg-white/5 text-neutral-500 dark:text-white/50 group-hover:text-neutral-900 group-hover:dark:text-white"
@@ -145,13 +145,13 @@ export function AppleFeatureBlock() {
 
           {/* Right Column: Phone Mockup Simulation Screen */}
           <div className="w-full lg:w-6/12 flex justify-center items-center z-10">
-            <div className="relative w-[280px] h-[520px] md:w-[300px] md:h-[560px] border-[8px] border-neutral-300 dark:border-neutral-800 bg-[#f8f9fa] dark:bg-[#020203] rounded-[3rem] shadow-xl dark:shadow-[0_25px_50px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col justify-between items-center">
+            <div className="relative w-[280px] h-[520px] md:w-[300px] md:h-[560px] border-[8px] border-neutral-300 dark:border-neutral-800 bg-[#f8f9fa] dark:bg-[#020203] rounded-[3px] shadow-none dark:shadow-none overflow-hidden flex flex-col justify-between items-center">
               
               {/* Dynamic Island Notch */}
               <div className="w-24 h-5 bg-black rounded-full absolute top-2.5 left-1/2 -translate-x-1/2 z-30 flex items-center justify-between px-3 select-none">
                 <div className="w-1.5 h-1.5 bg-[#0a0a0a] rounded-full border border-neutral-900" />
                 <div className="w-5 h-1 bg-[#101010] rounded-full" />
-                <div className="w-1.5 h-1.5 bg-[#3182f6]/20 rounded-full animate-pulse" />
+                <div className="w-1.5 h-1.5 bg-[#000000]/20 rounded-full animate-pulse" />
               </div>
 
               {/* Status Bar */}
@@ -246,9 +246,9 @@ function HoldSystemSimulator({ theme }: { theme: string }) {
         {/* Seat Map Display */}
         <div className="grid grid-cols-2 gap-4 w-full px-2">
           {/* Seat A */}
-          <div className={`aspect-square rounded-2xl border flex flex-col justify-center items-center transition-all duration-300 relative ${
+          <div className={`aspect-square rounded-none border flex flex-col justify-center items-center transition-all duration-300 relative ${
             stage >= 2 
-              ? "bg-gradient-to-b from-orange-500 to-amber-600 border-orange-400/30 text-white shadow-lg scale-[1.02]" 
+              ? "bg-gradient-to-b from-orange-500 to-amber-600 border-orange-400/30 text-white shadow-none scale-[1.02]" 
               : "bg-neutral-100/80 dark:bg-white/5 border-neutral-350 dark:border-white/10 text-neutral-500 dark:text-white/40"
           }`}>
             <span className="text-[10px] font-bold">좌석 A</span>
@@ -261,7 +261,7 @@ function HoldSystemSimulator({ theme }: { theme: string }) {
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="absolute bottom-2 bg-black/60 border border-orange-400/20 px-2 py-0.5 rounded-full text-[9px] font-black text-orange-400 font-mono flex items-center gap-1 shadow-md"
+                className="absolute bottom-2 bg-black/60 border border-orange-400/20 px-2 py-0.5 rounded-full text-[9px] font-black text-orange-400 font-mono flex items-center gap-1 shadow-none"
               >
                 <Timer className="w-2.5 h-2.5 animate-pulse" />
                 <span>{timer}</span>
@@ -274,7 +274,7 @@ function HoldSystemSimulator({ theme }: { theme: string }) {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: [1, 0, 1, 0, 1] }}
                 transition={{ duration: 1.5 }}
-                className="absolute -top-3 left-1/2 -translate-x-1/2 bg-red-600 border border-red-400 text-white text-[8px] font-black px-2 py-0.5 rounded-full shadow-lg flex items-center gap-1 whitespace-nowrap"
+                className="absolute -top-3 left-1/2 -translate-x-1/2 bg-red-600 border border-red-400 text-white text-[8px] font-black px-2 py-0.5 rounded-full shadow-none flex items-center gap-1 whitespace-nowrap"
               >
                 <AlertCircle className="w-2.5 h-2.5" />
                 <span>선점 불가 (LOCK)</span>
@@ -283,7 +283,7 @@ function HoldSystemSimulator({ theme }: { theme: string }) {
           </div>
 
           {/* Seat B */}
-          <div className="aspect-square rounded-2xl border bg-neutral-100/80 dark:bg-white/5 border-neutral-350 dark:border-white/10 text-neutral-500 dark:text-white/40 flex flex-col justify-center items-center">
+          <div className="aspect-square rounded-none border bg-neutral-100/80 dark:bg-white/5 border-neutral-350 dark:border-white/10 text-neutral-500 dark:text-white/40 flex flex-col justify-center items-center">
             <span className="text-[10px] font-bold">좌석 B</span>
             <span className="text-[8px] font-bold font-mono mt-1">비어있음</span>
           </div>
@@ -298,7 +298,7 @@ function HoldSystemSimulator({ theme }: { theme: string }) {
             className="absolute z-20 pointer-events-none"
           >
             <div className="relative">
-              <MousePointer className="w-5 h-5 text-neutral-900 dark:text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] fill-current" />
+              <MousePointer className="w-5 h-5 text-neutral-900 dark:text-white drop-shadow-none fill-current" />
               <motion.div 
                 animate={{ scale: [1, 2.5], opacity: [0.8, 0] }}
                 transition={{ delay: 1.3, duration: 0.5 }}
@@ -317,7 +317,7 @@ function HoldSystemSimulator({ theme }: { theme: string }) {
             className="absolute z-20 pointer-events-none"
           >
             <div className="relative">
-              <MousePointer className="w-5 h-5 text-red-500 drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] fill-red-500" />
+              <MousePointer className="w-5 h-5 text-red-500 drop-shadow-none fill-red-500" />
               <motion.div 
                 animate={{ scale: [1, 2.5], opacity: [0.8, 0] }}
                 transition={{ delay: 0.6, duration: 0.5 }}
@@ -330,7 +330,7 @@ function HoldSystemSimulator({ theme }: { theme: string }) {
       </div>
 
       {/* Info status footer */}
-      <div className="w-full bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/10 rounded-xl p-2.5 text-[10px] text-neutral-700 dark:text-white/70 select-none">
+      <div className="w-full bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/10 rounded-none p-2.5 text-[10px] text-neutral-700 dark:text-white/70 select-none">
         {stage === 0 && "🔵 클라이언트 접속 완료. 대기 중..."}
         {stage === 1 && "👆 User A: 좌석 A 선택 터치 중..."}
         {stage === 2 && "⚡ 좌석 A 임시 락 획득 성공 (5분 타이머 작동)"}
@@ -384,14 +384,14 @@ function GridBuilderSimulator({ theme }: { theme: string }) {
     >
       {/* Screen Header */}
       <div className="w-full text-center">
-        <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
+        <span className="text-[9px] font-black text-[#000000] uppercase tracking-widest bg-[#000000]/10 px-2 py-0.5 rounded border border-[#000000]/20">
           Builder Grid snap
         </span>
         <h4 className="text-xs font-extrabold text-neutral-800 dark:text-white mt-1">20px 정밀 스냅 배치</h4>
       </div>
 
       {/* Grid Area */}
-      <div className="relative w-full flex-1 border border-neutral-300 dark:border-white/10 rounded-2xl bg-neutral-100/30 dark:bg-white/[0.01] my-4 overflow-hidden flex items-center justify-center">
+      <div className="relative w-full flex-1 border border-neutral-300 dark:border-white/10 rounded-none bg-neutral-100/30 dark:bg-white/[0.01] my-4 overflow-hidden flex items-center justify-center">
         
         {/* Background Grid Lines */}
         <div className="absolute inset-0 opacity-15 dark:opacity-20 pointer-events-none"
@@ -417,7 +417,7 @@ function GridBuilderSimulator({ theme }: { theme: string }) {
             initial={{ opacity: 1 }}
             animate={{ opacity: 0 }}
             transition={{ duration: 0.8 }}
-            className="absolute inset-0 border-2 border-blue-500/50 rounded-2xl pointer-events-none"
+            className="absolute inset-0 border-2 border-[#000000]/50 rounded-none pointer-events-none"
           />
         )}
 
@@ -425,9 +425,9 @@ function GridBuilderSimulator({ theme }: { theme: string }) {
         <motion.div
           animate={{ x: posX, y: posY }}
           transition={{ duration: stage === 2 ? 0.3 : 1.2, ease: "easeInOut" }}
-          className={`w-14 h-14 rounded-xl flex flex-col justify-center items-center z-10 border transition-all ${
+          className={`w-14 h-14 rounded-none flex flex-col justify-center items-center z-10 border transition-all ${
             stage === 2 
-              ? "bg-gradient-to-b from-blue-500 to-indigo-600 border-blue-400 shadow-md text-white scale-[1.05]" 
+              ? "bg-gradient-to-b from-[#000000] to-[#000000] border-blue-400 shadow-none text-white scale-[1.05]" 
               : stage === 1 
                 ? "bg-neutral-200/50 dark:bg-white/10 border-blue-400/50 text-blue-600 dark:text-blue-300"
                 : "bg-neutral-100 dark:bg-white/5 border-neutral-300 dark:border-white/10 text-neutral-500 dark:text-white/40"
@@ -445,13 +445,13 @@ function GridBuilderSimulator({ theme }: { theme: string }) {
           transition={{ duration: stage === 2 ? 0.3 : 1.2, ease: "easeInOut" }}
           className="absolute z-20 pointer-events-none"
         >
-          <MousePointer className="w-5 h-5 text-neutral-900 dark:text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] fill-current" />
+          <MousePointer className="w-5 h-5 text-neutral-900 dark:text-white drop-shadow-none fill-current" />
         </motion.div>
 
       </div>
 
       {/* Info status footer */}
-      <div className="w-full bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/10 rounded-xl p-2.5 text-[10px] text-neutral-700 dark:text-white/70 select-none">
+      <div className="w-full bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/10 rounded-none p-2.5 text-[10px] text-neutral-700 dark:text-white/70 select-none">
         {stage === 0 && "🛠️ 드래그로 좌석을 잡아당기는 중..."}
         {stage === 1 && "📐 눈금 정렬 안내선 기동..."}
         {stage === 2 && "🎯 20px 그리드 스냅 연산 완료! 정렬 저장"}
@@ -545,7 +545,7 @@ function RealtimeMonitorSimulator({ theme }: { theme: string }) {
             initial={{ scale: 0.8, opacity: 0.8 }}
             animate={{ scale: 1.1, opacity: 0 }}
             transition={{ duration: 0.6 }}
-            className="absolute inset-0 border-2 border-emerald-500 rounded-2xl pointer-events-none"
+            className="absolute inset-0 border-2 border-emerald-500 rounded-none pointer-events-none"
             onAnimationComplete={() => setPulse(false)}
           />
         )}
@@ -553,20 +553,20 @@ function RealtimeMonitorSimulator({ theme }: { theme: string }) {
         {seats.map((seat) => {
           let bgClass = "bg-neutral-100/50 dark:bg-white/5 border-neutral-200 dark:border-white/10 text-neutral-500 dark:text-white/40";
           if (seat.status === 'occupied') bgClass = "bg-red-500/10 border-red-500/30 text-red-550 dark:text-red-400";
-          if (seat.status === 'reserved') bgClass = "bg-blue-500/10 border-blue-500/30 text-blue-550 dark:text-blue-400";
+          if (seat.status === 'reserved') bgClass = "bg-[#000000]/10 border-[#000000]/30 text-blue-550 dark:text-blue-400";
           if (seat.status === 'hold') bgClass = "bg-orange-500/10 border-orange-500/30 text-orange-550 dark:text-orange-400 animate-pulse";
           if (seat.status === 'empty') bgClass = "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400";
 
           return (
             <div
               key={seat.id}
-              className={`rounded-xl border p-2 flex flex-col justify-between transition-colors duration-300 ${bgClass}`}
+              className={`rounded-none border p-2 flex flex-col justify-between transition-colors duration-300 ${bgClass}`}
             >
               <div className="flex justify-between items-center">
                 <span className="text-[9px] font-bold">{seat.id}</span>
                 <span className={`w-1.5 h-1.5 rounded-full ${
                   seat.status === 'occupied' ? 'bg-red-500' :
-                  seat.status === 'reserved' ? 'bg-blue-500' :
+                  seat.status === 'reserved' ? 'bg-[#000000]' :
                   seat.status === 'hold' ? 'bg-orange-500' : 'bg-emerald-500'
                 }`} />
               </div>
@@ -579,7 +579,7 @@ function RealtimeMonitorSimulator({ theme }: { theme: string }) {
       </div>
 
       {/* Terminal log logs */}
-      <div className="w-full bg-[#050507] border border-white/10 rounded-xl p-2.5 font-mono text-[8.5px] text-white/60 space-y-1 select-none">
+      <div className="w-full bg-[#050507] border border-white/10 rounded-none p-2.5 font-mono text-[8.5px] text-white/60 space-y-1 select-none">
         {logs.map((log, index) => (
           <div key={index} className="flex gap-1.5 items-start">
             <span className="text-emerald-500 font-black shrink-0">&gt;</span>
@@ -661,11 +661,11 @@ function DistributedLockSimulator({ theme }: { theme: string }) {
 
         {/* Redis Gate Lock Point */}
         <div className="relative flex flex-col items-center z-10">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all ${
+          <div className={`w-10 h-10 rounded-none flex items-center justify-center border transition-all ${
             stage === 2 
               ? "bg-amber-500/20 border-amber-500 text-amber-500 dark:text-amber-300 animate-pulse"
               : stage === 3
-                ? "bg-purple-600 border-purple-400 text-white shadow-md"
+                ? "bg-purple-600 border-purple-400 text-white shadow-none"
                 : "bg-neutral-200/50 dark:bg-white/5 border-neutral-300 dark:border-white/10 text-neutral-400 dark:text-white/40"
           }`}>
             {stage === 3 ? <Key className="w-5 h-5" /> : <RefreshCw className={`w-5 h-5 ${stage === 2 ? 'animate-spin' : ''}`} />}
@@ -698,7 +698,7 @@ function DistributedLockSimulator({ theme }: { theme: string }) {
             <motion.div 
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="absolute bg-amber-500 text-white text-[8px] font-sans font-bold px-2 py-0.5 rounded shadow-lg"
+              className="absolute bg-amber-500 text-white text-[8px] font-sans font-bold px-2 py-0.5 rounded shadow-none"
             >
               선착순 락 경합 검사 중...
             </motion.div>
@@ -708,7 +708,7 @@ function DistributedLockSimulator({ theme }: { theme: string }) {
             <motion.div 
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="absolute bg-emerald-550 text-white text-[8px] font-sans font-extrabold px-2.5 py-0.5 rounded shadow-lg flex items-center gap-1"
+              className="absolute bg-emerald-550 text-white text-[8px] font-sans font-extrabold px-2.5 py-0.5 rounded shadow-none flex items-center gap-1"
             >
               UA 락 획득 (OK) / UB 요청 차단
             </motion.div>
@@ -723,7 +723,7 @@ function DistributedLockSimulator({ theme }: { theme: string }) {
       </div>
 
       {/* Info status footer */}
-      <div className="w-full bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/10 rounded-xl p-2.5 text-[9px] text-neutral-600 dark:text-white/70 font-sans select-none">
+      <div className="w-full bg-neutral-200/50 dark:bg-white/5 border border-neutral-300 dark:border-white/10 rounded-none p-2.5 text-[9px] text-neutral-600 dark:text-white/70 font-sans select-none">
         {stage === 0 && "🔵 DB 진입 전 락 게이트 대기..."}
         {stage === 1 && "🚀 두 유저가 거의 동시(1ms 차이) 요청 발송..."}
         {stage === 2 && "⏳ Redis 분산 Mutex 락 획득 연산 처리..."}

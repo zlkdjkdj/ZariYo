@@ -350,11 +350,11 @@ export function ReservePage() {
     <div className="bg-slate-50 dark:bg-[#030303] text-neutral-900 dark:text-[#f5f5f7] font-sans min-h-screen flex flex-col justify-between select-none overflow-x-hidden relative transition-colors duration-300">
       
       {/* 1. TOP TABLET KIOSK HEADER */}
-      <header className="w-full bg-white dark:bg-[#09090b] border-b border-neutral-200 dark:border-white/5 px-6 py-4 flex items-center justify-between shadow-lg relative z-20">
+      <header className="w-full bg-white dark:bg-[#09090b] border-b border-neutral-200 dark:border-white/5 px-6 py-4 flex items-center justify-between shadow-none relative z-20">
         
         {/* Left Branding & Table Switcher Badge */}
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#3182f6] to-[#4894fe] flex items-center justify-center shadow-md">
+          <div className="w-10 h-10 rounded-none bg-gradient-to-tr from-[#000000] to-[#000000] flex items-center justify-center shadow-none">
             <UtensilsCrossed className="w-5 h-5 text-white" />
           </div>
 
@@ -364,7 +364,7 @@ export function ReservePage() {
               
               <button
                 onClick={() => setIsTableModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[#3182f6] to-[#4894fe] text-white text-xs font-black shadow-md cursor-pointer hover:scale-[1.03] transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[#000000] to-[#000000] text-white text-xs font-black shadow-none cursor-pointer hover:scale-[1.03] transition-all"
                 title="테이블 변경하기"
               >
                 <MapPin className="w-3.5 h-3.5" />
@@ -382,7 +382,7 @@ export function ReservePage() {
           {/* Mobile BYOD QR Code Modal Button */}
           <button
             onClick={() => setIsQrModalOpen(true)}
-            className="px-3.5 py-2 rounded-full bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/20 text-xs font-black cursor-pointer transition-all flex items-center gap-1.5 shadow-sm"
+            className="px-3.5 py-2 rounded-full bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/20 text-xs font-black cursor-pointer transition-all flex items-center gap-1.5 shadow-none"
           >
             <QrCode className="w-4 h-4" />
             <span>테이블 QR 스캔 📲</span>
@@ -391,7 +391,7 @@ export function ReservePage() {
           {/* Smart Service Call Modal Button */}
           <button
             onClick={() => setIsServiceCallModalOpen(true)}
-            className="px-4 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 text-xs font-black cursor-pointer transition-all flex items-center gap-1.5 shadow-sm animate-pulse"
+            className="px-4 py-2 rounded-full bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 text-xs font-black cursor-pointer transition-all flex items-center gap-1.5 shadow-none animate-pulse"
           >
             <BellRing className="w-4 h-4" />
             <span>직원 / 편의 서비스 요청</span>
@@ -418,9 +418,9 @@ export function ReservePage() {
         <div className="lg:col-span-8 space-y-6 text-left">
           
           {/* Top Category Filter */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-3xl p-6 shadow-xl">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 shadow-none">
             <div>
-              <span className="text-[10px] font-black text-[#3182f6] uppercase font-mono bg-[#3182f6]/10 px-2.5 py-1 rounded-full border border-[#3182f6]/20">
+              <span className="text-[10px] font-black text-[#000000] uppercase font-mono bg-[#000000]/10 px-2.5 py-1 rounded-full border border-[#000000]/20">
                 SMART TABLET DINING GALLERY
               </span>
               <h2 className="text-xl font-black text-neutral-900 dark:text-white mt-2">쉐프 특선 요리 & 인기 음료 라인업</h2>
@@ -429,25 +429,25 @@ export function ReservePage() {
             <div className="flex gap-1.5 bg-neutral-100 dark:bg-white/5 p-1.5 rounded-full border border-neutral-200 dark:border-white/10 text-xs font-black">
               <button 
                 onClick={() => setActiveCategory('all')} 
-                className={`px-3.5 py-2 rounded-full transition-all cursor-pointer ${activeCategory === 'all' ? 'bg-[#3182f6] text-white shadow-md' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'}`}
+                className={`px-3.5 py-2 rounded-full transition-all cursor-pointer ${activeCategory === 'all' ? 'bg-[#000000] text-white shadow-none' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'}`}
               >
                 전체 메뉴
               </button>
               <button 
                 onClick={() => setActiveCategory('main')} 
-                className={`px-3.5 py-2 rounded-full transition-all cursor-pointer ${activeCategory === 'main' ? 'bg-[#3182f6] text-white shadow-md' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'}`}
+                className={`px-3.5 py-2 rounded-full transition-all cursor-pointer ${activeCategory === 'main' ? 'bg-[#000000] text-white shadow-none' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'}`}
               >
                 메인 요리
               </button>
               <button 
                 onClick={() => setActiveCategory('side')} 
-                className={`px-3.5 py-2 rounded-full transition-all cursor-pointer ${activeCategory === 'side' ? 'bg-[#3182f6] text-white shadow-md' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'}`}
+                className={`px-3.5 py-2 rounded-full transition-all cursor-pointer ${activeCategory === 'side' ? 'bg-[#000000] text-white shadow-none' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'}`}
               >
                 사이드
               </button>
               <button 
                 onClick={() => setActiveCategory('drink')} 
-                className={`px-3.5 py-2 rounded-full transition-all cursor-pointer ${activeCategory === 'drink' ? 'bg-[#3182f6] text-white shadow-md' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'}`}
+                className={`px-3.5 py-2 rounded-full transition-all cursor-pointer ${activeCategory === 'drink' ? 'bg-[#000000] text-white shadow-none' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'}`}
               >
                 음료 / 주류 (5종)
               </button>
@@ -471,25 +471,25 @@ export function ReservePage() {
                     exit={{ y: -20, opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                     onClick={() => handleOpenOptionModal(menu)}
-                    className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 hover:border-[#3182f6]/50 rounded-3xl p-5 shadow-xl hover:shadow-[0_15px_30px_rgba(49,130,246,0.15)] transition-all cursor-pointer group flex flex-col justify-between"
+                    className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 hover:border-[#000000]/50 rounded-none p-5 shadow-none hover:shadow-none transition-all cursor-pointer group flex flex-col justify-between"
                   >
                     <div>
-                      <div className="h-44 w-full rounded-2xl overflow-hidden relative mb-4">
+                      <div className="h-44 w-full rounded-none overflow-hidden relative mb-4">
                         <img 
                           src={menu.image} 
                           alt={menu.name} 
                           className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-500" 
                         />
                         {menu.badge && (
-                          <span className="absolute top-3 left-3 text-[9.5px] font-black text-white bg-gradient-to-r from-orange-500 to-amber-500 px-3 py-1 rounded-full shadow-lg font-mono">
+                          <span className="absolute top-3 left-3 text-[9.5px] font-black text-white bg-gradient-to-r from-orange-500 to-amber-500 px-3 py-1 rounded-full shadow-none font-mono">
                             {menu.badge}
                           </span>
                         )}
                       </div>
 
-                      <h3 className="text-base font-black text-neutral-900 dark:text-white group-hover:text-[#3182f6] transition-colors flex items-center justify-between">
+                      <h3 className="text-base font-black text-neutral-900 dark:text-white group-hover:text-[#000000] transition-colors flex items-center justify-between">
                         <span>{menu.name}</span>
-                        <span className="text-sm font-black text-[#3182f6]">₩ {menu.price.toLocaleString()}</span>
+                        <span className="text-sm font-black text-[#000000]">₩ {menu.price.toLocaleString()}</span>
                       </h3>
                       <p className="text-xs text-neutral-500 dark:text-neutral-400 font-semibold mt-1.5 leading-relaxed line-clamp-2">
                         {menu.description}
@@ -498,7 +498,7 @@ export function ReservePage() {
 
                     <div className="mt-4 pt-3 border-t border-neutral-100 dark:border-white/5 flex items-center justify-between">
                       <span className="text-[10px] text-neutral-400 font-bold">옵션 선택 가능 ({menu.options.length}개)</span>
-                      <div className="px-3.5 py-1.5 rounded-full bg-[#3182f6]/10 text-[#3182f6] group-hover:bg-[#3182f6] group-hover:text-white text-xs font-extrabold transition-all flex items-center gap-1">
+                      <div className="px-3.5 py-1.5 rounded-full bg-[#000000]/10 text-[#000000] group-hover:bg-[#000000] group-hover:text-white text-xs font-extrabold transition-all flex items-center gap-1">
                         <span>선택 및 담기</span>
                         <ChevronRight className="w-3.5 h-3.5" />
                       </div>
@@ -513,10 +513,10 @@ export function ReservePage() {
         {/* Right 4 cols: Side-by-Side Floating Receipt & Live Cooking Timeline */}
         <div className="lg:col-span-4 space-y-6 text-left select-none sticky top-24">
           
-          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-3xl p-6 shadow-2xl">
+          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 shadow-none">
             
             <div className="flex justify-between items-center mb-3 pb-3 border-b border-neutral-200 dark:border-white/5">
-              <span className="text-xs font-black text-[#3182f6] uppercase font-mono flex items-center gap-1.5">
+              <span className="text-xs font-black text-[#000000] uppercase font-mono flex items-center gap-1.5">
                 <ShoppingBag className="w-4 h-4" /> 테이블 주문 수선서
               </span>
               <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">
@@ -526,7 +526,7 @@ export function ReservePage() {
 
             {/* Live Cooking Progress Bar Timeline (조리 힐링 타임라인) */}
             {orderCookingStage > 0 && (
-              <div className="bg-orange-500/10 border border-orange-500/20 p-3 rounded-2xl mb-4 text-xs select-none">
+              <div className="bg-orange-500/10 border border-orange-500/20 p-3 rounded-none mb-4 text-xs select-none">
                 <span className="text-[10px] font-black text-orange-500 uppercase font-mono block mb-1.5">
                   REALTIME COOKING PROGRESS
                 </span>
@@ -565,20 +565,20 @@ export function ReservePage() {
                     key={idx}
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 flex items-center justify-between text-xs"
+                    className="p-3.5 rounded-none bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 flex items-center justify-between text-xs"
                   >
                     <div>
                       <h5 className="font-black text-neutral-900 dark:text-white">{item.menu.name}</h5>
                       {item.selectedOptions.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">
                           {item.selectedOptions.map((opt, oIdx) => (
-                            <span key={oIdx} className="text-[9px] text-[#3182f6] bg-[#3182f6]/10 px-1.5 py-0.5 rounded font-bold">
+                            <span key={oIdx} className="text-[9px] text-[#000000] bg-[#000000]/10 px-1.5 py-0.5 rounded font-bold">
                               +{opt.name} ({opt.price > 0 ? `+₩${opt.price}` : '무료'})
                             </span>
                           ))}
                         </div>
                       )}
-                      <span className="text-[10.5px] text-[#3182f6] font-mono mt-1 block font-bold">
+                      <span className="text-[10.5px] text-[#000000] font-mono mt-1 block font-bold">
                         ₩ {item.itemTotalPrice.toLocaleString()}
                       </span>
                     </div>
@@ -601,7 +601,7 @@ export function ReservePage() {
             {cartItems.length > 0 && (
               <button
                 onClick={() => setIsDutchPayModalOpen(true)}
-                className="w-full py-2.5 mb-3 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/20 text-xs font-extrabold cursor-pointer transition-all flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 mb-3 rounded-none bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 dark:text-purple-400 border border-purple-500/20 text-xs font-extrabold cursor-pointer transition-all flex items-center justify-center gap-1.5"
               >
                 <Calculator className="w-4 h-4" /> 더치페이 / N분의 1 계산기 🧮
               </button>
@@ -609,12 +609,12 @@ export function ReservePage() {
 
             <div className="flex justify-between items-center my-3 pt-3 border-t border-neutral-200 dark:border-white/5">
               <span className="text-xs font-bold text-neutral-500">총 결제 예정 금액</span>
-              <span className="text-xl font-black text-[#3182f6]">₩ {totalCartPrice.toLocaleString()}</span>
+              <span className="text-xl font-black text-[#000000]">₩ {totalCartPrice.toLocaleString()}</span>
             </div>
 
             <button
               onClick={handleHoldAndOrder}
-              className="w-full py-4 rounded-full bg-gradient-to-r from-[#3182f6] to-[#4894fe] hover:opacity-95 text-white text-xs font-extrabold cursor-pointer shadow-lg transition-all flex items-center justify-center gap-2 hover:scale-[1.02]"
+              className="w-full py-4 rounded-full bg-gradient-to-r from-[#000000] to-[#000000] hover:opacity-95 text-white text-xs font-extrabold cursor-pointer shadow-none transition-all flex items-center justify-center gap-2 hover:scale-[1.02]"
             >
               <span>5분 선점 및 옵션 주문 실시간 발송</span>
             </button>
@@ -632,7 +632,7 @@ export function ReservePage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl relative text-left"
+              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none p-8 max-w-md w-full shadow-none relative text-left"
             >
               <button 
                 onClick={() => setIsDutchPayModalOpen(false)}
@@ -642,7 +642,7 @@ export function ReservePage() {
               </button>
 
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 rounded-2xl bg-purple-500/10 text-purple-500">
+                <div className="p-3 rounded-none bg-purple-500/10 text-purple-500">
                   <Calculator className="w-6 h-6" />
                 </div>
                 <div>
@@ -666,9 +666,9 @@ export function ReservePage() {
                     <button
                       key={cnt}
                       onClick={() => setDutchPeopleCount(cnt)}
-                      className={`py-3 rounded-2xl text-xs font-black border transition-all cursor-pointer ${
+                      className={`py-3 rounded-none text-xs font-black border transition-all cursor-pointer ${
                         dutchPeopleCount === cnt 
-                          ? 'bg-purple-500 border-purple-500 text-white shadow-md' 
+                          ? 'bg-purple-500 border-purple-500 text-white shadow-none' 
                           : 'bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10 text-neutral-700 dark:text-neutral-300'
                       }`}
                     >
@@ -679,7 +679,7 @@ export function ReservePage() {
               </div>
 
               {/* Split calculation result */}
-              <div className="bg-purple-500/10 border border-purple-500/20 p-5 rounded-2xl text-center mb-6">
+              <div className="bg-purple-500/10 border border-purple-500/20 p-5 rounded-none text-center mb-6">
                 <span className="text-xs font-bold text-purple-500 block mb-1">
                   1인당 부담 결제 금액 ({dutchPeopleCount}인 분할)
                 </span>
@@ -693,7 +693,7 @@ export function ReservePage() {
                   setIsDutchPayModalOpen(false);
                   alert(`1인당 ₩${Math.round(totalCartPrice / dutchPeopleCount).toLocaleString()} 분할 결제 요청 패킷이 각자 QR 카드로 기동되었습니다.`);
                 }}
-                className="w-full py-3.5 rounded-full bg-purple-500 hover:bg-purple-600 text-white text-xs font-extrabold cursor-pointer shadow-lg transition-all"
+                className="w-full py-3.5 rounded-full bg-purple-500 hover:bg-purple-600 text-white text-xs font-extrabold cursor-pointer shadow-none transition-all"
               >
                 1인당 금액으로 분할 결제 시작
               </button>
@@ -710,7 +710,7 @@ export function ReservePage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-8 max-w-sm w-full shadow-2xl relative text-center"
+              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none p-8 max-w-sm w-full shadow-none relative text-center"
             >
               <button 
                 onClick={() => setIsQrModalOpen(false)}
@@ -719,7 +719,7 @@ export function ReservePage() {
                 <X className="w-4 h-4" />
               </button>
 
-              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-500 flex items-center justify-center mx-auto mb-4">
+              <div className="w-12 h-12 rounded-none bg-purple-500/10 text-purple-500 flex items-center justify-center mx-auto mb-4">
                 <QrCode className="w-6 h-6" />
               </div>
 
@@ -731,7 +731,7 @@ export function ReservePage() {
               </p>
 
               {/* QR Graphics Placeholder */}
-              <div className="w-48 h-48 mx-auto bg-white p-4 rounded-3xl border-2 border-purple-500/30 shadow-md flex items-center justify-center mb-6">
+              <div className="w-48 h-48 mx-auto bg-white p-4 rounded-none border-2 border-purple-500/30 shadow-none flex items-center justify-center mb-6">
                 <QrCode className="w-36 h-36 text-purple-600" />
               </div>
 
@@ -759,7 +759,7 @@ export function ReservePage() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.85, opacity: 0, y: 30 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl relative text-left"
+              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none p-8 max-w-md w-full shadow-none relative text-left"
             >
               <button 
                 onClick={() => setActiveMenuForOption(null)}
@@ -769,13 +769,13 @@ export function ReservePage() {
               </button>
 
               <div className="flex gap-4 items-center mb-6">
-                <img src={activeMenuForOption.image} alt={activeMenuForOption.name} className="w-20 h-20 rounded-2xl object-cover border border-neutral-200 dark:border-white/10 shrink-0" />
+                <img src={activeMenuForOption.image} alt={activeMenuForOption.name} className="w-20 h-20 rounded-none object-cover border border-neutral-200 dark:border-white/10 shrink-0" />
                 <div>
-                  <span className="text-[10px] font-black text-[#3182f6] bg-[#3182f6]/10 px-2.5 py-0.5 rounded-full font-mono uppercase">
+                  <span className="text-[10px] font-black text-[#000000] bg-[#000000]/10 px-2.5 py-0.5 rounded-full font-mono uppercase">
                     OPTION SELECTOR
                   </span>
                   <h3 className="text-lg font-black text-neutral-900 dark:text-white mt-1">{activeMenuForOption.name}</h3>
-                  <span className="text-sm font-black text-[#3182f6]">₩ {activeMenuForOption.price.toLocaleString()}</span>
+                  <span className="text-sm font-black text-[#000000]">₩ {activeMenuForOption.price.toLocaleString()}</span>
                 </div>
               </div>
 
@@ -788,22 +788,22 @@ export function ReservePage() {
                     <div 
                       key={opt.id}
                       onClick={() => toggleOption(opt)}
-                      className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all cursor-pointer ${
+                      className={`flex items-center justify-between p-3.5 rounded-none border transition-all cursor-pointer ${
                         isChecked 
-                          ? 'bg-[#3182f6]/15 border-[#3182f6] text-neutral-900 dark:text-white shadow-md' 
+                          ? 'bg-[#000000]/15 border-[#000000] text-neutral-900 dark:text-white shadow-none' 
                           : 'bg-neutral-50 dark:bg-white/[0.02] border-neutral-200 dark:border-white/5 text-neutral-700 dark:text-neutral-300'
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`w-5 h-5 rounded-lg border flex items-center justify-center transition-all ${
-                          isChecked ? 'bg-[#3182f6] border-[#3182f6] text-white' : 'border-neutral-300 dark:border-white/20'
+                        <div className={`w-5 h-5 rounded-none border flex items-center justify-center transition-all ${
+                          isChecked ? 'bg-[#000000] border-[#000000] text-white' : 'border-neutral-300 dark:border-white/20'
                         }`}>
                           {isChecked && <Check className="w-3.5 h-3.5" />}
                         </div>
                         <span className="text-xs font-extrabold">{opt.name}</span>
                       </div>
 
-                      <span className="text-xs font-black text-[#3182f6]">
+                      <span className="text-xs font-black text-[#000000]">
                         {opt.price > 0 ? `+ ₩ ${opt.price.toLocaleString()}` : '무료'}
                       </span>
                     </div>
@@ -820,7 +820,7 @@ export function ReservePage() {
 
               <button
                 onClick={handleAddToCartWithOptions}
-                className="w-full py-3.5 rounded-full bg-[#3182f6] hover:bg-[#286fd7] text-white text-xs font-extrabold cursor-pointer shadow-lg transition-all"
+                className="w-full py-3.5 rounded-full bg-[#000000] hover:bg-[#286fd7] text-white text-xs font-extrabold cursor-pointer shadow-none transition-all"
               >
                 옵션 포함 장바구니 담기
               </button>
@@ -837,7 +837,7 @@ export function ReservePage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-8 max-w-lg w-full shadow-2xl relative text-left"
+              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none p-8 max-w-lg w-full shadow-none relative text-left"
             >
               <button 
                 onClick={() => setIsServiceCallModalOpen(false)}
@@ -847,7 +847,7 @@ export function ReservePage() {
               </button>
 
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-3 rounded-2xl bg-red-500/10 text-red-500">
+                <div className="p-3 rounded-none bg-red-500/10 text-red-500">
                   <BellRing className="w-6 h-6" />
                 </div>
                 <div>
@@ -863,7 +863,7 @@ export function ReservePage() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
                 <button
                   onClick={() => handleServiceCallRequest('시원한 물 요청 🧊')}
-                  className="p-4 rounded-2xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 text-cyan-600 dark:text-cyan-400 flex flex-col items-center gap-2 cursor-pointer transition-all hover:scale-[1.03]"
+                  className="p-4 rounded-none bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/20 text-cyan-600 dark:text-cyan-400 flex flex-col items-center gap-2 cursor-pointer transition-all hover:scale-[1.03]"
                 >
                   <Droplet className="w-6 h-6" />
                   <span className="text-xs font-black">물 요청</span>
@@ -871,7 +871,7 @@ export function ReservePage() {
 
                 <button
                   onClick={() => handleServiceCallRequest('수저 & 휴지 요청 🥢')}
-                  className="p-4 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-600 dark:text-amber-400 flex flex-col items-center gap-2 cursor-pointer transition-all hover:scale-[1.03]"
+                  className="p-4 rounded-none bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-amber-600 dark:text-amber-400 flex flex-col items-center gap-2 cursor-pointer transition-all hover:scale-[1.03]"
                 >
                   <Utensils className="w-6 h-6" />
                   <span className="text-xs font-black">수저 / 휴지</span>
@@ -879,7 +879,7 @@ export function ReservePage() {
 
                 <button
                   onClick={() => handleServiceCallRequest('일회용 앞치마 요청 🎽')}
-                  className="p-4 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 text-purple-600 dark:text-purple-400 flex flex-col items-center gap-2 cursor-pointer transition-all hover:scale-[1.03]"
+                  className="p-4 rounded-none bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 text-purple-600 dark:text-purple-400 flex flex-col items-center gap-2 cursor-pointer transition-all hover:scale-[1.03]"
                 >
                   <Shield className="w-6 h-6" />
                   <span className="text-xs font-black">앞치마 요청</span>
@@ -887,7 +887,7 @@ export function ReservePage() {
 
                 <button
                   onClick={() => handleServiceCallRequest('물티슈 추가 요청 🧻')}
-                  className="p-4 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex flex-col items-center gap-2 cursor-pointer transition-all hover:scale-[1.03]"
+                  className="p-4 rounded-none bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex flex-col items-center gap-2 cursor-pointer transition-all hover:scale-[1.03]"
                 >
                   <Sparkles className="w-6 h-6" />
                   <span className="text-xs font-black">물티슈 요청</span>
@@ -895,7 +895,7 @@ export function ReservePage() {
 
                 <button
                   onClick={() => handleServiceCallRequest('직원 직접 방문 요청 🔔')}
-                  className="p-4 col-span-2 sm:col-span-2 rounded-2xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-500 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.03]"
+                  className="p-4 col-span-2 sm:col-span-2 rounded-none bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-500 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all hover:scale-[1.03]"
                 >
                   <BellRing className="w-6 h-6 animate-pulse" />
                   <span className="text-xs font-black">직원 직접 호출</span>
@@ -921,7 +921,7 @@ export function ReservePage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-8 max-w-md w-full shadow-2xl relative text-left"
+              className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none p-8 max-w-md w-full shadow-none relative text-left"
             >
               <button 
                 onClick={() => setIsTableModalOpen(false)}
@@ -931,7 +931,7 @@ export function ReservePage() {
               </button>
 
               <h3 className="text-lg font-black text-neutral-900 dark:text-white mb-1 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-[#3182f6]" /> 테이블 수동 변경 선택
+                <MapPin className="w-5 h-5 text-[#000000]" /> 테이블 수동 변경 선택
               </h3>
               <p className="text-xs text-neutral-500 dark:text-neutral-400 font-bold mb-6">
                 현재 앉으신 테이블 자리를 터치해 선택하세요.
@@ -944,10 +944,10 @@ export function ReservePage() {
                     <button
                       key={seat.id}
                       onClick={() => handleChangeTable(seat)}
-                      className={`p-4 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center ${
+                      className={`p-4 rounded-none border text-center transition-all cursor-pointer flex flex-col items-center ${
                         isCurrent 
-                          ? 'bg-[#3182f6] border-[#3182f6] text-white font-black shadow-lg scale-[1.02]' 
-                          : 'bg-neutral-50 dark:bg-white/5 border-neutral-200 dark:border-white/10 hover:border-[#3182f6] text-neutral-700 dark:text-neutral-300 font-bold'
+                          ? 'bg-[#000000] border-[#000000] text-white font-black shadow-none scale-[1.02]' 
+                          : 'bg-neutral-50 dark:bg-white/5 border-neutral-200 dark:border-white/10 hover:border-[#000000] text-neutral-700 dark:text-neutral-300 font-bold'
                       }`}
                     >
                       <span className="text-base font-black">{seat.label}</span>

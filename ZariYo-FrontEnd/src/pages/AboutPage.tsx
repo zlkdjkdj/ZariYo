@@ -37,11 +37,11 @@ export function AboutPage() {
   ];
 
   return (
-    <div className="bg-slate-50 dark:bg-[#030303] text-neutral-900 dark:text-white font-sans selection:bg-[#3182f6]/20 min-h-screen flex flex-col justify-between relative overflow-x-hidden transition-colors duration-300">
+    <div className="bg-slate-50 dark:bg-[#030303] text-neutral-900 dark:text-white font-sans selection:bg-[#000000]/20 min-h-screen flex flex-col justify-between relative overflow-x-hidden transition-colors duration-300">
       
       {/* Background radial gradients for dynamic look */}
-      <div className="absolute top-[-10%] left-[-20%] w-[80%] h-[50%] rounded-full bg-[#3182f6]/4 dark:bg-[#3182f6]/5 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[20%] right-[-10%] w-[60%] h-[50%] rounded-full bg-[#3182f6]/2 dark:bg-[#3182f6]/3 blur-[140px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-20%] w-[80%] h-[50%] rounded-full bg-[#000000]/4 dark:bg-[#000000]/5 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[-10%] w-[60%] h-[50%] rounded-full bg-[#000000]/2 dark:bg-[#000000]/3 blur-[140px] pointer-events-none" />
 
       {/* Header component */}
       <Header />
@@ -62,7 +62,7 @@ export function AboutPage() {
 
         {/* Title Block */}
         <div className="text-center md:text-left mb-16 max-w-3xl">
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#3182f6]/10 text-[#3182f6] text-[10px] font-bold mb-4 uppercase">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#000000]/10 text-[#000000] text-[10px] font-bold mb-4 uppercase">
             <BookOpen className="w-3 h-3" /> ZariYo User Guide
           </span>
           <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 text-neutral-900 dark:text-white leading-tight">
@@ -77,8 +77,8 @@ export function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           
           {/* Card 1: 5-min holds */}
-          <div className="p-8 rounded-3xl border border-neutral-200 dark:border-white/5 bg-white dark:bg-white/[0.01] shadow-md dark:shadow-2xl transition-transform hover:scale-[1.01]">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mb-6">
+          <div className="p-8 rounded-none border border-neutral-200 dark:border-white/5 bg-white dark:bg-white/[0.01] shadow-none dark:shadow-none transition-transform hover:scale-[1.01]">
+            <div className="w-10 h-10 rounded-none bg-amber-500/10 text-amber-500 flex items-center justify-center mb-6">
               <AlertCircle className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold mb-3 text-neutral-900 dark:text-white">1. 실시간 선점 정책</h3>
@@ -88,8 +88,8 @@ export function AboutPage() {
           </div>
 
           {/* Card 2: 2D Grid Builder */}
-          <div className="p-8 rounded-3xl border border-neutral-200 dark:border-white/5 bg-white dark:bg-white/[0.01] shadow-md dark:shadow-2xl transition-transform hover:scale-[1.01]">
-            <div className="w-10 h-10 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center mb-6">
+          <div className="p-8 rounded-none border border-neutral-200 dark:border-white/5 bg-white dark:bg-white/[0.01] shadow-none dark:shadow-none transition-transform hover:scale-[1.01]">
+            <div className="w-10 h-10 rounded-none bg-[#000000]/10 text-[#000000] flex items-center justify-center mb-6">
               <Settings className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold mb-3 text-neutral-900 dark:text-white">2. 격자 드래그 배치 빌더</h3>
@@ -99,8 +99,8 @@ export function AboutPage() {
           </div>
 
           {/* Card 3: Redisson lock */}
-          <div className="p-8 rounded-3xl border border-neutral-200 dark:border-white/5 bg-white dark:bg-white/[0.01] shadow-md dark:shadow-2xl transition-transform hover:scale-[1.01]">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-505 flex items-center justify-center mb-6">
+          <div className="p-8 rounded-none border border-neutral-200 dark:border-white/5 bg-white dark:bg-white/[0.01] shadow-none dark:shadow-none transition-transform hover:scale-[1.01]">
+            <div className="w-10 h-10 rounded-none bg-emerald-500/10 text-emerald-505 flex items-center justify-center mb-6">
               <Key className="w-5 h-5" />
             </div>
             <h3 className="text-base font-bold mb-3 text-neutral-900 dark:text-white">3. 백엔드 분산 락 기술</h3>
@@ -112,9 +112,9 @@ export function AboutPage() {
         </div>
 
         {/* FAQ Accordeon Panel */}
-        <div className="w-full bg-white dark:bg-[#09090b]/80 border border-neutral-200 dark:border-white/5 rounded-3xl p-8 shadow-md dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+        <div className="w-full bg-white dark:bg-[#09090b]/80 border border-neutral-200 dark:border-white/5 rounded-none p-8 shadow-none dark:shadow-none">
           <h2 className="text-xl font-bold text-neutral-900 dark:text-white mb-6 flex items-center gap-2">
-            <HelpCircle className="w-5 h-5 text-[#3182f6]" />
+            <HelpCircle className="w-5 h-5 text-[#000000]" />
             자주 묻는 질문 (FAQ)
           </h2>
 
@@ -124,7 +124,7 @@ export function AboutPage() {
               return (
                 <div 
                   key={idx} 
-                  className="bg-white/50 dark:bg-white/[0.01] border border-neutral-200 dark:border-white/5 rounded-2xl overflow-hidden transition-all shadow-sm"
+                  className="bg-white/50 dark:bg-white/[0.01] border border-neutral-200 dark:border-white/5 rounded-none overflow-hidden transition-all shadow-none"
                 >
                   <button
                     onClick={() => toggleFaq(idx)}

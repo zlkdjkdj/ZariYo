@@ -5,13 +5,13 @@ export function Features() {
     <section id="features" className="py-24 border-t border-white/5 bg-[#030303] text-white relative overflow-hidden transition-colors duration-300">
       
       {/* Background spill light */}
-      <div className="absolute right-[-10%] top-[30%] w-[50%] h-[50%] rounded-full bg-[#3182f6]/3 blur-[120px] pointer-events-none" />
+      <div className="absolute right-[-10%] top-[30%] w-[50%] h-[50%] rounded-full bg-[#000000]/3 blur-[120px] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
 
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-20 select-none">
-          <span className="text-[10px] font-extrabold tracking-widest text-[#3182f6] uppercase font-mono bg-[#3182f6]/10 px-3 py-1 rounded-full">CORE FEATURES</span>
+          <span className="text-[10px] font-extrabold tracking-widest text-[#000000] uppercase font-mono bg-[#000000]/10 px-3 py-1 rounded-full">CORE FEATURES</span>
           <h2 className="text-3xl md:text-4xl font-extrabold mt-4 mb-5 text-white tracking-tight leading-tight">
             스마트 오피스를 지탱하는 강력한 설계.
           </h2>
@@ -24,8 +24,8 @@ export function Features() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
 
           {/* Card 1: 5분 임시 선점 */}
-          <div className="p-8 rounded-2xl border border-white/5 bg-white/[0.01] backdrop-blur-xl hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 group hover:scale-[1.02] shadow-[0_15px_35px_rgba(0,0,0,0.4)]">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#3182f6] to-[#4894fe] flex items-center justify-center text-white mb-6 shadow-[0_4px_15px_rgba(49,130,246,0.2)]">
+          <div className="p-8 rounded-none border border-white/5 bg-white/[0.01] backdrop-blur-xl hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 group hover:scale-[1.02] shadow-none">
+            <div className="w-10 h-10 rounded-none bg-gradient-to-tr from-[#000000] to-[#000000] flex items-center justify-center text-white mb-6 shadow-none">
               <Timer className="w-5 h-5" />
             </div>
             <h3 className="text-base font-extrabold text-white mb-3">5분 임시 선점</h3>
@@ -35,8 +35,8 @@ export function Features() {
           </div>
 
           {/* Card 2: 실시간 현황 관제 */}
-          <div className="p-8 rounded-2xl border border-white/5 bg-white/[0.01] backdrop-blur-xl hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 group hover:scale-[1.02] shadow-[0_15px_35px_rgba(0,0,0,0.4)]">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#3182f6] to-[#4894fe] flex items-center justify-center text-white mb-6 shadow-[0_4px_15px_rgba(49,130,246,0.2)]">
+          <div className="p-8 rounded-none border border-white/5 bg-white/[0.01] backdrop-blur-xl hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 group hover:scale-[1.02] shadow-none">
+            <div className="w-10 h-10 rounded-none bg-gradient-to-tr from-[#000000] to-[#000000] flex items-center justify-center text-white mb-6 shadow-none">
               <Activity className="w-5 h-5" />
             </div>
             <h3 className="text-base font-extrabold text-white mb-3">실시간 통계 및 관제</h3>
@@ -46,8 +46,8 @@ export function Features() {
           </div>
 
           {/* Card 3: 스마트 키오스크 연동 */}
-          <div className="p-8 rounded-2xl border border-white/5 bg-white/[0.01] backdrop-blur-xl hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 group hover:scale-[1.02] shadow-[0_15px_35px_rgba(0,0,0,0.4)]">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#3182f6] to-[#4894fe] flex items-center justify-center text-white mb-6 shadow-[0_4px_15px_rgba(49,130,246,0.25)]">
+          <div className="p-8 rounded-none border border-white/5 bg-white/[0.01] backdrop-blur-xl hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 group hover:scale-[1.02] shadow-none">
+            <div className="w-10 h-10 rounded-none bg-gradient-to-tr from-[#000000] to-[#000000] flex items-center justify-center text-white mb-6 shadow-none">
               <QrCode className="w-5 h-5" />
             </div>
             <h3 className="text-base font-extrabold text-white mb-3">부담을 낮춘 접근성</h3>
@@ -57,8 +57,8 @@ export function Features() {
           </div>
 
           {/* Card 4: 분산 락 동시성 제어 */}
-          <div className="p-8 rounded-2xl border border-white/5 bg-white/[0.01] backdrop-blur-xl hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 group hover:scale-[1.02] shadow-[0_15px_35px_rgba(0,0,0,0.4)]">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#3182f6] to-[#4894fe] flex items-center justify-center text-white mb-6 shadow-[0_4px_15px_rgba(49,130,246,0.2)]">
+          <div className="p-8 rounded-none border border-white/5 bg-white/[0.01] backdrop-blur-xl hover:border-white/15 hover:bg-white/[0.03] transition-all duration-300 group hover:scale-[1.02] shadow-none">
+            <div className="w-10 h-10 rounded-none bg-gradient-to-tr from-[#000000] to-[#000000] flex items-center justify-center text-white mb-6 shadow-none">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <h3 className="text-base font-extrabold text-white mb-3">분산 락 트랜잭션</h3>

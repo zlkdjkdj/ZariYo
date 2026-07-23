@@ -28,7 +28,7 @@ export function BuilderCanvas({
         <span className="text-[10px] text-neutral-500 dark:text-neutral-400 font-bold">
           격자 배치판 (마우스 드래그로 요소를 이동하세요)
         </span>
-        <span className="text-[9px] text-[#3182f6] font-bold font-mono bg-[#3182f6]/10 border border-[#3182f6]/20 px-2 py-0.5 rounded-full">
+        <span className="text-[9px] text-[#000000] font-bold font-mono bg-[#000000]/10 border border-[#000000]/20 px-2 py-0.5 rounded-full">
           Grid Snap: 20px
         </span>
       </div>
@@ -39,7 +39,7 @@ export function BuilderCanvas({
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
         onClick={() => onSelectId(null)}
-        className="w-full h-[520px] bg-white dark:bg-neutral-900/30 border border-neutral-200 dark:border-white/10 rounded-2xl relative overflow-hidden select-none shadow-[0_20px_50px_rgba(0,0,0,0.02)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)]"
+        className="w-full h-[520px] bg-white dark:bg-neutral-900/30 border border-neutral-200 dark:border-white/10 rounded-none relative overflow-hidden select-none shadow-none dark:shadow-none"
       >
         {/* 20px Grid Background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000003_1px,transparent_1px),linear-gradient(to_bottom,#00000003_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:20px_20px]" />
@@ -69,9 +69,9 @@ export function BuilderCanvas({
                 width: el.width,
                 height: el.height,
               }}
-              className={`rounded-xl border flex flex-col items-center justify-center p-2 text-center transition-all cursor-move shadow-sm ${templateColor} ${
+              className={`rounded-none border flex flex-col items-center justify-center p-2 text-center transition-all cursor-move shadow-none ${templateColor} ${
                 isSelected 
-                  ? 'border-[#3182f6] ring-2 ring-[#3182f6]/40 dark:ring-[#3182f6]/40 z-20 shadow-[0_0_15px_rgba(49,130,246,0.15)] dark:shadow-[0_0_15px_rgba(49,130,246,0.25)]' 
+                  ? 'border-[#000000] ring-2 ring-[#000000]/40 dark:ring-[#000000]/40 z-20 shadow-none dark:shadow-none' 
                   : 'z-10'
               }`}
             >
@@ -79,7 +79,7 @@ export function BuilderCanvas({
                 {el.label}
               </span>
               {el.isReservable && (
-                <span className="text-[8px] mt-1 bg-[#3182f6]/10 border border-[#3182f6]/20 text-[#3182f6] px-1.5 py-0.5 rounded-full font-bold">
+                <span className="text-[8px] mt-1 bg-[#000000]/10 border border-[#000000]/20 text-[#000000] px-1.5 py-0.5 rounded-full font-bold">
                   예약석
                 </span>
               )}
@@ -89,7 +89,7 @@ export function BuilderCanvas({
 
         {placedElements.length === 0 && (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
-            <Store className="w-9 h-9 text-[#3182f6] mb-3 animate-pulse" />
+            <Store className="w-9 h-9 text-[#000000] mb-3 animate-pulse" />
             <p className="text-xs text-neutral-900 dark:text-white font-extrabold">배치된 가구가 없습니다.</p>
             <p className="text-[10px] text-neutral-400 dark:text-neutral-600 mt-1 font-bold">좌측 템플릿 항목을 눌러 캔버스에 추가해보세요.</p>
           </div>

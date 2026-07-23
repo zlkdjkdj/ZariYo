@@ -40,7 +40,7 @@ export function AnalyticsPage() {
         {/* Header Title with Export Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-neutral-200 dark:border-white/5 select-none">
           <div className="text-left">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#3182f6]/10 text-[#3182f6] text-[10px] font-bold font-mono mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#000000]/10 text-[#000000] text-[10px] font-bold font-mono mb-2">
               <TrendingUp className="w-3.5 h-3.5" /> SALES & BUSINESS ANALYTICS
             </div>
             <h1 className="text-2xl font-black text-neutral-900 dark:text-white">매출 분석 & 경영 보고서</h1>
@@ -54,19 +54,19 @@ export function AnalyticsPage() {
             <div className="bg-neutral-200/50 dark:bg-white/5 p-1 rounded-full border border-neutral-300 dark:border-white/10 flex gap-1 font-bold text-xs select-none">
               <button
                 onClick={() => setTimeRange('today')}
-                className={`px-3 py-1.5 rounded-full transition-all cursor-pointer ${timeRange === 'today' ? 'bg-[#3182f6] text-white' : 'text-neutral-500'}`}
+                className={`px-3 py-1.5 rounded-full transition-all cursor-pointer ${timeRange === 'today' ? 'bg-[#000000] text-white' : 'text-neutral-500'}`}
               >
                 오늘
               </button>
               <button
                 onClick={() => setTimeRange('week')}
-                className={`px-3 py-1.5 rounded-full transition-all cursor-pointer ${timeRange === 'week' ? 'bg-[#3182f6] text-white' : 'text-neutral-500'}`}
+                className={`px-3 py-1.5 rounded-full transition-all cursor-pointer ${timeRange === 'week' ? 'bg-[#000000] text-white' : 'text-neutral-500'}`}
               >
                 이번 주
               </button>
               <button
                 onClick={() => setTimeRange('month')}
-                className={`px-3 py-1.5 rounded-full transition-all cursor-pointer ${timeRange === 'month' ? 'bg-[#3182f6] text-white' : 'text-neutral-500'}`}
+                className={`px-3 py-1.5 rounded-full transition-all cursor-pointer ${timeRange === 'month' ? 'bg-[#000000] text-white' : 'text-neutral-500'}`}
               >
                 이번 달
               </button>
@@ -74,7 +74,7 @@ export function AnalyticsPage() {
 
             <button
               onClick={handleExportCSV}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#3182f6] hover:bg-[#286fd7] text-white text-xs font-black cursor-pointer shadow-md transition-all"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#000000] hover:bg-[#286fd7] text-white text-xs font-black cursor-pointer shadow-none transition-all"
             >
               <Download className="w-4 h-4" />
               CSV 내보내기
@@ -84,7 +84,7 @@ export function AnalyticsPage() {
 
         {/* Top 4 KPI Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8 select-none">
-          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-3xl p-6 shadow-sm text-left">
+          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 shadow-none text-left">
             <span className="text-[10px] font-mono text-neutral-400 font-bold uppercase">TOTAL REVENUE</span>
             <p className="text-2xl font-black text-neutral-900 dark:text-white mt-1">₩ 2,750,000</p>
             <span className="text-[10.5px] text-emerald-500 font-bold flex items-center gap-0.5 mt-2">
@@ -92,19 +92,19 @@ export function AnalyticsPage() {
             </span>
           </div>
 
-          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-3xl p-6 shadow-sm text-left">
+          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 shadow-none text-left">
             <span className="text-[10px] font-mono text-neutral-400 font-bold uppercase">AVERAGE TICKET (객단가)</span>
             <p className="text-2xl font-black text-neutral-900 dark:text-white mt-1">₩ 44,200</p>
             <span className="text-[10.5px] text-neutral-400 font-bold block mt-2">테이블당 평균 지출액</span>
           </div>
 
-          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-3xl p-6 shadow-sm text-left">
+          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 shadow-none text-left">
             <span className="text-[10px] font-mono text-neutral-400 font-bold uppercase">SEAT TURNOVER (회전율)</span>
-            <p className="text-2xl font-black text-[#3182f6] mt-1">3.8 회 / 일</p>
-            <span className="text-[10.5px] text-[#3182f6] font-bold block mt-2">평균 좌석 점유 유지시간 45분</span>
+            <p className="text-2xl font-black text-[#000000] mt-1">3.8 회 / 일</p>
+            <span className="text-[10.5px] text-[#000000] font-bold block mt-2">평균 좌석 점유 유지시간 45분</span>
           </div>
 
-          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-3xl p-6 shadow-sm text-left">
+          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 shadow-none text-left">
             <span className="text-[10px] font-mono text-neutral-400 font-bold uppercase">PEAK TIME</span>
             <p className="text-2xl font-black text-orange-500 mt-1">18:00 ~ 19:30</p>
             <span className="text-[10.5px] text-orange-500 font-bold block mt-2">최대 피크 매출 기록</span>
@@ -115,10 +115,10 @@ export function AnalyticsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Hourly Sales Bar Chart (Left 7 cols) */}
-          <div className="lg:col-span-7 bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-3xl p-6 md:p-8 shadow-md text-left select-none">
+          <div className="lg:col-span-7 bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 md:p-8 shadow-none text-left select-none">
             <h3 className="text-base font-black text-neutral-900 dark:text-white mb-6 flex items-center justify-between">
               <span className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-[#3182f6]" /> 시간대별 매출 추이
+                <BarChart3 className="w-5 h-5 text-[#000000]" /> 시간대별 매출 추이
               </span>
               <span className="text-[10px] font-mono text-neutral-400">UNIT: KRW (₩)</span>
             </h3>
@@ -128,11 +128,11 @@ export function AnalyticsPage() {
                 <div key={item.hour} className="space-y-1">
                   <div className="flex justify-between text-xs font-bold text-neutral-600 dark:text-neutral-300">
                     <span>{item.hour}</span>
-                    <span className="font-mono text-[#3182f6]">₩ {item.sales.toLocaleString()}</span>
+                    <span className="font-mono text-[#000000]">₩ {item.sales.toLocaleString()}</span>
                   </div>
                   <div className="w-full h-3 bg-neutral-100 dark:bg-white/5 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-gradient-to-r from-[#3182f6] to-[#4894fe] rounded-full transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-[#000000] to-[#000000] rounded-full transition-all duration-500"
                       style={{ width: `${item.percentage}%` }}
                     />
                   </div>
@@ -142,16 +142,16 @@ export function AnalyticsPage() {
           </div>
 
           {/* Popular Menu Rankings TOP 5 (Right 5 cols) */}
-          <div className="lg:col-span-5 bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-3xl p-6 md:p-8 shadow-md text-left select-none">
+          <div className="lg:col-span-5 bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 md:p-8 shadow-none text-left select-none">
             <h3 className="text-base font-black text-neutral-900 dark:text-white mb-6 flex items-center gap-2">
               <Award className="w-5 h-5 text-orange-500" /> 인기 메뉴 판매 랭킹 TOP 4
             </h3>
 
             <div className="space-y-4">
               {topMenuItems.map((menu) => (
-                <div key={menu.rank} className="flex items-center justify-between p-3.5 rounded-2xl bg-neutral-50 dark:bg-white/[0.01] border border-neutral-200 dark:border-white/5">
+                <div key={menu.rank} className="flex items-center justify-between p-3.5 rounded-none bg-neutral-50 dark:bg-white/[0.01] border border-neutral-200 dark:border-white/5">
                   <div className="flex items-center gap-3">
-                    <span className={`w-7 h-7 rounded-xl flex items-center justify-center font-black text-xs ${
+                    <span className={`w-7 h-7 rounded-none flex items-center justify-center font-black text-xs ${
                       menu.rank === 1 ? 'bg-amber-500 text-white' : 'bg-neutral-200 dark:bg-white/10 text-neutral-600 dark:text-neutral-300'
                     }`}>
                       {menu.rank}
@@ -164,7 +164,7 @@ export function AnalyticsPage() {
 
                   <div className="text-right">
                     <span className="text-xs font-black text-neutral-900 dark:text-white block">₩ {menu.total.toLocaleString()}</span>
-                    <span className="text-[10px] text-[#3182f6] font-bold font-mono">{menu.share}% 점유</span>
+                    <span className="text-[10px] text-[#000000] font-bold font-mono">{menu.share}% 점유</span>
                   </div>
                 </div>
               ))}

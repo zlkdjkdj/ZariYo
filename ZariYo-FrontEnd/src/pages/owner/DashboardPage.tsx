@@ -1,9 +1,6 @@
-import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { 
-  LayoutDashboard, ChefHat, Receipt, 
-  CheckCircle2, DollarSign, PlusCircle, CreditCard, X, Move, Printer, Percent 
-} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { GripVertical, Layers } from 'lucide-react';
 import { ConsoleSidebar } from '../../components/owner/ConsoleSidebar';
 import { useDashboard } from '../../hooks/useDashboard';
 import { DashboardKpi } from '../../components/owner/dashboard/DashboardKpi';
@@ -11,86 +8,76 @@ import { DashboardCanvas } from '../../components/owner/dashboard/DashboardCanva
 import { TempOccupiedList } from '../../components/owner/dashboard/TempOccupiedList';
 import { ReservationList } from '../../components/owner/dashboard/ReservationList';
 import { TimelineLogs } from '../../components/owner/dashboard/TimelineLogs';
+
+// Refactored Subcomponents
+import { DashboardHeader } from '../../components/owner/dashboard/DashboardHeader';
+import { DashboardBgmPlayer } from '../../components/owner/dashboard/DashboardBgmPlayer';
+import { DashboardDeliveryPane, type DeliveryOrderItem } from '../../components/owner/dashboard/DashboardDeliveryPane';
+import { DashboardKdsPane, type KdsOrderItem } from '../../components/owner/dashboard/DashboardKdsPane';
+import { DashboardReceiptPane } from '../../components/owner/dashboard/DashboardReceiptPane';
+import { AddMenuModal } from '../../components/owner/dashboard/AddMenuModal';
+
+// External Mock Data Imports
+import { 
+  INITIAL_STORE_INFO, 
+  INITIAL_TABLE_BILLS, 
+  INITIAL_DELIVERY_ORDERS, 
+  INITIAL_KDS_ORDERS, 
+  INITIAL_PLACED_ELEMENTS,
+  type BillItem 
+} from '../../data/mockDashboard';
+
 import type { PlacedElement } from '../../types/store';
 
-interface BillItem {
-  name: string;
-  qty: number;
-  price: number;
-}
+type WidgetId = 'canvas' | 'receipt' | 'delivery_summary' | 'bgm' | 'temp_occupied' | 'reservations' | 'timeline';
 
-interface KdsOrderItem {
-  id: string;
-  tableLabel: string;
-  menuName: string;
-  quantity: number;
-  time: string;
-  status: 'cooking' | 'completed';
-  note?: string;
-  price: number;
-}
+const DEFAULT_WIDGET_ORDER: WidgetId[] = [
+  'canvas', 'receipt', 'delivery_summary', 'bgm', 'temp_occupied', 'reservations', 'timeline'
+];
 
 export function DashboardPage() {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const initialTab = (searchParams.get('tab') as 'live' | 'kds') || 'live';
-  const [activeTab, setActiveTab] = useState<'live' | 'kds'>(initialTab);
+  const tabParam = (searchParams.get('tab') as 'live' | 'kds' | 'delivery') || 'live';
+  const [activeTab, setActiveTab] = useState<'live' | 'kds' | 'delivery'>(tabParam);
 
-  // 계산서 선택 테이블 상태
-  const [selectedBillTable, setSelectedBillTable] = useState<{ id: string; label: string } | null>({ id: '3', label: 'T-1' });
-
-  // 할인 상태
-  const [discountAmount, setDiscountAmount] = useState<number>(0);
-
-  // 매장 유튜브 BGM 라이브 비디오 상태
-  const [youtubeVideoId, setYoutubeVideoId] = useState<string>('jfKfPfyJRdk');
-  const [customYoutubeInput, setCustomYoutubeInput] = useState<string>('');
-
-
-  // 각 테이블별 실시간 주문 수선서 상태
-  const [tableBills, setTableBills] = useState<Record<string, { items: BillItem[]; paymentMethod: string }>>({
-    '3': {
-      paymentMethod: '신용카드 (현대카드 / 일시불)',
-      items: [
-        { name: '토마호크 스테이크', qty: 1, price: 48000 },
-        { name: '트러플 크림 파스타', qty: 1, price: 18000 },
-        { name: '시그니처 수제 에이드', qty: 2, price: 14000 },
-      ]
-    },
-    '4': {
-      paymentMethod: '카카오페이 (간편결제)',
-      items: [
-        { name: '화덕 마르게리타 피자', qty: 2, price: 36000 }
-      ]
-    }
+  // Drag & Drop 위젯 순서 및 편집 모드
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [widgetOrder, setWidgetOrder] = useState<WidgetId[]>(() => {
+    const saved = localStorage.getItem('zariyo_dashboard_widget_order');
+    return saved ? JSON.parse(saved) : DEFAULT_WIDGET_ORDER;
   });
+  const [draggedWidgetId, setDraggedWidgetId] = useState<WidgetId | null>(null);
+  const [dragOverWidgetId, setDragOverWidgetId] = useState<WidgetId | null>(null);
 
-  // 현장 메뉴 직접 추가 모달 상태
+  // Sync activeTab with URL search params
+  useEffect(() => {
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
+  // 선택 상태
+  const [selectedBillTable, setSelectedBillTable] = useState<{ id: string; label: string } | null>({ id: '3', label: 'T-1' });
+  const [selectedDeliveryId, setSelectedDeliveryId] = useState<string | null>('del-1');
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
+  const [youtubeVideoId, setYoutubeVideoId] = useState<string>('jfKfPfyJRdk');
+
+  // 외부 목업 데이터 모듈 연동
+  const [tableBills, setTableBills] = useState<Record<string, { items: BillItem[]; paymentMethod: string }>>(INITIAL_TABLE_BILLS);
+  const [deliveryOrders, setDeliveryOrders] = useState<DeliveryOrderItem[]>(INITIAL_DELIVERY_ORDERS);
+  const [kdsOrders, setKdsOrders] = useState<KdsOrderItem[]>(INITIAL_KDS_ORDERS);
+
+  // 모달 상태
   const [isAddMenuModalOpen, setIsAddMenuModalOpen] = useState(false);
-
-  // KDS 데이터
-  const [kdsOrders, setKdsOrders] = useState<KdsOrderItem[]>([
-    { id: 'k1', tableLabel: 'T-1', menuName: '토마호크 스테이크', quantity: 1, time: '12:35', status: 'cooking', note: '미디엄 웰던으로 요청', price: 48000 },
-    { id: 'k2', tableLabel: 'T-1', menuName: '트러플 크림 파스타', quantity: 1, time: '12:35', status: 'cooking', price: 18000 },
-    { id: 'k3', tableLabel: 'T-2', menuName: '화덕 마르게리타 피자', quantity: 2, time: '12:40', status: 'cooking', price: 36000 },
-    { id: 'k4', tableLabel: 'T-3', menuName: '시그니처 수제 에이드', quantity: 3, time: '12:42', status: 'completed', price: 21000 },
-  ]);
 
   const [storeInfo] = useState(() => {
     const saved = localStorage.getItem('zariyo_store_info');
-    return saved ? JSON.parse(saved) : { name: 'ZariYo 프리미엄 라운지 & 다이닝', address: '서울특별시 강남구 테헤란로 123' };
+    return saved ? JSON.parse(saved) : INITIAL_STORE_INFO;
   });
 
   const [placedElements] = useState<PlacedElement[]>(() => {
     const saved = localStorage.getItem('zariyo_store_layout');
-    return saved ? JSON.parse(saved) : [
-      { id: '1', type: 'counter', label: '카운터 POS', x: 280, y: 40, width: 160, height: 50, isReservable: false, isTempOccupiedEnabled: false },
-      { id: '2', type: 'door', label: '입구', x: 40, y: 380, width: 80, height: 30, isReservable: false, isTempOccupiedEnabled: false },
-      { id: '3', type: 'table-4', label: 'T-1', x: 120, y: 160, width: 100, height: 60, isReservable: true, isTempOccupiedEnabled: true },
-      { id: '4', type: 'table-2', label: 'T-2', x: 320, y: 160, width: 60, height: 60, isReservable: true, isTempOccupiedEnabled: true },
-      { id: '5', type: 'table-2', label: 'T-3', x: 440, y: 160, width: 60, height: 60, isReservable: true, isTempOccupiedEnabled: true },
-      { id: '6', type: 'table-bar', label: '바석-A', x: 160, y: 280, width: 140, height: 40, isReservable: true, isTempOccupiedEnabled: false },
-    ];
+    return saved ? JSON.parse(saved) : INITIAL_PLACED_ELEMENTS;
   });
 
   const {
@@ -103,455 +90,301 @@ export function DashboardPage() {
     handleControlState,
     handleCompleteReservation,
     handleNoShowReservation,
-    kpi,
+    kpi
   } = useDashboard(placedElements);
 
-  // 현장 POS 메뉴 추가 핸들러
-  const handleAddOrderToTable = (menuName: string, price: number) => {
-    if (!selectedBillTable) return;
-    const tableId = selectedBillTable.id;
+  // 드래그 앤 드롭 핸들러
+  const handleDragStart = (id: WidgetId) => setDraggedWidgetId(id);
+  const handleDragOver = (e: React.DragEvent, id: WidgetId) => {
+    e.preventDefault();
+    if (draggedWidgetId !== id) setDragOverWidgetId(id);
+  };
+  const handleDrop = (targetId: WidgetId) => {
+    if (!draggedWidgetId || draggedWidgetId === targetId) return;
+    const newOrder = [...widgetOrder];
+    const fromIndex = newOrder.indexOf(draggedWidgetId);
+    const toIndex = newOrder.indexOf(targetId);
 
+    if (fromIndex >= 0 && toIndex >= 0) {
+      newOrder.splice(fromIndex, 1);
+      newOrder.splice(toIndex, 0, draggedWidgetId);
+      setWidgetOrder(newOrder);
+      localStorage.setItem('zariyo_dashboard_widget_order', JSON.stringify(newOrder));
+    }
+    setDraggedWidgetId(null);
+    setDragOverWidgetId(null);
+  };
+
+  const handleResetWidgetOrder = () => {
+    setWidgetOrder(DEFAULT_WIDGET_ORDER);
+    localStorage.setItem('zariyo_dashboard_widget_order', JSON.stringify(DEFAULT_WIDGET_ORDER));
+  };
+
+  // 계산서 금액 계산
+  const currentBill = selectedBillTable ? tableBills[selectedBillTable.id] : null;
+  const subtotal = currentBill ? currentBill.items.reduce((sum, item) => sum + item.price * item.qty, 0) : 0;
+  const finalTotal = Math.max(0, subtotal - discountAmount);
+
+  // 선택 배달 데이터
+  const selectedDelivery = deliveryOrders.find(d => d.id === selectedDeliveryId) || deliveryOrders[0];
+
+  const handleUpdateDeliveryStatus = (id: string, nextStatus: DeliveryOrderItem['status']) => {
+    setDeliveryOrders(prev => prev.map(item => item.id === id ? { ...item, status: nextStatus } : item));
+  };
+
+  const handleAddMenuItem = (menuName: string, price: number) => {
+    if (!selectedBillTable) return;
     setTableBills(prev => {
-      const currentBill = prev[tableId] || { paymentMethod: '신용카드 (현대카드 / 일시불)', items: [] };
-      const existingIdx = currentBill.items.findIndex(i => i.name === menuName);
-      
-      let updatedItems = [...currentBill.items];
+      const tableData = prev[selectedBillTable.id] || { items: [], paymentMethod: '현장 현금 / 카드' };
+      const existingIdx = tableData.items.findIndex(item => item.name === menuName);
+      let updatedItems = [...tableData.items];
       if (existingIdx >= 0) {
-        updatedItems[existingIdx].qty += 1;
+        updatedItems[existingIdx] = { ...updatedItems[existingIdx], qty: updatedItems[existingIdx].qty + 1 };
       } else {
         updatedItems.push({ name: menuName, qty: 1, price });
       }
-
-      return {
-        ...prev,
-        [tableId]: { ...currentBill, items: updatedItems }
-      };
+      return { ...prev, [selectedBillTable.id]: { ...tableData, items: updatedItems } };
     });
-
     setIsAddMenuModalOpen(false);
-    alert(`테이블 [${selectedBillTable.label}]에 [${menuName}]이(가) 현장 주문 추가되었습니다.`);
   };
 
-  const markAsCompleted = (orderId: string) => {
-    setKdsOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: 'completed' } : o));
+  const handleToggleKdsStatus = (id: string) => {
+    setKdsOrders(prev => prev.map(order => 
+      order.id === id ? { ...order, status: order.status === 'cooking' ? 'completed' : 'cooking' } : order
+    ));
   };
 
-  const currentTableBill = selectedBillTable ? tableBills[selectedBillTable.id] || { paymentMethod: '신용카드 (현대카드 / 일시불)', items: [] } : null;
-  const subTotalAmount = currentTableBill ? currentTableBill.items.reduce((sum, i) => sum + i.price * i.qty, 0) : 0;
-  const finalTotalAmount = Math.max(0, subTotalAmount - discountAmount);
+  // 위젯 콘텐츠 디스패처
+  const renderWidgetContent = (id: WidgetId) => {
+    switch (id) {
+      case 'canvas':
+        if (activeTab === 'live') {
+          return (
+            <div className="bg-white dark:bg-[#09090b] border border-neutral-300 dark:border-neutral-800 rounded-[3px] p-6 h-full text-left">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-neutral-200 dark:border-white/10">
+                <div>
+                  <span className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-wider">
+                    2D REALTIME STORE CANVAS MAP
+                  </span>
+                  <h3 className="text-base font-black text-black dark:text-white">실시간 좌석 관제판</h3>
+                </div>
+                <span className="text-[10.5px] font-bold text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-white/5 px-2.5 py-1 rounded-[3px] border border-neutral-300 dark:border-white/10">
+                  테이블 탭 시 영수증 연동
+                </span>
+              </div>
+              <DashboardCanvas 
+                placedElements={placedElements}
+                tableStates={tableStates}
+                activeControlId={activeControlId}
+                setActiveControlId={setActiveControlId}
+                onControlState={(elId, label, newState) => {
+                  handleControlState(elId, label, newState);
+                  const selectedEl = placedElements.find(e => e.id === elId);
+                  if (selectedEl) {
+                    setSelectedBillTable({ id: selectedEl.id, label: selectedEl.label });
+                  }
+                }}
+              />
+            </div>
+          );
+        }
+        if (activeTab === 'kds') {
+          return (
+            <DashboardKdsPane 
+              kdsOrders={kdsOrders}
+              deliveryOrders={deliveryOrders}
+              onToggleKdsStatus={handleToggleKdsStatus}
+              onUpdateDeliveryStatus={handleUpdateDeliveryStatus}
+            />
+          );
+        }
+        return (
+          <DashboardDeliveryPane 
+            deliveryOrders={deliveryOrders}
+            selectedDeliveryId={selectedDeliveryId}
+            setSelectedDeliveryId={setSelectedDeliveryId}
+            onUpdateDeliveryStatus={handleUpdateDeliveryStatus}
+          />
+        );
+
+      case 'receipt':
+        return (
+          <DashboardReceiptPane 
+            activeTab={activeTab}
+            selectedBillTable={selectedBillTable}
+            selectedDelivery={selectedDelivery}
+            currentBill={currentBill}
+            discountAmount={discountAmount}
+            setDiscountAmount={setDiscountAmount}
+            subtotal={subtotal}
+            finalTotal={finalTotal}
+            onOpenAddMenuModal={() => setIsAddMenuModalOpen(true)}
+            onControlState={handleControlState}
+            onUpdateDeliveryStatus={handleUpdateDeliveryStatus}
+          />
+        );
+
+      case 'delivery_summary':
+        return (
+          <DashboardDeliveryPane 
+            deliveryOrders={deliveryOrders}
+            selectedDeliveryId={selectedDeliveryId}
+            setSelectedDeliveryId={setSelectedDeliveryId}
+            onUpdateDeliveryStatus={handleUpdateDeliveryStatus}
+          />
+        );
+
+      case 'bgm':
+        return (
+          <DashboardBgmPlayer 
+            youtubeVideoId={youtubeVideoId}
+            setYoutubeVideoId={setYoutubeVideoId}
+          />
+        );
+
+      case 'temp_occupied':
+        return (
+          <TempOccupiedList 
+            tempOccupations={tempOccupations}
+            onConfirm={(elId, label) => handleControlState(elId, label, 'using')}
+            onCancel={(elId, label) => handleControlState(elId, label, 'empty')}
+          />
+        );
+
+      case 'reservations':
+        return (
+          <ReservationList 
+            reservations={reservations}
+            onComplete={handleCompleteReservation}
+            onNoShow={handleNoShowReservation}
+          />
+        );
+
+      case 'timeline':
+        return <TimelineLogs logs={logs} />;
+
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="flex bg-slate-50 dark:bg-[#030303] text-neutral-900 dark:text-[#f5f5f7] font-sans min-h-screen transition-colors duration-300">
+    <div className="flex h-screen bg-[var(--bg-main)] text-[var(--text-main)] overflow-hidden font-sans select-none transition-colors duration-300">
       
-      {/* Universal Sidebar with Theme Toggle */}
+      {/* Console Sidebar */}
       <ConsoleSidebar />
 
-      {/* Main Console */}
-      <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+      {/* Main Area */}
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[var(--bg-main)]">
         
-        {/* Top Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-neutral-200 dark:border-white/5 select-none">
-          <div className="text-left">
-            <h1 className="text-2xl font-black text-neutral-900 dark:text-white flex items-center gap-2.5">
-              <LayoutDashboard className="w-6 h-6 text-[#3182f6]" />
-              {storeInfo.name} 실시간 관제 POS
-            </h1>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 font-bold">
-              운영 지점: {storeInfo.address}
-            </p>
-          </div>
+        <DashboardHeader 
+          storeName={storeInfo.name}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          deliveryCount={deliveryOrders.length}
+          isEditMode={isEditMode}
+          setIsEditMode={setIsEditMode}
+          onResetWidgetOrder={handleResetWidgetOrder}
+        />
 
-          <div className="flex items-center gap-3">
-            <div className="bg-neutral-200/60 dark:bg-white/5 p-1 rounded-full border border-neutral-300/30 dark:border-white/10 flex gap-1 select-none font-bold text-xs">
-              <button
-                onClick={() => setActiveTab('live')}
-                className={`px-4 py-2 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
-                  activeTab === 'live' ? 'bg-[#3182f6] text-white shadow-md' : 'text-neutral-500 dark:text-neutral-400'
-                }`}
-              >
-                <LayoutDashboard className="w-3.5 h-3.5" /> 관제 & POS
-              </button>
-              <button
-                onClick={() => setActiveTab('kds')}
-                className={`px-4 py-2 rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
-                  activeTab === 'kds' ? 'bg-[#3182f6] text-white shadow-md' : 'text-neutral-500 dark:text-neutral-400'
-                }`}
-              >
-                <ChefHat className="w-3.5 h-3.5" /> 주방 KDS
-              </button>
+        {/* Dashboard Content Container */}
+        <div className="p-6 space-y-6 max-w-[1600px] mx-auto w-full">
+          
+          <DashboardKpi {...kpi} />
+
+          {isEditMode && (
+            <div className="p-3.5 rounded-[3px] bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold flex items-center justify-between animate-pulse">
+              <div className="flex items-center gap-2">
+                <Layers className="w-4 h-4" />
+                <span>위젯 배치 편집 모드가 활성화되었습니다. 블록 상단의 드래그 핸들을 잡고 원하는 위치로 이동해보세요!</span>
+              </div>
+              <span className="text-[10px] font-mono font-black uppercase bg-amber-500/20 px-2 py-0.5 rounded-[3px]">
+                DRAG & DROP ACTIVE
+              </span>
             </div>
+          )}
 
-            <button
-              onClick={() => navigate('/owner/store/new')}
-              className="px-4 py-2 rounded-full border border-neutral-200 dark:border-white/10 text-xs font-extrabold text-neutral-700 dark:text-white hover:bg-neutral-100 dark:hover:bg-white/5 cursor-pointer transition-all"
-            >
-              도면 수정
-            </button>
-          </div>
-        </div>
-
-        {/* Live Control View */}
-        {activeTab === 'live' && (
-          <div className="space-y-6">
+          {/* Main Drag & Drop Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            <DashboardKpi
-              usingCount={kpi.usingCount}
-              tempOccupiedCount={kpi.tempOccupiedCount}
-              reservedCount={kpi.reservedCount}
-              emptyCount={kpi.emptyCount}
-              totalTables={kpi.totalTables}
-            />
+            {/* Left 8 Cols */}
+            <div className="lg:col-span-8 space-y-6 text-left">
+              {widgetOrder.filter(id => id === 'canvas' || id === 'temp_occupied' || id === 'reservations' || id === 'timeline').map((id) => {
+                const isDragging = draggedWidgetId === id;
+                const isOver = dragOverWidgetId === id;
 
-            {/* Side-by-Side Main Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              
-              {/* Left 8 cols: 2D Interactive Table Canvas */}
-              <div className="lg:col-span-8 space-y-6">
-                <DashboardCanvas
-                  placedElements={placedElements}
-                  tableStates={tableStates}
-                  activeControlId={activeControlId}
-                  setActiveControlId={(id) => {
-                    setActiveControlId(id);
-                    const clickedEl = placedElements.find(e => e.id === id);
-                    if (clickedEl && clickedEl.isReservable) {
-                      setSelectedBillTable({ id: clickedEl.id, label: clickedEl.label });
-                      setDiscountAmount(0);
-                    }
-                  }}
-                  onControlState={handleControlState}
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <TempOccupiedList
-                    tempOccupations={tempOccupations}
-                    onConfirm={(elId, lbl) => handleControlState(elId, lbl, 'using')}
-                    onCancel={(elId, lbl) => handleControlState(elId, lbl, 'empty')}
-                  />
-                  <ReservationList
-                    reservations={reservations}
-                    onComplete={handleCompleteReservation}
-                    onNoShow={handleNoShowReservation}
-                  />
-                </div>
-
-                {/* Store Ambience YouTube BGM Video Player Panel */}
-                <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-6 shadow-xl text-left select-none space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-black text-[#3182f6] uppercase font-mono flex items-center gap-1.5">
-                      📺 STORE YOUTUBE BGM LIVE PLAYER
-                    </span>
-                    <span className="text-[10px] text-red-500 font-mono font-bold bg-red-500/10 px-2.5 py-0.5 rounded-full border border-red-500/20">
-                      LIVE YOUTUBE STREAMING
-                    </span>
-                  </div>
-                  
-                  {/* YouTube Embedded Video Iframe */}
-                  <div className="w-full aspect-video rounded-2xl overflow-hidden border border-neutral-200 dark:border-white/10 bg-black shadow-inner">
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      src={`https://www.youtube.com/embed/${youtubeVideoId}?autoplay=1&mute=0`}
-                      title="ZariYo Store BGM YouTube Player"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="w-full h-full"
-                    />
-                  </div>
-
-                  {/* Preset BGM Video Buttons */}
-                  <div>
-                    <label className="block text-[11px] font-bold text-neutral-500 dark:text-neutral-400 mb-2">
-                      인기 매장 BGM 비디오 추천 트랙:
-                    </label>
-                    <div className="grid grid-cols-3 gap-2 text-xs font-bold">
-                      <button 
-                        onClick={() => setYoutubeVideoId('jfKfPfyJRdk')} 
-                        className={`py-2 px-3 rounded-xl border transition-all cursor-pointer text-center ${
-                          youtubeVideoId === 'jfKfPfyJRdk'
-                            ? 'bg-[#3182f6] border-[#3182f6] text-white shadow-md'
-                            : 'bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10 text-neutral-700 dark:text-neutral-300 hover:border-[#3182f6]'
-                        }`}
-                      >
-                        재즈 라운지 🎷
-                      </button>
-                      
-                      <button 
-                        onClick={() => setYoutubeVideoId('mPZkdNFkNps')} 
-                        className={`py-2 px-3 rounded-xl border transition-all cursor-pointer text-center ${
-                          youtubeVideoId === 'mPZkdNFkNps'
-                            ? 'bg-[#3182f6] border-[#3182f6] text-white shadow-md'
-                            : 'bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10 text-neutral-700 dark:text-neutral-300 hover:border-[#3182f6]'
-                        }`}
-                      >
-                        클래식 다이닝 🎻
-                      </button>
-                      
-                      <button 
-                        onClick={() => setYoutubeVideoId('1ZYbU85NO6w')} 
-                        className={`py-2 px-3 rounded-xl border transition-all cursor-pointer text-center ${
-                          youtubeVideoId === '1ZYbU85NO6w'
-                            ? 'bg-[#3182f6] border-[#3182f6] text-white shadow-md'
-                            : 'bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10 text-neutral-700 dark:text-neutral-300 hover:border-[#3182f6]'
-                        }`}
-                      >
-                        어쿠스틱 팝 🎸
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Custom YouTube Link Input */}
-                  <div className="flex gap-2 pt-1">
-                    <input
-                      type="text"
-                      placeholder="원하시는 유튜브 영상 ID 또는 링크 입력 (예: jfKfPfyJRdk)"
-                      value={customYoutubeInput}
-                      onChange={(e) => setCustomYoutubeInput(e.target.value)}
-                      className="flex-1 px-3 py-2 text-xs rounded-xl bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-neutral-900 dark:text-white focus:outline-none focus:border-[#3182f6]"
-                    />
-                    <button
-                      onClick={() => {
-                        if (!customYoutubeInput.trim()) return;
-                        let extractedId = customYoutubeInput.trim();
-                        if (extractedId.includes('v=')) {
-                          extractedId = extractedId.split('v=')[1].split('&')[0];
-                        } else if (extractedId.includes('youtu.be/')) {
-                          extractedId = extractedId.split('youtu.be/')[1].split('?')[0];
-                        }
-                        setYoutubeVideoId(extractedId);
-                        setCustomYoutubeInput('');
-                        alert(`유튜브 매장 BGM 비디오가 변경되었습니다. (ID: ${extractedId})`);
-                      }}
-                      className="px-4 py-2 bg-[#3182f6] hover:bg-[#286fd7] text-white text-xs font-black rounded-xl cursor-pointer transition-all"
-                    >
-                      적용
-                    </button>
-                  </div>
-
-                </div>
-              </div>
-
-
-
-              {/* Right 4 cols: Side-by-Side Bill & POS Action Bar */}
-              <div className="lg:col-span-4 space-y-6">
-                <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-6 shadow-xl text-left select-none">
-                  <div className="flex items-center justify-between mb-4 border-b border-neutral-200 dark:border-white/5 pb-3">
-                    <span className="text-xs font-black text-[#3182f6] uppercase font-mono flex items-center gap-1.5">
-                      <Receipt className="w-4 h-4" /> REALTIME TABLE RECEIPT
-                    </span>
-                    <span className="text-[10px] text-neutral-400 font-mono">SIDE-BY-SIDE POS</span>
-                  </div>
-
-                  {selectedBillTable ? (
-                    <div>
-                      <div className="mb-3 flex justify-between items-start">
-                        <div>
-                          <span className="text-xl font-black text-neutral-900 dark:text-white">
-                            테이블 {selectedBillTable.label}
-                          </span>
-                          <p className="text-[10px] text-neutral-400 font-mono">
-                            STATUS: {tableStates[selectedBillTable.id] === 'using' ? '착석 사용 중' : tableStates[selectedBillTable.id] === 'temp-occupied' ? '5분 선점 중' : '공석'}
-                          </p>
-                        </div>
+                return (
+                  <div
+                    key={id}
+                    draggable={isEditMode}
+                    onDragStart={() => handleDragStart(id)}
+                    onDragOver={(e) => handleDragOver(e, id)}
+                    onDrop={() => handleDrop(id)}
+                    className={`transition-all duration-200 relative ${
+                      isEditMode ? 'cursor-grab active:cursor-grabbing border-2 border-dashed border-neutral-400 p-1.5 rounded-[3px]' : ''
+                    } ${
+                      isDragging ? 'opacity-40 scale-[0.98]' : ''
+                    } ${
+                      isOver ? 'border-amber-500 scale-[1.01] bg-amber-500/5' : ''
+                    }`}
+                  >
+                    {isEditMode && (
+                      <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black rounded-[3px] text-[10px] font-mono font-black shadow-md">
+                        <GripVertical className="w-3.5 h-3.5" />
+                        <span>드래그하여 이동</span>
                       </div>
-
-                      {/* POS Real Action Bar (테이블 이동, 인쇄, 할인, 메뉴추가) */}
-                      <div className="grid grid-cols-2 gap-1.5 mb-4">
-                        <button
-                          onClick={() => setIsAddMenuModalOpen(true)}
-                          className="px-3 py-2 rounded-xl bg-[#3182f6]/10 text-[#3182f6] hover:bg-[#3182f6] hover:text-white border border-[#3182f6]/20 text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1"
-                        >
-                          <PlusCircle className="w-3.5 h-3.5" /> + 메뉴 추가
-                        </button>
-                        <button
-                          onClick={() => {
-                            if (discountAmount > 0) {
-                              setDiscountAmount(0);
-                              alert('할인이 취소되었습니다.');
-                            } else {
-                              setDiscountAmount(Math.round(subTotalAmount * 0.1));
-                              alert(`10% 특별 할인 (₩${Math.round(subTotalAmount * 0.1).toLocaleString()}) 이 적용되었습니다.`);
-                            }
-                          }}
-                          className={`px-3 py-2 rounded-xl border text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1 ${
-                            discountAmount > 0 
-                              ? 'bg-purple-500 text-white border-purple-500' 
-                              : 'bg-purple-500/10 text-purple-500 border-purple-500/20 hover:bg-purple-500 hover:text-white'
-                          }`}
-                        >
-                          <Percent className="w-3.5 h-3.5" /> {discountAmount > 0 ? '할인 적용됨' : '10% 할인'}
-                        </button>
-                        <button
-                          onClick={() => alert(`[${selectedBillTable.label}] 테이블 수선서 영수증이 매장 프린터로 출력되었습니다.`)}
-                          className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-white/5 hover:bg-neutral-200 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-white/10 text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1"
-                        >
-                          <Printer className="w-3.5 h-3.5" /> 영수증 인쇄
-                        </button>
-                        <button
-                          onClick={() => alert(`[${selectedBillTable.label}] 테이블 합석 및 자리 이동 모달이 준비되었습니다.`)}
-                          className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-white/5 hover:bg-neutral-200 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-white/10 text-[11px] font-bold transition-all cursor-pointer flex items-center justify-center gap-1"
-                        >
-                          <Move className="w-3.5 h-3.5" /> 자리 이동
-                        </button>
-                      </div>
-
-                      {/* Payment Method Badge */}
-                      {currentTableBill && (
-                        <div className="text-[10.5px] text-neutral-600 dark:text-neutral-400 font-bold bg-neutral-100 dark:bg-white/5 p-2 rounded-xl mb-3 flex items-center gap-1.5">
-                          <CreditCard className="w-3.5 h-3.5 text-[#3182f6]" />
-                          <span>{currentTableBill.paymentMethod}</span>
-                        </div>
-                      )}
-
-                      {/* Receipt items list */}
-                      <div className="space-y-2 border-y border-neutral-200 dark:border-white/5 py-4 text-xs font-bold">
-                        {!currentTableBill || currentTableBill.items.length === 0 ? (
-                          <div className="text-center text-neutral-400 py-4 text-[11px]">
-                            주문 내역이 없습니다. (+ 메뉴 추가 주문 가능)
-                          </div>
-                        ) : (
-                          currentTableBill.items.map((item, idx) => (
-                            <div key={idx} className="flex justify-between text-neutral-800 dark:text-white">
-                              <span>{item.name} (x{item.qty})</span>
-                              <span>₩ {(item.price * item.qty).toLocaleString()}</span>
-                            </div>
-                          ))
-                        )}
-                      </div>
-
-                      {discountAmount > 0 && (
-                        <div className="flex justify-between items-center text-xs font-bold text-purple-500 py-2 border-b border-neutral-200 dark:border-white/5">
-                          <span>10% 이벤트 특별 할인 적용</span>
-                          <span>- ₩ {discountAmount.toLocaleString()}</span>
-                        </div>
-                      )}
-
-                      <div className="flex justify-between items-center my-4">
-                        <span className="text-xs font-bold text-neutral-500">최종 결제 수선액</span>
-                        <span className="text-xl font-black text-[#3182f6]">₩ {finalTotalAmount.toLocaleString()}</span>
-                      </div>
-
-                      <button
-                        onClick={() => {
-                          handleControlState(selectedBillTable.id, selectedBillTable.label, 'empty');
-                          setDiscountAmount(0);
-                          alert(`테이블 ${selectedBillTable.label} 결제가 완료되어 공석 원복되었습니다.`);
-                        }}
-                        className="w-full py-3 rounded-full bg-[#3182f6] hover:bg-[#286fd7] text-white text-xs font-extrabold cursor-pointer shadow-md transition-all flex items-center justify-center gap-1.5"
-                      >
-                        <DollarSign className="w-4 h-4" />
-                        결제 승인 및 퇴석 처리
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="py-12 text-center text-neutral-400 text-xs font-bold">
-                      왼쪽 도면에서 수선서를 확인할 테이블을 탭하세요.
-                    </div>
-                  )}
-                </div>
-
-                <TimelineLogs logs={logs} />
-              </div>
-
+                    )}
+                    {renderWidgetContent(id)}
+                  </div>
+                );
+              })}
             </div>
-          </div>
-        )}
 
-        {/* Kitchen KDS View */}
-        {activeTab === 'kds' && (
-          <div className="space-y-6 select-none text-left">
-            <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-6 md:p-8 shadow-md">
-              <h3 className="text-lg font-black text-neutral-900 dark:text-white mb-6 flex items-center gap-2">
-                <ChefHat className="w-5.5 h-5.5 text-orange-500" /> 주방 KDS 조리 대기열
-              </h3>
+            {/* Right 4 Cols */}
+            <div className="lg:col-span-4 space-y-6 text-left select-none">
+              {widgetOrder.filter(id => id === 'receipt' || id === 'delivery_summary' || id === 'bgm').map((id) => {
+                const isDragging = draggedWidgetId === id;
+                const isOver = dragOverWidgetId === id;
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {kdsOrders.filter(o => o.status === 'cooking').map((order) => (
-                  <div key={order.id} className="bg-neutral-50 dark:bg-white/[0.02] border-2 border-orange-500/30 rounded-2xl p-5 shadow-sm">
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-sm font-black text-orange-500 bg-orange-500/10 px-2.5 py-0.5 rounded">
-                        테이블 {order.tableLabel}
-                      </span>
-                      <span className="text-[10px] text-neutral-400 font-mono">{order.time} 접수</span>
-                    </div>
-
-                    <h4 className="text-base font-black text-neutral-900 dark:text-white my-2">
-                      {order.menuName} <span className="text-[#3182f6]">x{order.quantity}</span>
-                    </h4>
-
-                    <button
-                      onClick={() => markAsCompleted(order.id)}
-                      className="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-black cursor-pointer shadow-md flex items-center justify-center gap-1.5 transition-all mt-4"
-                    >
-                      <CheckCircle2 className="w-4 h-4" /> 조리 완료
-                    </button>
+                return (
+                  <div
+                    key={id}
+                    draggable={isEditMode}
+                    onDragStart={() => handleDragStart(id)}
+                    onDragOver={(e) => handleDragOver(e, id)}
+                    onDrop={() => handleDrop(id)}
+                    className={`transition-all duration-200 relative ${
+                      isEditMode ? 'cursor-grab active:cursor-grabbing border-2 border-dashed border-neutral-400 p-1.5 rounded-[3px]' : ''
+                    } ${
+                      isDragging ? 'opacity-40 scale-[0.98]' : ''
+                    } ${
+                      isOver ? 'border-amber-500 scale-[1.01] bg-amber-500/5' : ''
+                    }`}
+                  >
+                    {isEditMode && (
+                      <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black rounded-[3px] text-[10px] font-mono font-black shadow-md">
+                        <GripVertical className="w-3.5 h-3.5" />
+                        <span>드래그하여 이동</span>
+                      </div>
+                    )}
+                    {renderWidgetContent(id)}
                   </div>
-                ))}
-              </div>
+                );
+              })}
             </div>
-          </div>
-        )}
 
+          </div>
+
+        </div>
       </main>
 
-      {/* POS Quick Menu Add Modal */}
-      {isAddMenuModalOpen && selectedBillTable && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm select-none">
-          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-8 max-w-sm w-full shadow-2xl relative text-left">
-            
-            <button 
-              onClick={() => setIsAddMenuModalOpen(false)}
-              className="absolute top-6 right-6 p-2 rounded-full bg-neutral-100 dark:bg-white/5 text-neutral-500 dark:text-white cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <h3 className="text-base font-black text-neutral-900 dark:text-white mb-1">
-              테이블 [{selectedBillTable.label}] 메뉴 직접 추가
-            </h3>
-            <p className="text-xs text-neutral-400 font-bold mb-6">
-              현장 주문 건을 해당 테이블 영수증 수선에 추가합니다.
-            </p>
-
-            <div className="space-y-2">
-              <button
-                onClick={() => handleAddOrderToTable('토마호크 스테이크', 48000)}
-                className="w-full p-3 rounded-2xl bg-neutral-50 dark:bg-white/5 hover:bg-[#3182f6]/10 border border-neutral-200 dark:border-white/10 flex justify-between items-center text-xs font-black cursor-pointer transition-all text-neutral-900 dark:text-white"
-              >
-                <span>토마호크 스테이크</span>
-                <span className="text-[#3182f6]">+ ₩48,000</span>
-              </button>
-
-              <button
-                onClick={() => handleAddOrderToTable('트러플 크림 파스타', 18000)}
-                className="w-full p-3 rounded-2xl bg-neutral-50 dark:bg-white/5 hover:bg-[#3182f6]/10 border border-neutral-200 dark:border-white/10 flex justify-between items-center text-xs font-black cursor-pointer transition-all text-neutral-900 dark:text-white"
-              >
-                <span>트러플 크림 파스타</span>
-                <span className="text-[#3182f6]">+ ₩18,000</span>
-              </button>
-
-              <button
-                onClick={() => handleAddOrderToTable('살치살 찹스테이크', 32000)}
-                className="w-full p-3 rounded-2xl bg-neutral-50 dark:bg-white/5 hover:bg-[#3182f6]/10 border border-neutral-200 dark:border-white/10 flex justify-between items-center text-xs font-black cursor-pointer transition-all text-neutral-900 dark:text-white"
-              >
-                <span>살치살 찹스테이크</span>
-                <span className="text-[#3182f6]">+ ₩32,000</span>
-              </button>
-
-              <button
-                onClick={() => handleAddOrderToTable('시그니처 수제 자몽 에이드', 7000)}
-                className="w-full p-3 rounded-2xl bg-neutral-50 dark:bg-white/5 hover:bg-[#3182f6]/10 border border-neutral-200 dark:border-white/10 flex justify-between items-center text-xs font-black cursor-pointer transition-all text-neutral-900 dark:text-white"
-              >
-                <span>수제 자몽 에이드</span>
-                <span className="text-[#3182f6]">+ ₩7,000</span>
-              </button>
-            </div>
-
-          </div>
-        </div>
-      )}
+      {/* Add Menu Modal Component */}
+      <AddMenuModal 
+        isOpen={isAddMenuModalOpen}
+        onClose={() => setIsAddMenuModalOpen(false)}
+        selectedTableLabel={selectedBillTable?.label}
+        onAddMenuItem={handleAddMenuItem}
+      />
 
     </div>
   );

@@ -14,11 +14,11 @@ export function Footer() {
           <a href="https://github.com" target="_blank" rel="noreferrer" className="text-neutral-500 hover:text-black dark:text-white/40 dark:hover:text-white transition-colors text-[10px]">
             Github
           </a>
-          <span className="w-1 h-1 rounded-full bg-[#3182f6]" />
+          <span className="w-1 h-1 rounded-full bg-[#000000]" />
           <a href="#privacy" className="text-neutral-500 hover:text-black dark:text-white/40 dark:hover:text-white transition-colors text-[10px]">
             개인정보처리방침
           </a>
-          <span className="w-1 h-1 rounded-full bg-[#3182f6]" />
+          <span className="w-1 h-1 rounded-full bg-[#000000]" />
           <a href="#terms" className="text-neutral-500 hover:text-black dark:text-white/40 dark:hover:text-white transition-colors text-[10px]">
             이용약관
           </a>

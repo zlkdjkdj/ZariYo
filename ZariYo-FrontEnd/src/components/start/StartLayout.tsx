@@ -18,10 +18,10 @@ export function StartLayout({ children }: StartLayoutProps) {
   };
 
   return (
-    <div className="bg-slate-50 dark:bg-black text-neutral-900 dark:text-white font-sans selection:bg-[#3182f6]/20 min-h-screen flex flex-col justify-between relative overflow-hidden transition-colors duration-300">
+    <div className="bg-slate-50 dark:bg-black text-neutral-900 dark:text-white font-sans selection:bg-[#000000]/20 min-h-screen flex flex-col justify-between relative overflow-hidden transition-colors duration-300">
       
       {/* Light/Dark Responsive Blue Glow spill */}
-      <div className="absolute top-[-20%] left-[50%] -translate-x-1/2 w-[70%] h-[50%] rounded-full bg-[#3182f6]/4 dark:bg-[#3182f6]/5 blur-[130px] pointer-events-none -z-10" />
+      <div className="absolute top-[-20%] left-[50%] -translate-x-1/2 w-[70%] h-[50%] rounded-full bg-[#000000]/4 dark:bg-[#000000]/5 blur-[130px] pointer-events-none -z-10" />
 
       {/* Top Navigation Header */}
       <header className="w-full max-w-7xl mx-auto px-6 md:px-12 py-6 flex items-center justify-between z-10 select-none">
@@ -29,11 +29,11 @@ export function StartLayout({ children }: StartLayoutProps) {
           onClick={() => navigate('/')} 
           className="flex items-center gap-2 cursor-pointer group"
         >
-          <div className="w-6.5 h-6.5 rounded-lg bg-gradient-to-tr from-[#3182f6] to-[#4894fe] flex items-center justify-center shadow-[0_4px_10px_rgba(49,130,246,0.2)]">
+          <div className="w-6.5 h-6.5 rounded-none bg-gradient-to-tr from-[#000000] to-[#000000] flex items-center justify-center shadow-none">
             <LayoutGrid className="w-3.5 h-3.5 text-white" />
           </div>
           <span className="text-lg font-black tracking-tight text-neutral-900 dark:text-white flex items-center">
-            ZariYo <span className="text-[#3182f6] font-mono text-[9px] ml-1.5 font-bold tracking-widest uppercase bg-[#3182f6]/10 px-2 py-0.5 rounded-full border border-[#3182f6]/20">Console</span>
+            ZariYo <span className="text-[#000000] font-mono text-[9px] ml-1.5 font-bold tracking-widest uppercase bg-[#000000]/10 px-2 py-0.5 rounded-full border border-[#000000]/20">Console</span>
           </span>
         </div>
 

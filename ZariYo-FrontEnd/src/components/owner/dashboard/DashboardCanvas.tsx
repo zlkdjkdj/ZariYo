@@ -21,19 +21,19 @@ export function DashboardCanvas({
     <div className="lg:col-span-8 flex flex-col gap-3">
       <div className="flex justify-between items-center px-1 text-xs select-none">
         <span className="text-xs text-neutral-600 dark:text-neutral-300 font-extrabold flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#3182f6] animate-ping" />
+          <span className="w-2 h-2 rounded-full bg-[#000000] animate-ping" />
           실시간 2D 스마트 매장 관제 맵
         </span>
         <div className="flex gap-3 text-[10px] font-black font-mono">
           <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-emerald-500/20 border border-emerald-500" />공석</span>
           <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-red-500/20 border border-red-500" />점유중</span>
           <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-orange-500/20 border border-orange-500 animate-pulse" />선점대기</span>
-          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-[#3182f6]/20 border border-[#3182f6]" />예약됨</span>
+          <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-[#000000]/20 border border-[#000000]" />예약됨</span>
         </div>
       </div>
 
       {/* Live Cyber Glassmorphic Map Box */}
-      <div className="w-full h-[520px] bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl relative overflow-hidden select-none shadow-2xl backdrop-blur-2xl">
+      <div className="w-full h-[520px] bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none relative overflow-hidden select-none shadow-none backdrop-blur-2xl">
         
         {/* Grid Background Lines */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000005_1px,transparent_1px),linear-gradient(to_bottom,#00000005_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:20px_20px]" />
@@ -46,13 +46,13 @@ export function DashboardCanvas({
           if (!isTable) {
             colorClasses = 'bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/5 text-neutral-400 dark:text-neutral-500';
           } else if (tableState === 'empty') {
-            colorClasses = 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500 text-emerald-600 dark:text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.15)]';
+            colorClasses = 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500 text-emerald-600 dark:text-emerald-400 shadow-none';
           } else if (tableState === 'using') {
-            colorClasses = 'bg-red-500/15 hover:bg-red-500/25 border-red-500 text-red-500 font-black shadow-[0_0_15px_rgba(239,68,68,0.2)]';
+            colorClasses = 'bg-red-500/15 hover:bg-red-500/25 border-red-500 text-red-500 font-black shadow-none';
           } else if (tableState === 'temp-occupied') {
-            colorClasses = 'bg-orange-500/20 hover:bg-orange-500/30 border-orange-500 text-orange-500 font-black animate-pulse border-2 shadow-[0_0_20px_rgba(249,115,22,0.3)]';
+            colorClasses = 'bg-orange-500/20 hover:bg-orange-500/30 border-orange-500 text-orange-500 font-black animate-pulse border-2 shadow-none';
           } else if (tableState === 'reserved') {
-            colorClasses = 'bg-[#3182f6]/15 hover:bg-[#3182f6]/25 border-[#3182f6] text-[#3182f6] font-black shadow-[0_0_15px_rgba(49,130,246,0.2)]';
+            colorClasses = 'bg-[#000000]/15 hover:bg-[#000000]/25 border-[#000000] text-[#000000] font-black shadow-none';
           }
 
           return (
@@ -66,7 +66,7 @@ export function DashboardCanvas({
                 width: el.width,
                 height: el.height,
               }}
-              className={`rounded-2xl border flex flex-col items-center justify-center p-2 text-center transition-all ${colorClasses} ${
+              className={`rounded-none border flex flex-col items-center justify-center p-2 text-center transition-all ${colorClasses} ${
                 isTable ? 'cursor-pointer hover:scale-[1.04]' : ''
               }`}
             >
@@ -88,7 +88,7 @@ export function DashboardCanvas({
         {/* Live Interactive Control Modal */}
         {activeControlId && activeControlElement && (
           <div className="absolute inset-0 bg-black/60 backdrop-blur-md z-30 flex items-center justify-center p-4">
-            <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-3xl p-6 max-w-xs w-full shadow-2xl text-left">
+            <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/10 rounded-none p-6 max-w-xs w-full shadow-none text-left">
               <div className="flex items-center justify-between mb-5 border-b border-neutral-200 dark:border-white/5 pb-3 select-none">
                 <h4 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-widest font-mono">
                   [{activeControlElement.label}] 좌석 상태 수동 변경
@@ -122,7 +122,7 @@ export function DashboardCanvas({
                 </button>
                 <button
                   onClick={() => onControlState(activeControlElement.id, activeControlElement.label, 'reserved')}
-                  className="w-full py-3 rounded-full border border-neutral-200 dark:border-white/10 hover:border-[#3182f6] hover:bg-[#3182f6]/10 text-[#3182f6] text-xs font-bold cursor-pointer transition-all"
+                  className="w-full py-3 rounded-full border border-neutral-200 dark:border-white/10 hover:border-[#000000] hover:bg-[#000000]/10 text-[#000000] text-xs font-bold cursor-pointer transition-all"
                 >
                   지정 예약석 배정
                 </button>

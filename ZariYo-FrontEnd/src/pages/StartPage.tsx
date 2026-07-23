@@ -16,7 +16,7 @@ export function StartPage() {
         
         {/* Top Console Title Block */}
         <div className="text-center mb-10 select-none">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#3182f6]/10 border border-[#3182f6]/25 text-[10px] text-[#3182f6] mb-4 font-bold font-mono">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#000000]/10 border border-[#000000]/25 text-[10px] text-[#000000] mb-4 font-bold font-mono">
             <Store className="w-3.5 h-3.5" />
             <span>ZARIYO INTEGRATED KITCHEN & KIOSK CONSOLE</span>
           </div>
@@ -30,42 +30,42 @@ export function StartPage() {
 
         {/* Real-time KPI Analytics Summary Bar */}
         <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 select-none">
-          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-2xl p-5 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-none p-5 shadow-none flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-neutral-400 dark:text-white/40 uppercase tracking-widest font-mono">TODAY SALES</span>
               <p className="text-lg md:text-xl font-black text-neutral-900 dark:text-white mt-1">₩ 1,840,000</p>
             </div>
-            <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-500">
+            <div className="p-3 rounded-none bg-emerald-500/10 text-emerald-500">
               <TrendingUp className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-2xl p-5 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-none p-5 shadow-none flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-neutral-400 dark:text-white/40 uppercase tracking-widest font-mono">OCCUPIED SEATS</span>
-              <p className="text-lg md:text-xl font-black text-neutral-900 dark:text-white mt-1">18 / 24 <span className="text-xs text-[#3182f6] font-bold">(75%)</span></p>
+              <p className="text-lg md:text-xl font-black text-neutral-900 dark:text-white mt-1">18 / 24 <span className="text-xs text-[#000000] font-bold">(75%)</span></p>
             </div>
-            <div className="p-3 rounded-xl bg-[#3182f6]/10 text-[#3182f6]">
+            <div className="p-3 rounded-none bg-[#000000]/10 text-[#000000]">
               <Users className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-2xl p-5 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-none p-5 shadow-none flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-neutral-400 dark:text-white/40 uppercase tracking-widest font-mono">KDS PENDING</span>
               <p className="text-lg md:text-xl font-black text-orange-500 mt-1">4 건 대기중</p>
             </div>
-            <div className="p-3 rounded-xl bg-orange-500/10 text-orange-500">
+            <div className="p-3 rounded-none bg-orange-500/10 text-orange-500">
               <ChefHat className="w-5 h-5 animate-pulse" />
             </div>
           </div>
 
-          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-2xl p-5 shadow-sm flex items-center justify-between">
+          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-none p-5 shadow-none flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-neutral-400 dark:text-white/40 uppercase tracking-widest font-mono">HOLDS & ROLLBACK</span>
               <p className="text-lg md:text-xl font-black text-purple-500 mt-1">2 건 처리됨</p>
             </div>
-            <div className="p-3 rounded-xl bg-purple-500/10 text-purple-500">
+            <div className="p-3 rounded-none bg-purple-500/10 text-purple-500">
               <Clock className="w-5 h-5" />
             </div>
           </div>

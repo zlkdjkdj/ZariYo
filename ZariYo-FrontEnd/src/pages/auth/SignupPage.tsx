@@ -45,7 +45,7 @@ export function SignupPage() {
   };
 
   return (
-    <div className="bg-slate-50 dark:bg-[#030303] text-neutral-900 dark:text-[#f5f5f7] font-sans selection:bg-[#3182f6]/20 min-h-screen flex transition-colors duration-300 relative overflow-hidden">
+    <div className="bg-slate-50 dark:bg-[#030303] text-neutral-900 dark:text-[#f5f5f7] font-sans selection:bg-[#000000]/20 min-h-screen flex transition-colors duration-300 relative overflow-hidden">
       
       {/* 1. Left Side: 50% Graphic Banner Panel */}
       <div className="hidden md:flex w-1/2 h-screen relative overflow-hidden select-none bg-black">
@@ -63,20 +63,20 @@ export function SignupPage() {
             onClick={() => navigate('/')} 
             className="flex items-center gap-2 cursor-pointer group"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#3182f6] to-[#4894fe] flex items-center justify-center shadow-[0_4px_10px_rgba(49,130,246,0.3)]">
+            <div className="w-8 h-8 rounded-none bg-gradient-to-tr from-[#000000] to-[#000000] flex items-center justify-center shadow-none">
               <LayoutGrid className="w-4 h-4 text-white" />
             </div>
             <span className="text-xl font-black tracking-tight text-white flex items-center">
-              ZariYo <span className="text-[#3182f6] font-mono text-[9px] ml-1.5 font-bold tracking-widest uppercase bg-[#3182f6]/10 px-2 py-0.5 rounded-full border border-[#3182f6]/20">Console</span>
+              ZariYo <span className="text-[#000000] font-mono text-[9px] ml-1.5 font-bold tracking-widest uppercase bg-[#000000]/10 px-2 py-0.5 rounded-full border border-[#000000]/20">Console</span>
             </span>
           </div>
 
           {/* Bottom typography context */}
           <div>
-            <span className="text-[10px] font-black tracking-widest text-[#3182f6] uppercase font-mono bg-[#3182f6]/20 px-3 py-1 rounded-full border border-[#3182f6]/30 backdrop-blur-md">
+            <span className="text-[10px] font-black tracking-widest text-[#000000] uppercase font-mono bg-[#000000]/20 px-3 py-1 rounded-full border border-[#000000]/30 backdrop-blur-md">
               Atomic space management
             </span>
-            <h2 className="text-3xl md:text-4xl font-black text-white mt-4 leading-tight drop-shadow-md">
+            <h2 className="text-3xl md:text-4xl font-black text-white mt-4 leading-tight drop-shadow-none">
               단 1ms 오차도 허용하지 않는<br />동시 예약 락 무결성을 가집니다.
             </h2>
             <p className="text-white/60 text-xs md:text-sm mt-4 leading-relaxed font-semibold max-w-md">
@@ -95,11 +95,11 @@ export function SignupPage() {
             onClick={() => navigate('/')}
             className="flex items-center gap-2 text-xs font-bold text-neutral-500 hover:text-neutral-900 dark:text-[#a1a1a6] dark:hover:text-white transition-colors duration-200 cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4 text-[#3182f6]" />
+            <ArrowLeft className="w-4 h-4 text-[#000000]" />
             메인으로
           </button>
 
-          <Link to="/login" className="text-xs text-[#3182f6] hover:underline font-extrabold">
+          <Link to="/login" className="text-xs text-[#000000] hover:underline font-extrabold">
             이미 회원이신가요?
           </Link>
         </div>
@@ -125,7 +125,7 @@ export function SignupPage() {
                 onClick={() => setRole('owner')}
                 className={`flex-1 py-2.5 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 relative z-10 cursor-pointer ${
                   role === 'owner'
-                    ? 'bg-gradient-to-r from-[#3182f6] to-[#4894fe] text-white shadow-[0_4px_12px_rgba(49,130,246,0.25)]'
+                    ? 'bg-gradient-to-r from-[#000000] to-[#000000] text-white shadow-none'
                     : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                 }`}
               >
@@ -136,7 +136,7 @@ export function SignupPage() {
                 onClick={() => setRole('customer')}
                 className={`flex-1 py-2.5 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 relative z-10 cursor-pointer ${
                   role === 'customer'
-                    ? 'bg-gradient-to-r from-[#3182f6] to-[#4894fe] text-white shadow-[0_4px_12px_rgba(49,130,246,0.25)]'
+                    ? 'bg-gradient-to-r from-[#000000] to-[#000000] text-white shadow-none'
                     : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                 }`}
               >
@@ -186,7 +186,7 @@ export function SignupPage() {
                 <input
                   type="checkbox"
                   {...register('agreeTerms')}
-                  className="w-4 h-4 rounded border border-neutral-300 dark:border-white/20 text-[#3182f6] bg-white dark:bg-black focus:ring-0 focus:ring-offset-0 cursor-pointer"
+                  className="w-4 h-4 rounded border border-neutral-300 dark:border-white/20 text-[#000000] bg-white dark:bg-black focus:ring-0 focus:ring-offset-0 cursor-pointer"
                 />
                 <span className="text-[11px] text-neutral-500 dark:text-neutral-400 font-bold leading-tight group-hover:text-neutral-950 dark:group-hover:text-white transition-colors">
                   이용약관 및 개인정보 처리방침에 동의합니다.

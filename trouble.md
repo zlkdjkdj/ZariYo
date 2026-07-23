@@ -560,3 +560,58 @@
 ### [해결 방법]
 - `StartPage.tsx` 내의 `useNavigate` 패키지 출처를 `react-router-dom`으로 바로잡았으며, 3개 페이지 소스상의 미사용 아이콘(`Clock`, `AlertCircle`, `Utensils` 등)과 변수 선언 구문들을 소거하여 프로덕션 번들 컴파일을 100% 정상 통과시켰습니다.
 
+---
+
+## 28. view_file 툴 호출 인자 예외로 인한 파일 뷰어 오류
+
+### [이슈 개요]
+- **일시**: 2026-07-23
+- **장애 요인**: `work.md` 파일 검토 과정에서 `view_file` 도구 호출 시 인자 설정 오류(`StartLine (1) must be less than or equal to EndLine (0)`)로 인해 파싱 예외 및 도구 호출 실패 발생.
+- **오류 메시지**:
+  ```text
+  invalid_args: StartLine (1) must be less than or equal to EndLine (0)
+  ```
+
+### [원인 분석]
+- `view_file` 도구 사용 시 `StartLine` 매개변수를 `1`로 할당했으나, `EndLine` 매개변수를 명시적으로 채우지 않고 비워둠(Omit)으로써 API 내에서 `EndLine`이 기본값 `0`으로 처리되어 유효성 검사 규칙(`StartLine <= EndLine`)을 충족하지 못해 오류가 발생했습니다.
+
+### [해결 방법]
+- 파일의 특정 부분만 발췌해서 볼 때에는 `StartLine`과 `EndLine`을 모두 올바르게 지정하여 호출하거나, 전체 혹은 첫 800라인을 조회할 경우 두 매개변수를 모두 명시하지 않고 빈값으로 생략 처리하여 유효성 예외를 즉각 교정했습니다.
+
+---
+
+## 29. Input.tsx 치환 과정 중 핵심 input 태그 누락 구문 에러
+
+### [이슈 개요]
+- **일시**: 2026-07-23
+- **장애 요인**: `Input.tsx` 개편 시 치환 구문 인자 매칭 불일치로 인해 핵심 `<input ref={ref}` 태그 및 속성들이 유실되어 태그 짝이 맞지 않는 TypeScript 컴파일 에러 발생.
+- **오류 메시지**:
+  ```text
+  JSX element 'input' has no corresponding closing tag.
+  ```
+
+### [원인 분석]
+- `replace_file_content` 도구를 적용하여 `Input` 컴포넌트의 클래스명과 스타일을 교체하는 과정에서, 타겟 범위 지정 문제로 인해 `<input ref={ref}` 여는 태그가 삭제되고 마감 태그와 relative div wrapper 구조가 파손되어 파싱 오류를 유발했습니다.
+
+### [해결 방법]
+- 손상된 `Input.tsx` 코드 구조를 역추적하고, `<div className="relative">` wrapper div 와 `<input ref={ref}` 태그를 제자리에 복구하면서 새롭게 제정된 `input bordered` 및 `spacious padding` 클래스를 조화롭게 병합 적용하여 빌드 번들러를 100% 정상 가동시켰습니다.
+
+---
+
+## 30. DashboardPage 전면 개편 중 서브 컴포넌트 Props 시그니처 불일치 컴파일 에러
+
+### [이슈 개요]
+- **일시**: 2026-07-23
+- **장애 요인**: `DashboardPage.tsx` 대시보드 리뉴얼 과정에서 `DashboardKpi`, `DashboardCanvas`, `TempOccupiedList`, `ReservationList` 서브 컴포넌트들의 exact interface props 시그니처와 매핑하지 않아 TS2322 / TS2739 타입 컴파일 에러 10건 발생.
+- **오류 메시지**:
+  ```text
+  Property 'placedElements' does not exist on type 'IntrinsicAttributes & DashboardKpiProps'.
+  Property 'onRelease' does not exist on type 'IntrinsicAttributes & TempOccupiedListProps'.
+  Type '{ reservations: ReservationItem[]; }' is missing the following properties from type 'ReservationListProps': onComplete, onNoShow
+  ```
+
+### [원인 분석]
+- 대시보드 렌더링 영역 재설계 중 `DashboardKpi`에 `{...kpi}` 객체 대신 불필요한 `placedElements`를 전달하고, `TempOccupiedList`와 `ReservationList`에 `onConfirm`/`onCancel`, `onComplete`/`onNoShow` 등 정의된 정확한 콜백 인터페이스명을 지정하지 않아 타입 유효성 검사에서 불일치가 발생했습니다.
+
+### [해결 방법]
+- 서브 컴포넌트들의 `.tsx` 선언부 인터페이스(`DashboardKpiProps`, `DashboardCanvasProps`, `TempOccupiedListProps`, `ReservationListProps`)를 직접 추적하여 exact props 구성을 파악하고, `DashboardPage.tsx`에서 `{...kpi}`, `onConfirm`, `onCancel`, `onComplete`, `onNoShow` 핸들러를 정확하게 연결함으로써 TS 컴파일 에러 10건을 100% 해소하고 빌드를 무결 성공시켰습니다.

@@ -19,14 +19,14 @@ export const AuthInput = forwardRef<HTMLInputElement, AuthInputProps>(
           {rightElement}
         </div>
         <div className="relative select-none">
-          <Icon className="absolute left-4 top-4.5 w-4 h-4 text-[#3182f6]" />
+          <Icon className="absolute left-4 top-4.5 w-4 h-4 text-[#000000]" />
           <input
             ref={ref}
             className={`w-full bg-white dark:bg-black/40 border ${
               error
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
-                : 'border-neutral-200 dark:border-white/10 focus:border-[#3182f6] dark:focus:border-[#3182f6] focus:ring-[#3182f6]/20 dark:focus:ring-[#3182f6]/20'
-            } rounded-xl pl-11 pr-4 py-4 text-xs text-neutral-900 dark:text-white placeholder-neutral-400 dark:focus:bg-[#101012] focus:outline-none focus:ring-4 transition-all duration-200 ${className || ''}`}
+                : 'border-neutral-200 dark:border-white/10 focus:border-[#000000] dark:focus:border-[#000000] focus:ring-[#000000]/20 dark:focus:ring-[#000000]/20'
+            } rounded-none pl-11 pr-4 py-4 text-xs text-neutral-900 dark:text-white placeholder-neutral-400 dark:focus:bg-[#101012] focus:outline-none focus:ring-4 transition-all duration-200 ${className || ''}`}
             {...props}
           />
         </div>

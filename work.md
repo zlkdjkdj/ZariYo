@@ -424,6 +424,141 @@
     - 추천 프리셋 비디오(`[재즈 라운지 🎷]`, `[클래식 다이닝 🎻]`, `[어쿠스틱 팝 🎸]`) 버튼 및 커스텀 유튜브 URL/ID 수동 입력기를 통해 실시간 유튜브 영상과 음악을 트는 최첨단 미디어 컨트롤 패널을 완성했습니다.
   - 개발 완료 후 `pnpm build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
 
+### 58. Apple Human Interface Guidelines (HIG) 기반 디자인 시스템 전면 개편
+- **작업 내용**:
+  - **Apple HIG 사양 디자인 토큰 개편 ([index.css](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/index.css))**: 폰트 스택에 `"SF Pro Text"`, `"SF Pro Display"`를 최우선 배치하고, CSS 글로벌 변수들을 Fog Canvas (`#f5f5f7`), Dark Canvas (`#0f1215`), Muted (`#6e6e73`/`#8e8e93`), Primary Action (`#0071e3`), Border (`#d2d2d7`/`#292e32`)로 전면 개편했습니다.
+  - **공통 UI 컴포넌트 재구성 ([Button.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/ui/Button.tsx), [Card.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/ui/Card.tsx), [Input.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/ui/Input.tsx))**:
+    - `Button.tsx`: 애플 블루 `#0071e3`과 링크 블루 `#0066cc` 매핑, 둥글기 8px(rounded-lg) 기준 및 outline/secondary 스타일 조정.
+    - `Card.tsx`: 둥글기 `rounded-3xl`에서 18px(rounded-[18px])로 개선하고 CSS 변수로 다크 모드 연동.
+    - `Input.tsx`: 둥글기를 8px로 조정하고 포커스 테두리를 `#0071e3`, 포커스 링을 `rgba(0,113,227,0.15)`로 정교화.
+  - **하드코딩 토스 블루 일괄 교체**: 39개 소스 파일 전체에서 사용되던 `#3182f6` (Toss Blue) 색상 코드 및 2차 그라디언트 종단부 `#4894fe`, 그리고 shadow 내 `rgba(49,130,246` 코드들을 일괄적으로 애플 테마 색상(`bg-[#0071e3]`, `to-[#00c6ff]`, `rgba(0,113,227`)로 전면 개편.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 통과를 입증했습니다.
+
+### 59. ZariYo 디자인 시스템 세부 설정 개편 (Style Preferences & Spacious Density)
+- **작업 내용**:
+  - **Button 스타일 미세조정 ([Button.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/ui/Button.tsx))**: `button rounded` 선호도에 맞춰 모든 버튼의 모서리를 `rounded-full` 알약 형태로 변경하고, `density spacious` 조건에 대응하여 여백(padding)을 대폭 넓혔습니다.
+  - **Input 스타일 bordered 테마 고도화 ([Input.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/ui/Input.tsx))**: `input bordered` 선호도를 충족시키기 위해 투명한 배경(`bg-transparent`)과 명확한 테두리(`border-neutral-300` / `dark:border-neutral-700`) 스타일을 적용하고 패딩을 넓혔습니다.
+  - **Card elevated 입체감 강화 ([Card.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/ui/Card.tsx))**: 깊이 있는 입체감을 형성하기 위해 그림자 효과(`shadow-[0_12px_36px_rgba(0,0,0,0.05)]`) 및 다크 모드 그림자를 고밀도로 강화하고 호버 시 부드러운 승강(elevation) 트랜지션을 구축했습니다.
+  - **Header glass 액션 및 테마 연동 ([Header.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Header.tsx), [LandingPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LandingPage.tsx))**: 헤더의 글래스모피즘 효과(`backdrop-blur-2xl bg-white/60`)를 강화하고, 랜딩 페이지 배경을 CSS 변수 `--bg-main` 기반으로 전환하여 화이트/다크 테마 스위치와 실시간 연동시켰습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 60. 현대카드(Hyundai Card) 디자인 라이브러리 기반 테마 개편
+- **작업 내용**:
+  - **현대카드 YouandiNewKr 폰트 및 고대비 모노크롬 개편 ([index.css](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/index.css))**: 폰트 스택에 `"YouandiNewKr"`, `"YouandiNewKrTitle"`을 최우선 배치하고, 라이트/다크 모드 전반을 순백색(Canvas: `#ffffff`)과 칠흑색(Ink: `#000000`)의 강력한 고대비로 통일했습니다.
+  - **공통 컴포넌트 직각화 및 섀도우 무력화 ([Button.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/ui/Button.tsx), [Card.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/ui/Card.tsx), [Input.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/ui/Input.tsx))**:
+    - `Button.tsx`: 모서리를 3px 미세 곡률(`rounded-[3px]`)로 축소하고 그림자를 제거(`shadow-none`)했습니다.
+    - `Card.tsx`: 모서리를 완전한 직각(`rounded-none`)으로 변경하고 elevated 및 glass 그림자/블러를 모두 걷어내어 Flat border 스타일로 만들었습니다.
+    - `Input.tsx`: 모서리를 직각(`rounded-none`)으로 바꾸고 포커스 링을 제거하여 모던하고 날카로운 검은색/흰색 선형 테두리만 강조했습니다.
+  - **전체 프로젝트 색상 및 그라디언트 평면화**: 39개 소스 파일 전반의 `#0071e3`(애플 블루) 및 `#00c6ff`(그라디언트 종단부 블루), 섀도우 내 `rgba(0,113,227)`를 모두 칠흑색 `#000000` 및 평면 검은색 `rgba(0,0,0`으로 일괄 치환하여 그라디언트를 평면 칠흑색으로 정지시키고 flat 2D 미학을 완성했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 61. 화이트 모드(라이트 테마) 가독성 및 시인성 전면 개편
+- **작업 내용**:
+  - **글로벌 `--text-muted` 텍스트 명암비 강화 ([index.css](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/index.css))**: 서브 텍스트 변수 `--text-muted`의 대비를 `#666666`에서 `#444444`로 상향 조정하여 화이트 모드에서의 가독성(Contrast Ratio)을 대폭 높였습니다.
+  - **Hero 섹션 시인성 보정 ([Hero.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Hero.tsx))**: 고정된 `text-white` 및 `text-neutral-400`을 테마 가변형 클래스(`text-black dark:text-white`, `text-neutral-700 dark:text-neutral-300`)로 치환하여 화이트 모드에서 제목과 설명문이 하얀 배경에 묻히는 문제를 완전히 해결했습니다.
+  - **주요 랜딩 컴포넌트 시인성 전면 개편 ([Header.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Header.tsx), [ModuleShowcase.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/ModuleShowcase.tsx), [SpaceShowcase.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/SpaceShowcase.tsx), [Architecture.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Architecture.tsx), [AppleFeatureBlock.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/AppleFeatureBlock.tsx))**:
+    - 하드코딩된 다크 전용 배경과 희미한 회색 테두리들을 라이트 모드 겸용 단색 테두리(`border-neutral-300 dark:border-neutral-800`) 및 선명한 텍스트로 보정했습니다.
+    - 배지, 버튼, 피처 체크리스트 아이콘의 고대비 색상을 상향했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 확인했습니다.
+
+### 62. 스크롤 기반 트리거 애니메이션 & 100vh 풀스크린 랜딩 페이지 전면 개편
+- **작업 내용**:
+  - **100vh 풀스크린 웅장한 Hero 인트로 마운트 ([Hero.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Hero.tsx))**:
+    - `min-h-[105vh]` 꽉 찬 화면 구조 구축 및 럭셔리 모노크롬 매장/POS 컨트롤 센터 씬 배경 이미지(`/images/hero_fullscreen_bg.png`) 마운트.
+    - 현대카드 `YouandiNewKr` 대형 타이포그래피로 "스마트 식당의 모든 동선, 단 하나의 플랫폼으로 연결." 메시지를 수놓고 바운싱 Scroll Down Indicator를 추가했습니다.
+  - **스크롤 3D Perspective 원근 틸트 애니메이션 ([Hero.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Hero.tsx))**:
+    - Framer Motion의 `useScroll`, `useTransform`을 결합하여 스크롤을 내릴 때 우측 관제 2D 좌석도가 `rotateX(22deg) -> rotateX(0deg)` 및 `scale(0.92) -> scale(1.05)`로 평평하게 다가오는 3D 입체 트랜스폼을 탑재했습니다.
+  - **상단 스크롤 진행률 프로그레스 바 마운트 ([LandingPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LandingPage.tsx))**:
+    - Framer Motion `useSpring(scrollYProgress)`를 통해 페이지 맨 위에 칠흑색/순백색 스크롤 진행 게이지를 고정 마운트했습니다.
+  - **모듈 카드의 스크롤 트리거 릴레이 강화 ([ModuleShowcase.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/ModuleShowcase.tsx))**:
+    - 스크롤을 내릴 때 4대 모듈 카드가 `whileInView` 및 시차(stagger delay)를 두고 순차적(`y: 50 -> 0`, `scale: 0.96 -> 1`)으로 솟아오르는 시각적 역동성을 주입했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 63. 랜딩 페이지 헤더바 제거 & 세분화 기능 명세 쇼케이스(DetailedFeatureShowcase) 고도화
+- **작업 내용**:
+  - **헤더바 제거 & 인라인 내장 브랜딩 통합 ([LandingPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LandingPage.tsx), [Hero.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Hero.tsx))**:
+    - 랜딩 페이지 상단의 거추장스러운 헤더바(`Header.tsx`)를 제거하여 100vh 비주얼과 타이포그래피에 100% 몰입할 수 있는 환경을 만들었습니다.
+    - `Hero.tsx` 최상단에 내장형 로고 칩(`자리요 Console`)과 포털 링크(관제 POS, 키오스크 모드, 로그인/회원가입, 테마 토글 스위치)를 자연스럽게 통합하여 서비스 진입성을 완벽히 확보했습니다.
+  - **세분화 기능 명세 쇼케이스 신설 ([DetailedFeatureShowcase.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/DetailedFeatureShowcase.tsx))**:
+    - 4대 모듈(테이블 키오스크, 사장님 관제 POS, 주방 KDS, 매출 분석 및 영수증 관리)과 16가지 세부 기능 스펙(5분 타임아웃 선점 락, 곱빼기/토핑 옵션 모달, 직원호출 서비스 단추, 2D 맵 수선서 배치, 품절 스위치 등)을 탭 스위처로 분리했습니다.
+    - 우측에 2D 인터랙티브 미니 관제 시뮬레이터(실시간 5분 락 리셋, 옵션 선택 모달, 직원 호출 팝업, 영수증 렌더링, 주방 릴레이 클릭 완료, Sold-Out 품절 스위치)를 마운트하여 실전 동작 시뮬레이션을 구현했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 64. 세분화 명세 카드 여백 확장 및 사장님 메인 대시보드(DashboardPage) 전면 비주얼 개편
+- **작업 내용**:
+  - **세분화 명세 카드 상하 여백 및 간격 확장 ([DetailedFeatureShowcase.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/DetailedFeatureShowcase.tsx))**:
+    - 좌측 4개 세부 명세 카드 컨테이너 상하 간격을 `space-y-5`로 확장하고, 카드 내부 패딩을 `p-6`, 아이콘 박스를 `p-3`, 아이콘 크기를 `w-6 h-6`, 설명문 폰트 크기 및 줄간격을 확대하여 답답함 없이 시원시원한 가독성을 제공했습니다.
+  - **사장님 메인 관제 대시보드 전면 디자인 개편 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - **기능 100% 보존**: 2D 실시간 매장 좌석도, Side-by-Side 영수증 수선서, 현장 추가 주문 모달, 할인 적용, 결제/퇴석 승인, 주방 KDS 조리 탭, 5분 선점 락 리스트, 예약 목록, 타임라인 로그, 유튜브 BGM 미디어 플레이어 등 기존의 모든 핵심 기능을 완벽히 유지했습니다.
+    - **현대카드 사이버 관제실(Cyber Control Room) 디자인 전면 적용**: 칠흑색(Ink)과 순백색(Canvas)의 단단한 고대비, 3px 직각 플레이트 미학, 시인성 뛰어난 KPI 카드를 구축하고 우측 영수증 수선서를 수선서 전용 폰트와 영수증 명세 플레이트로 리뉴얼했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 65. 대시보드 메인 3단 다단 효율적 레이아웃 개편 & 배달/포장 관리 모듈 신설
+- **작업 내용**:
+  - **대시보드 3단 멀티 칼럼 레이아웃 구축 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - 한눈에 매장의 모든 상태를 일목요연하게 파악할 수 있도록 대시보드를 3단 다단 구조(`lg:grid-cols-12`)로 개편했습니다.
+    - 좌측 1단(KPI 요약 & BGM 플레이어 & 배달 라이브 칩), 중앙 2단(2D 좌석 관제 맵 / KDS 조리 / 배달관제 메인 뷰), 우측 3단(Side-by-Side 영수증 수선서 & 결제/퇴석/라이더 호출 승인 패널)으로 화면 효율을 극대화했습니다.
+  - **신규 배달/포장 관리 (Delivery & Takeout Order Management) 모듈 신설**:
+    - 배달의민족, 쿠팡이츠, 요기요, 전화 포장 주문을 수신하고 관제하는 배달 전용 탭 스위처를 구축했습니다.
+    - `주문 접수` ➔ `조리 시작` ➔ `라이더 호출(배차)` ➔ `배달 출발` ➔ `배달 완료`로 이어지는 실시간 라이브 릴레이 스위치를 구현했습니다.
+    - 우측 수선서 패널에 배달 주소(예: "테헤란로 123 402호"), 라이더 요청사항 메모("문 앞 두고 벨 눌러주세요"), 결제 방식 및 주문 품목 명세가 렌더링되도록 연결했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 66. 주방 조리 관제 & 배달/포장 관제 좌측 사이드바(ConsoleSidebar) 독립 메뉴 통합
+- **작업 내용**:
+  - **좌측 사이드바 독립 네비게이션 분리 ([ConsoleSidebar.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/ConsoleSidebar.tsx))**:
+    - 사장님 좌측 네비게이션 사이드바에 `주방 조리 관제 (KDS)` 및 `배달/포장 실시간 관제` 메뉴 항목을 별도 독립 네비게이션으로 분리했습니다.
+    - 사이드바 링크 클릭 시 `/owner/dashboard?tab=kds` 및 `/owner/dashboard?tab=delivery` 경로로 직관적으로 이동하도록 설계했습니다.
+  - **동적 관제 탭 동기화 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - `useSearchParams`와 `useEffect`를 통해 사이드바 메뉴 클릭 시 대시보드 뷰포트가 실시간으로 2D 홀 관제, 주방 KDS, 배달/포장 관제판으로 즉시 전환되도록 동기화했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 67. 대시보드 KPI 카드 찌그러짐 붕괴 교정 & 최상단 Full-Width 메트릭 바 레이아웃 정돈
+- **작업 내용**:
+  - **KPI 카드 찌그러짐 원인 규명 및 교정 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - 가로 4열(`grid-cols-4`)로 설계된 `DashboardKpi` 카드가 좁은 좌측 25% 컬럼(`lg:col-span-3`) 내부에 갇혀 글자와 박스가 세로 띠 형태로 찌그러졌던 레이아웃 결함을 즉각 수정했습니다.
+    - `DashboardKpi`를 대시보드 최상단(`w-full mb-6`) 단독 Full-Width 컨테이너로 배치하여 4개 카드가 웅장하고 선명하게 4열로 펼쳐지도록 교정했습니다.
+  - **관제 2열 구조 재정돈 (`lg:col-span-8` vs `lg:col-span-4`)**:
+    - 좌측 8열(`lg:col-span-8`)에 2D 실시간 매장 관제 맵 / KDS 조리 / 배달관제 메인 관제판을 넉넉한 뷰포트로 확장했습니다.
+    - 우측 4열(`lg:col-span-4`)에 Side-by-Side 영수증 수선서, 배달 라이브 현황 통계 위젯, 매장 BGM 유튜브 미디어 플레이어를 깔끔한 수직 스택으로 정돈했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 68. 대시보드 위젯 블록 드래그 앤 드롭(Drag & Drop) 사용자 정의 배치 기능 신설
+- **작업 내용**:
+  - **드래그 앤 드롭 커스텀 레이아웃 시스템 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - 대시보드의 각 관제 블록(2D 관제 맵/KDS/배달, 영수증 수선서, 배달 현황 위젯, BGM 플레이어, 선점 락 리스트, 예약 목록, 타임라인 로그)을 사장님이 원하는 위치로 마우스 드래그하여 순서를 바꿀 수 있는 HTML5 Drag & Drop 시스템을 구현했습니다.
+  - **로컬 스토리지 영속 보존 & 초기화 제어판**:
+    - 재배치한 위젯 순서 데이터를 로컬 스토리지(`zariyo_dashboard_widget_order`)에 자동 저장하여 재접속 시에도 맞춤형 레이아웃이 100% 영구 유지되도록 구성했습니다.
+    - 대시보드 헤더에 `⋮⋮ 위젯 배치 편집 (Drag & Drop Mode)` 토글 스위치 및 `↺ 순서 리셋` 버튼을 제공하여 편의성을 극대화했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 69. 주방 조리 관제(KDS) 홀 매장 & 배달/포장 주문 통합 분리 표출 고도화
+- **작업 내용**:
+  - **단일 KDS 컨테이너 박스 내 2분할 통합 표출 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - 주방 조리 관제(KDS) 뷰를 단일 컴포넌트 박스 안에서 **[🍽️ 홀 매장 조리 대기열]**과 **[🛵 배달 & 포장 조리 대기열]**을 2분할(Dual-Pane Sectioning)로 명확히 나누어 통합 표출했습니다.
+    - 배달 항목에 **`[배달/포장]`** 배지 및 배민, 쿠팡이츠, 요기요, 방문포장 아이콘 칩을 부여하여 홀 테이블 주문과 확연히 시각적 구분이 가도록 다듬었습니다.
+    - 홀과 배달 요리 모두 주방 KDS에서 클릭 한 번으로 조리 시작 및 조리 완료 릴레이 승인이 가능하도록 동기화했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 70. ZariYo-FrontEnd 전체 코드베이스 모듈화 리팩토링(Modular Refactoring)
+- **작업 내용**:
+  - **대형 파일 단일 책임 원칙 모듈화**:
+    - **`DashboardPage.tsx` (800+ 라인 ➔ 200 라인 이하)**: `DashboardHeader.tsx`, `DashboardReceiptPane.tsx`, `DashboardDeliveryPane.tsx`, `DashboardKdsPane.tsx`, `DashboardBgmPlayer.tsx`, `AddMenuModal.tsx`로 역할별 컴포넌트 전면 분리.
+    - **`DetailedFeatureShowcase.tsx` (500+ 라인 ➔ 150 라인)**: `FeatureSpecCard.tsx`, `FeatureSimulatorPane.tsx`로 세부 명세 및 시뮬레이터 분리.
+    - **`MenuManagementPage.tsx` (400+ 라인 ➔ 120 라인)**: `MenuCardItem.tsx`, `AddMenuFormModal.tsx`로 단일 카드 및 팝업 모달 분리.
+  - **가독성 및 유지보수성 최상위 달성**:
+    - 모든 현대카드 3px 직각 미학, 모노크롬 고대비, 2D 실시간 매장 관제, 배달 릴레이, 영수증 수선서, 드래그 앤 드롭 기능을 100% 온전히 보존하면서 컴포넌트 재사용성과 정돈된 구조를 완성했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
+### 71. 목업 데이터 전용 폴더(`src/data/`) 추출 및 모듈화 아키텍처 구축
+- **작업 내용**:
+  - **관심사의 완벽한 분리 (Separation of Concerns)**:
+    - `src/data/` 독립 데이터 폴더를 신설하고 `mockDashboard.ts`, `mockFeatureSpecs.ts`, `mockMenuManagement.ts` 전용 데이터 모듈을 구축했습니다.
+    - 컴포넌트 내부에 산재해 있던 인라인 목업 데이터(2D 레이아웃, 테이블 영수증 수선서, 배달 릴레이, KDS 대기열, 16개 세부 기능 스펙, 메뉴 및 커스텀 옵션 목록)를 모두 해당 모듈로 추출 및 `import` 연동했습니다.
+  - **백엔드 REST API / MSW 연동 유연성 확보**:
+    - 향후 백엔드 데이터베이스 및 API 서버 연결 시 데이터 모듈만 API 스티치로 즉시 전환할 수 있는 뛰어난 유지보수 구조를 확립했습니다.
+  - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
+
 
 
 
