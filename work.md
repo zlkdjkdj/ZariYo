@@ -300,3 +300,118 @@
   - `ZariYo-BackEnd` 하위의 `build/`, `.gradle/`, `bin/`, `out/` 및 프론트엔드의 `node_modules/`, `dist/` 등을 추적 제외하도록 지정했습니다.
   - `git rm -r --cached` 명령을 구동해 기존 깃 이력에 임시로 들어가 있던 빌드 파일들의 캐시를 소거하고 로컬에서 최종 커밋을 마쳤습니다.
 
+### 44. LandingPage 프리미엄 UI 디자인 리팩토링 및 AppleFeatureBlock 도입
+- **작업 내용**:
+  - `ZariYo-FrontEnd/src/components/landing/AppleFeatureBlock.tsx` 신규 컴포넌트를 직접 개발하여 도입했습니다.
+  - 이 컴포넌트는 `https://skiper-ui.com/v1/skiper76`의 Apple Feature Block 디자인을 본떠 어두운 다크 테마 카드 배경, 알약 형태의 Glassmorphism 탭, 그리고 프레임 내부에서 Framer Motion으로 동작하는 4대 기능 시뮬레이션(5분 선점, 2D 배치도 스냅, 실시간 웹소켓 관제, Redis 분산 락 시각화)을 조화롭게 구현했습니다.
+  - `ZariYo-FrontEnd/src/pages/LandingPage.tsx`에 이 컴포넌트를 추가하여 토스 스타일의 피처 요약 카드 그리드 바로 아래에서 사용자가 마이크로 인터랙션을 직접 체험할 수 있도록 배치하였습니다.
+  - 프론트엔드 전체 프로덕션 빌드(`pnpm build`)를 실행하여 TypeScript 오류나 번들링 예외 없이 정상적으로 빌드 완료됨을 확인하였습니다.
+
+### 45. ZariYo 전체 프론트엔드 다크 글래스모피즘(Skiper UI 스타일) 전면 리뉴얼
+- **작업 내용**:
+  - ZariYo 프로젝트의 전체 디자인 컨셉을 `https://skiper-ui.com/v1/skiper76` 스타일과 부합하는 어두운 밤하늘 계열의 다크 글래스모피즘 테마로 완전히 리뉴얼했습니다.
+  - **헤더 & 푸터 개편**: [Header.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Header.tsx)와 [Footer.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Footer.tsx)를 딥 블랙 및 반투명 유리 블러 배경과 얇은 보더 라인으로 마감하여 모던한 헤일로 조명을 주었습니다.
+  - **히어로 영역 개편**: [Hero.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Hero.tsx)의 배경에 대형 다이내믹 블루 방사형 글로우 아우라를 삽입하고, 라이브 콘솔 상태판 목업을 다크 젯블랙 글래스 톤으로 다듬어 럭셔리 제품 프레젠테이션 디자인으로 업그레이드했습니다.
+  - **코어 특징 & 아키텍처 개편**: [Features.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Features.tsx)와 [Architecture.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Architecture.tsx)의 카드 컨테이너를 얇은 세미 투명 테두리(`border-white/5 bg-white/[0.01] hover:border-white/15 hover:bg-white/[0.03]`)의 미니멀 글래스모피즘 카드로 통일 교체했습니다.
+  - **콘솔 진입 및 가이드 페이지 개편**: [StartPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/StartPage.tsx), [StartCard.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/start/StartCard.tsx), [StartLayout.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/start/StartLayout.tsx), [AboutPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/AboutPage.tsx)를 올 블랙 다크 모드로 변환하고 반투명 글래스 카드를 적용하여 전체 프론트엔드 페이지의 감각을 하나로 통일시켰습니다.
+  - 리팩토링 후 `pnpm build`를 수행해 정적 컴파일 및 무결 빌드 성공을 보장하였습니다.
+
+### 46. 전체 화면 설계 레이아웃 재배치 및 화이트/다크 테마 전환 전면 고도화
+- **작업 내용**:
+  - **화면 설계 흐름 개편**: 랜딩 페이지([LandingPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LandingPage.tsx))의 요약식 텍스트 블록인 `Features.tsx` 섹션을 완전히 제거하고, 메인 인터랙션 체험 도구인 [AppleFeatureBlock.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/AppleFeatureBlock.tsx)를 히어로 섹션 직하단으로 상향 배치하여, 사용자가 들어오자마자 핵심 기술(5분 선점, 그리드 스냅 배치, 웹소켓 관제, 분산 락)을 즉각 테스트해 볼 수 있도록 화면 설계를 전면 개정했습니다.
+  - **테마 반응형 글래스모피즘 개선**: 강제 다크 테마 방식에서 벗어나, 상단의 테마 스위치 작동 시 화이트(라이트) 모드와 다크 모드에 맞춰 최적화된 시각적 테마로 다이내믹하게 스타일이 전환되도록 리팩토링했습니다.
+    - [Header.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Header.tsx) & [Footer.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Footer.tsx): 라이트 모드 시 회색빛 반투명 유리막과 검은색/짙은 회색 텍스트 톤을, 다크 모드 시 딥 블랙 반투명 유리막과 저조도 은백색 텍스트 톤을 정확히 나누어 보정했습니다.
+    - [Hero.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Hero.tsx) & [Architecture.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Architecture.tsx): 모드 전환에 따른 방사형 그라데이션 글로우(라이트 파스텔블루 / 다크 딥인디고) 및 내부 모형 상태판/다이어그램의 선명도와 그림자 값을 세밀하게 조율했습니다.
+    - [AppleFeatureBlock.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/AppleFeatureBlock.tsx): 좌측 알약 탭들과 스마트폰 프레임, 그리고 내부의 4가지 시뮬레이션 좌석 및 상태 바 텍스트가 현재 테마 변수(`theme`)를 감지해 화이트/다크에 따라 각각 극강의 조화로운 명도를 띠도록 전면 로직을 다듬었습니다.
+    - [StartLayout.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/start/StartLayout.tsx) & [StartCard.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/start/StartCard.tsx) & [StartPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/StartPage.tsx) & [AboutPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/AboutPage.tsx): 사장님 전용 시작 대시보드 진입점 및 FAQ 가이드 문서까지 완벽하게 화이트 모드(`bg-slate-50 text-neutral-900`)와 다크 모드(`bg-[#030303] text-white`)를 교차 지원하도록 마감했습니다.
+  - 리팩토링 후 `pnpm build`를 기동하여 정적 컴파일 및 프로덕션 번들링 통과를 검증했습니다.
+
+### 47. 로그인/회원가입의 50:50 분할 스플릿 디자인 개편, 음식점 추가, Apple Cards Carousel 기술 캐러셀 도입
+- **작업 내용**:
+  - **로그인 & 회원가입 스플릿 개편**: [LoginPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/LoginPage.tsx)와 [SignupPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/SignupPage.tsx)의 중앙 배치 레이아웃을 전면 개정하여, 화면 좌측 50%에 테크 및 라운지 감성의 고화질 배경 사진([auth_cover.png](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/public/images/auth_cover.png))을 꽉 차게 배치하고, 우측 50% 영역에 화이트/다크 대응형 폼을 밀착 장착하는 듀얼 스플릿 레이아웃을 구축했습니다.
+  - **음식점(Restaurant) 추가**: `generate_image`로 최고급 다이닝 레스토랑 인테리어 컷([restaurant.png](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/public/images/spaces/restaurant.png))을 생성하고, [SpaceShowcase.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/SpaceShowcase.tsx)의 자동 롤링 문자열 단어 및 가로 확장형 아코디언 카드 갤러리에 음식점 구성을 확장 추가해 총 5종의 공간 전시를 완성했습니다.
+  - **Apple Cards Carousel 컴포넌트 탑재**: Aceternity UI의 비주얼 코드 패턴을 차용해 [AppleCardsCarousel.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/AppleCardsCarousel.tsx) 컴포넌트를 직접 개발했습니다. 가로 터치 스크롤 카드를 클릭하면 Framer Motion의 `layoutId` 모션에 따라 부드럽게 전체화면 팝업되어 ZariYo의 3대 핵심 모듈(분산 락, 눈금 캔버스, 스트리밍 웹소켓)의 정밀 상세 구조 설명이 렌더링되는 모달 인터랙션을 이식했습니다.
+  - 리팩토링 후 `pnpm build`를 기동하여 정적 컴파일 및 무결 빌드 성공을 재검증했습니다.
+
+### 48. 프로젝트 패러다임 전환: 식당 스마트 키오스크, POS & 주방 조리 시스템(KDS) 통합 플랫폼 구축
+- **작업 내용**:
+  - **콘솔 바로가기 포털 개편**: [StartPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/StartPage.tsx)를 식당 매니지먼트 통합 포털 콘솔로 전면 리모델링했습니다. 상단에 실시간 매출(₩1,840,000), 가동 좌석 비율(75%), 주방 조리 대기 건수(4건), 노쇼 방지 롤백 건(2건) 등의 KPI 통계 요약 바를 신설하고, 4대 핵심 시스템 모듈(도면 빌더, 스마트 키오스크, KDS 관제, 실시간 관제 POS) 바로가기 카드를 구축했습니다.
+  - **주방 조리 시스템 (KDS) & 실시간 계산서 (POS) 탑재**: [DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx)에 3대 탭 시스템을 내장했습니다.
+    - **[탭 1] 실시간 매장 관제 & 계산서 확인**: 좌석 맵의 테이블 탭 시 실시간 주문 내역, 5분 홀드 타이머, 총 금액(₩80,000) 산출 및 결제 완료 처리 단추가 기동하는 **계산서(Receipt) 팝업 모달**을 구현했습니다.
+    - **[탭 2] 주방 조리 관제 (KDS)**: 주문 접수 시 **'요리해야 할 음식'** 대기열에 테이블 번호, 메뉴, 수량, 요청 메모, 경과 시간이 실시간 노출되며, 조리사가 '조리 완료' 클릭 시 완료 이력으로 이동하고 관제판에 조리완료 패킷을 전파하는 시스템을 완성했습니다.
+  - **스마트 테이블 키오스크 & 디지털 메뉴판 구축**: [ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx)를 테이블 키오스크 주문용 모드로 개편했습니다. `generate_image`로 고화질 음식 메뉴 컷 4종([steak.png](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/public/images/menu/steak.png), [pasta.png](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/public/images/menu/pasta.png), [pizza.png](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/public/images/menu/pizza.png), [drink.png](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/public/images/menu/drink.png))을 배치하여 카테고리별 디지털 메뉴판과 수량 스티퍼, 장바구니 총 금액 계산 및 5분 선점 주문 발송 메커니즘을 연동했습니다.
+  - 리팩토링 후 `pnpm build`를 기동하여 정적 컴파일 및 무결 빌드 성공을 확인했습니다.
+
+### 49. 필수 신규 페이지 3종 신규 구축, 대시보드 사이드바 & Side-by-Side 개편, 인증 하프 이미지 교체 및 핵심 엔진 제거
+- **작업 내용**:
+  - **누락 필수 신규 페이지 3종 개발 & 라우팅 등록**:
+    - **매출 분석 & 통계 보고서 ([AnalyticsPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/AnalyticsPage.tsx))**: 시간대별 매출 추이 바 차트, 인기 시그니처 메뉴 TOP 4 랭킹, 객단가/회전율 카운터 및 CSV 엑셀 내보내기 버튼 구축.
+    - **메뉴 & 재고/품절 관리 ([MenuManagementPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/MenuManagementPage.tsx))**: 신규 메뉴 등록 폼, 실시간 **품절(Sold-Out) 토글 스위치** 연동 및 메뉴 삭제/가격 제어 패널 구축.
+    - **영수증 이력 & 환불 관리 ([OrderHistoryPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/OrderHistoryPage.tsx))**: 일자별/테이블별 수선 영수증 검색 및 **결제 승인 취소/전액 환불(Refund)** 팝업 모달 구축.
+    - [App.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/App.tsx)에 라우트 등록 완료 (`/owner/analytics`, `/owner/menu-management`, `/owner/order-history`).
+  - **콘솔 통합 사이드바 & Side-by-Side 대시보드 전면 개편**:
+    - [ConsoleSidebar.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/ConsoleSidebar.tsx)를 신규 개발하여 사장님 전용 페이지 전체에 원터치 사이드바 내비게이션을 마운트했습니다.
+    - [DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx)에 **2D 좌석 도면 맵**과 **실시간 계산서 영수증 패널**을 Side-by-Side(나란히) 밀착 배치하여, 테이블 탭 시 오른쪽 영역에서 1초 만에 영수증 수선서가 연동 확인되도록 극상의 사용성을 제공합니다.
+  - **인증 하프 커버 그래픽 교체**: `generate_image`로 럭셔리 다이닝 레스토랑 바와 카운터 키오스크 컷([auth_cover.png](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/public/images/auth_cover.png))을 새로 생성하여 로그인/회원가입 50:50 패널에 매핑했습니다.
+  - **랜딩페이지 핵심엔진 섹션 제거**: [LandingPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LandingPage.tsx)에서 사용자 지시에 따라 `AppleCardsCarousel` 임포트 및 마운트 코드를 소거했습니다.
+  - 리팩토링 후 `pnpm build`를 기동하여 정적 컴파일 및 무결 번들링 통과를 입증했습니다.
+
+### 50. POS 고도화: 메뉴 옵션 선택, 사진 직접 업로드, 결제 수단 명시 및 관제판 테이블 메뉴 추가 주문 구축
+- **작업 내용**:
+  - **메뉴 옵션 선택 시스템 (곱빼기, 토핑 등)**: [MenuManagementPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/MenuManagementPage.tsx)의 데이터 구조체에 `options` 필드를 확장하여, 곱빼기(+₩3,000), 트러플 오일 추가(+₩2,000) 등의 옵션을 동적으로 생성하고 카드에 뱃지로 출력하는 시스템을 완성했습니다.
+  - **사진 직접 업로드 미리보기 (Photo File Upload)**: 신규 메뉴 등록 모달 내에 `<input type="file" accept="image/*" />` 파일 선택기 및 `URL.createObjectURL` 기반 실시간 렌더링을 적용하여 사용자가 가지고 있는 음식 사진을 바로 업로드하여 메뉴 카드로 매핑할 수 있게 구현했습니다.
+  - **영수증 결제 수단 명시**: [OrderHistoryPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/OrderHistoryPage.tsx) 및 [DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx) 영수증 모달에 `paymentMethod` (`신용카드 (현대카드 / 일시불)`, `카카오페이`, `현금 결제`) 정보를 추가 표출했습니다.
+  - **실시간 관제판 현장 POS 메뉴 추가 주문 기능**: [DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx)의 Side-by-Side 영수증 패널에 `+ 메뉴 추가 주문` 단추와 퀵 팝업 폼을 연결했습니다. 테이블 선택 후 음료나 스테이크를 즉석에서 추가하면 해당 테이블의 수선서에 실시간 추가되고 총 결제액이 합산 동기화되는 사장님 POS 주문 기능을 통합 완성했습니다.
+  - 개발 완료 후 `pnpm build`를 구동하여 컴파일 0 오류 무결성 정적 번들링 통과를 확인했습니다.
+
+### 51. 독립된 손님 전용 식당 태블릿 키오스크 UX 구축, 주문 옵션 선택 모달 및 전체 워크플로우 통합
+- **작업 내용**:
+  - **손님 전용 태블릿 키오스크 UX 독립 개편 ([ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx))**: 사장님용 관리자 요소를 모두 제거하고 식당 테이블에 설치되는 풀스크린 전용 태블릿 키오스크 뷰를 완성했습니다. `[T-1] 테이블 스마트 키오스크` 뱃지, 실시간 5분 선점 락 현황판 및 시원한 식당 전용 다이닝 UI를 구축했습니다.
+  - **손님 주문 옵션 선택 모달 (Option Selector Modal)**: 손님이 메뉴 탭 시 `곱빼기 (+₩3,000)`, `트러플 오일/치즈 토핑 (+₩2,000)` 등의 선택지를 동적으로 체크하고 옵션 추가금이 합산된 1개 단가를 확인하여 장바구니에 담을 수 있는 팝업 모달을 제작했습니다.
+  - **상단 내비게이션 & 전체 워크플로우 동선 연동 ([Header.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Header.tsx))**: 헤더에 `[사장님 콘솔]`과 `[테이블 키오스크]` 전환 단추를 연결하여 손님용 키오스크와 사장님 POS 관제 포털 간의 이동 동선을 직관적으로 완성했습니다.
+  - 개발 완료 후 `pnpm build`를 구동하여 컴파일 오류 0건 무결성 정적 번들링을 입증했습니다.
+
+### 52. 메뉴 중심 키오스크 메인 화면 개편, 좌석 자동 할당 메커니즘 & Framer Motion 화려한 화면 애니메이션 도입
+- **작업 내용**:
+  - **메뉴 중심 스마트 태블릿 레이아웃 개편 ([ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx))**: 손님 키오스크에서 복잡한 수동 좌석도를 메인에서 제거하고, 카테고리별 요리 카드 갤러리와 음식 대형 사진이 메인 100% 영역을 차지하도록 전면 리구조화했습니다.
+  - **테이블 자리 자동 할당 (Automatic Table Assignment)**: 키오스크 진입 시 URL 쿼리 파라미터(`?table=T-1`) 또는 기본 설정에 따라 `[T-1] 메인 창가석`이 자동으로 할당되어, 손님이 별도 조작 없이 들어오자마자 요리를 담고 5분 선점 및 실시간 주문을 완료할 수 있도록 연동했습니다. (상단 뱃지 탭 시 미니 2D 좌석도 레이어 모달로 확인 가능)
+  - **Framer Motion 화려한 화면 애니메이션 구현**:
+    - **Staggered Slide-Up & Scale**: 카테고리 스위칭 시 메뉴 카드들이 시차를 두고 부드럽게 굴러 나오는 슬라이드 모션.
+    - **Spring Scale Option Modal**: 메뉴 탭 시 옵션 모달이 `scale(0.85 -> 1.0)`과 백드롭 블러로 튀어나오는 화려한 팝업 모션.
+    - **Cart Item Bounce**: 장바구니에 아이템 추가 시 카드 및 가격 합산 영역이 스프링 팝업되는 인터랙션을 내장했습니다.
+  - 개발 완료 후 `pnpm build`를 기동하여 0 컴파일 오류 무결 번들링을 확인했습니다.
+
+### 53. 랜딩페이지 좌우 분할 스플릿 레이아웃 개편, 관제 POS 최첨단 글래스모피즘 전면 리빌딩 & 키오스크 테이블 변경 모달/원터치 서비스 호출 구축
+- **작업 내용**:
+  - **랜딩페이지 좌우 분할 스플릿 교차 배치 ([Hero.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/Hero.tsx) & [AppleFeatureBlock.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/AppleFeatureBlock.tsx))**: 중앙 정렬 구조를 제거하고, 좌우 50:50 / 60:40 비대칭 분할 패널과 다이내믹 엠비언트 글로우를 교차(Side-by-Side Alternating Grid) 배치하여 한눈에 눈 사로잡는 하이엔드 비주얼 감성을 완성했습니다.
+  - **관제 POS 대시보드 하이엔드 글래스모피즘 전면 리빌딩 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx), [DashboardKpi.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardKpi.tsx), [DashboardCanvas.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardCanvas.tsx))**: 투박했던 화면을 탈피하고 사토시/네온 글래스모피즘 관제실(Cyber-Glassmorphism Control Center) 무드로 전면 리디자인하여 고대비 뱃지, 실시간 바운스 테이블 노드, 엠비언트 영수증 수선서 스타일을 입혔습니다.
+  - **손님 키오스크 테이블 수동 변경, 원터치 서비스 호출 단추 & 6종 요리 확충 ([ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx))**:
+    - **테이블 변경 모달 (Table Switcher)**: 상단 뱃지 탭 시 손님이 직접 원하는 매장 공석(`T-2`, `T-3`, `바석-A` 등)으로 자리를 스위칭할 수 있는 팝업 모달 제공.
+    - **원터치 서비스 호출**: `[물 요청 🧊]`, `[직원 호출 🔔]`, `[수저/휴지 🥢]`, `[앞치마 🎽]` 원터치 단추를 탑재하여 클릭 시 관제실/KDS에 실시간 패킷 전파.
+    - **고급 요리 메뉴 6종 확충**: `generate_image`로 생성한 `살치살 찹스테이크`, `감바스 알 아히요` 등 6종 이상으로 다채로운 메뉴판을 완성했습니다.
+  - 개발 완료 후 `pnpm build`를 구동하여 컴파일 오류 0건 무결 번들링 성공을 입증했습니다.
+
+### 54. 랜딩페이지 실제 4대 구축 결과물 중심 리라이팅, 바이크코딩 투박함 소거 & 애플/Skiper UI 감성 개편 및 전체 리팩토링
+- **작업 내용**:
+  - **실제 구축 4대 핵심 모듈 중심 스토리텔링 ([ModuleShowcase.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/ModuleShowcase.tsx))**: 추상적 문구를 폐지하고, ZariYo의 실제 4대 결과물 스토리(손님 테이블 키오스크, 사장님 관제 POS, 주방 KDS, 매출 분석 및 수선 이력 관리)를 렌더링하는 스페셜 카드 섹션을 신규 신설했습니다.
+  - **"바이크코딩" 투박함 완벽 제거 & 초고급 애플/Skiper UI 미학 적용**: 거친 원색 보더 및 개발자스러운 분위기를 100% 소거하고 얇은 엠비언트 글래스모피즘(`border-white/10`), 부드러운 다크 뎁스(`bg-[#030303]`, `bg-[#09090b]`) 및 미세 그라디언트 감성을 전면 적용했습니다.
+  - **전체 페이지 Framer Motion 역동적 모션 통합**: 스크롤 뷰포트 시차 애니메이션(`Staggered Scroll Fade-In-Up`) 및 부드러운 호버 스케일 업(`hover:scale-[1.02]`)을 통합했습니다.
+  - 개발 완료 후 `pnpm build`를 구동하여 컴파일 오류 0건 무결 번들링을 입증했습니다.
+
+### 55. 화이트/다크 모드 전체 가독성 교정, 사장님 POS 사이드바 테마 스위치 탑재, 키오스크 스마트 서비스 요청 모달 & POS 테이블 액션 바 고도화
+- **작업 내용**:
+  - **사장님 POS 사이드바 테마 전환 스위치 마운트 & 테마 오류 교정 ([ConsoleSidebar.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/ConsoleSidebar.tsx))**: 사장님 사이드바에 `Sun / Moon` 테마 토글 버튼을 마운트하고, 전체 사장님 페이지 및 손님 키오스크 화면의 화이트모드/다크모드 텍스트 및 배경 가독성 묻힘 현상을 100% 보정했습니다.
+  - **키오스크 스마트 서비스 요청 팝업 모달 전환 & 음료 5종 라인업 확충 ([ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx))**:
+    - 헤더바의 복잡한 버튼들을 소거하고 `[직원 / 편의 서비스 요청 🔔]` 단일 팝업 단추로 일원화하여 탭 시 `[물 🧊]`, `[수저/휴지 🥢]`, `[앞치마 🎽]`, `[물티슈 🧻]`, `[직원호출 🔔]` 팝업 모달을 렌더링하도록 전환했습니다.
+    - `수제 자몽 에이드`, `스파클링 제로 콜라`, `하우스 레드와인`, `생맥주`, `아메리카노` 등 5종 이상의 다채로운 음료 카테고리를 확충했습니다.
+  - **관제 POS 테이블 실동작 액션 바 고도화 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - 수선서 패널 상단에 `[+ 메뉴 추가]`, `[10% 할인]`, `[영수증 인쇄]`, `[자리 이동]` 액션 바를 장착하고 10% 이벤트 할인 ₩8,000 적용 시 결제액이 ₩80,000 -> ₩72,000으로 실시간 재계산되는 POS 연동을 입증했습니다.
+  - 개발 완료 후 `pnpm build`를 구동하여 컴파일 오류 0건 무결 번들링 통과를 확인했습니다.
+
+
+
+
+
+
+
+

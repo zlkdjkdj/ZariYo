@@ -7,6 +7,9 @@ import { StartPage } from './pages/StartPage';
 import { ReservePage } from './pages/customer/ReservePage';
 import { StoreBuilderPage } from './pages/owner/StoreBuilderPage';
 import { DashboardPage } from './pages/owner/DashboardPage';
+import { AnalyticsPage } from './pages/owner/AnalyticsPage';
+import { MenuManagementPage } from './pages/owner/MenuManagementPage';
+import { OrderHistoryPage } from './pages/owner/OrderHistoryPage';
 import { AboutPage } from './pages/AboutPage';
 
 function App() {
@@ -21,11 +24,15 @@ function App() {
           <Route path="/reserve" element={<ReservePage />} />
           <Route path="/owner/store/new" element={<StoreBuilderPage />} />
           <Route path="/owner/dashboard" element={<DashboardPage />} />
+          <Route path="/owner/analytics" element={<AnalyticsPage />} />
+          <Route path="/owner/menu-management" element={<MenuManagementPage />} />
+          <Route path="/owner/order-history" element={<OrderHistoryPage />} />
           <Route path="/about" element={<AboutPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
   );
 }
+
 
 export default App;

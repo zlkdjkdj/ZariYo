@@ -1,28 +1,42 @@
 import { Header } from '../components/landing/Header';
 import { Hero } from '../components/landing/Hero';
-import { Features } from '../components/landing/Features';
+import { AppleFeatureBlock } from '../components/landing/AppleFeatureBlock';
+import { ModuleShowcase } from '../components/landing/ModuleShowcase';
+import { SpaceShowcase } from '../components/landing/SpaceShowcase';
 import { Architecture } from '../components/landing/Architecture';
 import { Footer } from '../components/landing/Footer';
 
 export function LandingPage() {
   return (
-    <div className="bg-white dark:bg-black text-[#1d1d1f] dark:text-[#f5f5f7] font-sans selection:bg-[#3182f6]/20 min-h-screen overflow-x-hidden relative transition-colors duration-300">
+    <div className="bg-[#030303] text-[#f5f5f7] font-sans selection:bg-[#3182f6]/20 min-h-screen overflow-x-hidden relative transition-colors duration-300">
       
-      {/* 1. Header Navigation (Apple Transparent Bar Style) */}
+      {/* 1. Header Navigation */}
       <Header />
 
-      {/* 2. Hero Section & Main CTA & Live Seat Matrix Simulation */}
+      {/* 2. Hero Section */}
       <Hero />
 
-      {/* 3. Features Card Grid (Toss Large-Border-Radius Cards) */}
-      <Features />
+      {/* 3. Actual 4 Core Modules Showcase */}
+      <ModuleShowcase />
 
-      {/* 4. Technical Architecture Flow (Apple Tech Spec style layout) */}
+      {/* 4. Interactive Apple Feature Block */}
+      <AppleFeatureBlock />
+
+      {/* 5. Space Gallery Showcase */}
+      <SpaceShowcase />
+
+      {/* 6. Technical Architecture Flow */}
       <Architecture />
 
-      {/* 5. Footer area */}
+      {/* 7. Footer */}
       <Footer />
 
     </div>
   );
 }
+
+
+
+
+
+

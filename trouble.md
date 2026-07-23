@@ -485,4 +485,78 @@
 ### [해결 방법]
 - 백엔드 프로젝트 루트 경로(`ZariYo-BackEnd`)에서 `./gradlew bootRun` 명령을 백그라운드로 구동하여 내장 톰캣 서버를 포트 8080에서 실행(4.74초 만에 정상 구동 완료)하여 해결하였습니다.
 
+---
+
+## 24. Skiper UI shadcn add 실패 및 Custom AppleFeatureBlock 개발로 전환
+
+### [이슈 개요]
+- **일시**: 2026-07-23
+- **장애 요인**: `pnpm dlx shadcn add @skiper-ui/skiper76` 실행 시 레지스트리에서 파일을 찾을 수 없어 빌드가 막힘.
+- **오류 메시지**:
+  ```text
+  The item at https://skiper-ui.com/registry/skiper76.json was not found. It may not exist at the registry.
+  ```
+
+### [원인 분석]
+- `skiper76`(Apple Feature Block) 컴포넌트는 Skiper UI의 유료 Pro 버전 등급에 속하는 전용 파일로, 비공개 또는 라이선스가 요구되어 공개 레지스트리 CLI를 통한 direct fetch가 불가능하여 404 Not Found 에러가 유발되었습니다.
+
+### [해결 방법]
+- 외부 컴포넌트를 직접 레지스트리에서 가져오는 대신, 브라우저 스크린샷과 DOM 트리를 분석하여 해당 컴포넌트의 비주얼 컨셉(블랙 카드, 글래스모피즘 알약 모양 탭, 내부 스마트폰 프레임 배치 등)을 그대로 재현하는 `AppleFeatureBlock.tsx`를 수동 개발했습니다.
+- 특히 ZariYo의 4대 핵심 기능(5분 선점, 2D 배치도 빌더, 실시간 관제, Redis 분산 락)을 스마트폰 화면 내부에서 Framer Motion 애니메이션 시나리오로 가시화해 유니크하고 고급스러운 랜딩 페이지를 커스텀 기획하여 해결했습니다.
+
+---
+
+## 25. write_to_file 도구 호출 시 ArtifactMetadata 경로 제약 오류
+
+### [이슈 개요]
+- **일시**: 2026-07-23
+- **장애 요인**: `write_to_file` 도구를 사용하여 프로젝트 소스코드 디렉토리에 신규 파일(`AppleFeatureBlock.tsx`)을 작성하려 했을 때, 유효하지 않은 아티팩트 경로 에러가 발생하며 도구 실행 실패.
+- **오류 메시지**:
+  ```text
+  Error Message: model output error: invalid tool call error (invalid_args) /home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/AppleFeatureBlock.tsx is not a valid artifact path; artifacts must be in /home/jaehyeon/.gemini/antigravity-ide/brain/c3c1273a-48ff-4d77-8332-cf8db016eabe/
+  ```
+
+### [원인 분석]
+- `write_to_file` 도구를 사용할 때 `ArtifactMetadata` 필드를 채워 보낼 경우, 시스템은 이 동작을 프로젝트 '아티팩트'(사용자 보고서, 가이드, 기획안 마크다운 등)를 작성하는 작업으로 판단합니다. 따라서 `TargetFile`의 경로가 반드시 대화의 아티팩트 보존 디렉토리 내부여야만 하는 제약 조건에 어긋나 오류가 발생했습니다.
+
+### [해결 방법]
+- 프로젝트 소스코드의 일반 파일(예: `.tsx`, `.ts`, `.java` 등)을 소스파일 생성 및 수정 시 `ArtifactMetadata` 필드를 아예 인자에서 완전히 공백 또는 생략 처리하여, 순수 코드 소스파일로 생성하도록 시스템에 알려 해결할 수 있었습니다.
+
+---
+
+## 26. SpaceShowcase.tsx 내 미사용 변수 컴파일 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-23
+- **장애 요인**: `pnpm build` 빌드 검증 수행 시, `SpaceShowcase.tsx` 컴포넌트 내의 미사용 변수 선언으로 인해 컴파일러 오류 발생 및 번들링 실패.
+- **오류 메시지**:
+  ```text
+  src/components/landing/SpaceShowcase.tsx:14:9 - error TS6133: 'theme' is declared but its value is never read.
+  ```
+
+### [원인 분석]
+- `SpaceShowcase` 컴포넌트에서 테마별 격자선 등을 지원하기 위해 `useTheme()` 훅을 사용하여 `theme` 변수를 정의해 두었으나, 실제 단어 롤링 및 가로 확장 갤러리 구현 과정에서 해당 변수를 소비하는 스타일 클래스가 쓰이지 않았습니다. 프론트엔드의 엄격한 TypeScript 컴파일 옵션(`noUnusedLocals`)에 의해 미사용 로컬 변수가 치명적 컴파일 에러로 간주되었습니다.
+
+### [해결 방법]
+- `SpaceShowcase.tsx` 파일 최상단의 `import { useTheme } ...` 구문 및 컴포넌트 본문 내부의 `const { theme } = useTheme();` 선언을 깨끗하게 소거하여 컴파일 조건에 완벽히 부합되도록 복구하여 정적 컴파일 성공을 거두었습니다.
+
+---
+
+## 27. KDS 및 Kiosk 플랫폼 전환 시 미사용 아이콘/변수로 인한 TS6133 컴파일 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-23
+- **장애 요인**: `pnpm build` 구동 시 `StartPage.tsx`, `ReservePage.tsx`, `DashboardPage.tsx` 3개 페이지 파일에서 미사용 아이콘과 `useNavigate` 패키지 선언 오타로 인해 11개 TS6133 정적 분석 컴파일 오류 발생.
+- **오류 메시지**:
+  ```text
+  src/pages/StartPage.tsx:1:10 - error TS2305: Module '"react"' has no exported member 'useNavigate'.
+  src/pages/customer/ReservePage.tsx:4:3 - error TS6133: 'Clock' is declared but its value is never read.
+  src/pages/owner/DashboardPage.tsx:1:20 - error TS6133: 'useEffect' is declared but its value is never read.
+  ```
+
+### [원인 분석]
+- 식당 스마트 키오스크, POS, KDS 주방 조리 시스템을 대규모 구축하는 과정에서 임포트한 Lucide 아이콘 라이브러리 중 일부 항목이 사용되지 않고 남아있었거나, `StartPage.tsx`에서 `useNavigate`를 `react-router-dom`이 아닌 `react` 패키지에서 가져오는 소스상의 오타가 섞여 컴파일을 거부했습니다.
+
+### [해결 방법]
+- `StartPage.tsx` 내의 `useNavigate` 패키지 출처를 `react-router-dom`으로 바로잡았으며, 3개 페이지 소스상의 미사용 아이콘(`Clock`, `AlertCircle`, `Utensils` 등)과 변수 선언 구문들을 소거하여 프로덕션 번들 컴파일을 100% 정상 통과시켰습니다.
 

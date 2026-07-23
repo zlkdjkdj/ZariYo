@@ -1,48 +1,116 @@
 import { useNavigate } from 'react-router-dom';
-import { Store, PlusCircle, LayoutDashboard } from 'lucide-react';
+import { 
+  Store, PlusCircle, UtensilsCrossed, 
+  Receipt, ChefHat, TrendingUp, Users, Clock
+} from 'lucide-react';
 import { StartLayout } from '../components/start/StartLayout';
 import { StartCard } from '../components/start/StartCard';
+
 
 export function StartPage() {
   const navigate = useNavigate();
 
   return (
     <StartLayout>
-      <div className="w-full max-w-3xl flex flex-col items-center animate-fadeIn px-2">
-        {/* Title Block */}
-        <div className="text-center mb-12 select-none">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#3182f6]/10 border border-[#3182f6]/25 text-[10px] text-[#3182f6] mb-5 font-bold font-mono">
+      <div className="w-full max-w-5xl flex flex-col items-center animate-fadeIn px-2 py-4">
+        
+        {/* Top Console Title Block */}
+        <div className="text-center mb-10 select-none">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#3182f6]/10 border border-[#3182f6]/25 text-[10px] text-[#3182f6] mb-4 font-bold font-mono">
             <Store className="w-3.5 h-3.5" />
-            <span>OWNER SYSTEM CONSOLE</span>
+            <span>ZARIYO INTEGRATED KITCHEN & KIOSK CONSOLE</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#191f28] dark:text-white mb-4 leading-tight">
-            매장 관리 프로세스를 시작하세요
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight text-neutral-900 dark:text-white mb-3 leading-tight">
+            매장 스마트 관제 콘솔
           </h1>
-          <p className="text-xs md:text-sm text-[#4e5968] dark:text-neutral-400 font-bold max-w-lg mx-auto">
-            새로운 매장의 이름, 지리 정보 기입 및 좌석 배치도를 디자인하거나, 기존 운영 중인 실시간 통계 관제 대시보드 콘솔로 진입합니다.
+          <p className="text-xs md:text-sm text-neutral-500 dark:text-neutral-400 font-bold max-w-xl mx-auto">
+            2D 좌석 도면 설계부터 실시간 테이블 키오스크 주문 받기, 주방 조리 관제(KDS), 실시간 계산서 확인까지 한눈에 제어하세요.
           </p>
         </div>
 
-        {/* Owner Actions Selection Grid */}
+        {/* Real-time KPI Analytics Summary Bar */}
+        <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 select-none">
+          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-2xl p-5 shadow-sm flex items-center justify-between">
+            <div>
+              <span className="text-[10px] font-bold text-neutral-400 dark:text-white/40 uppercase tracking-widest font-mono">TODAY SALES</span>
+              <p className="text-lg md:text-xl font-black text-neutral-900 dark:text-white mt-1">₩ 1,840,000</p>
+            </div>
+            <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-500">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-2xl p-5 shadow-sm flex items-center justify-between">
+            <div>
+              <span className="text-[10px] font-bold text-neutral-400 dark:text-white/40 uppercase tracking-widest font-mono">OCCUPIED SEATS</span>
+              <p className="text-lg md:text-xl font-black text-neutral-900 dark:text-white mt-1">18 / 24 <span className="text-xs text-[#3182f6] font-bold">(75%)</span></p>
+            </div>
+            <div className="p-3 rounded-xl bg-[#3182f6]/10 text-[#3182f6]">
+              <Users className="w-5 h-5" />
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-2xl p-5 shadow-sm flex items-center justify-between">
+            <div>
+              <span className="text-[10px] font-bold text-neutral-400 dark:text-white/40 uppercase tracking-widest font-mono">KDS PENDING</span>
+              <p className="text-lg md:text-xl font-black text-orange-500 mt-1">4 건 대기중</p>
+            </div>
+            <div className="p-3 rounded-xl bg-orange-500/10 text-orange-500">
+              <ChefHat className="w-5 h-5 animate-pulse" />
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-2xl p-5 shadow-sm flex items-center justify-between">
+            <div>
+              <span className="text-[10px] font-bold text-neutral-400 dark:text-white/40 uppercase tracking-widest font-mono">HOLDS & ROLLBACK</span>
+              <p className="text-lg md:text-xl font-black text-purple-500 mt-1">2 건 처리됨</p>
+            </div>
+            <div className="p-3 rounded-xl bg-purple-500/10 text-purple-500">
+              <Clock className="w-5 h-5" />
+            </div>
+          </div>
+        </div>
+
+        {/* 4 Core Module Systems Selection Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-          {/* Setup New Store Action */}
+          
+          {/* Module 1: Store Builder */}
           <StartCard
-            title="새로운 매장 설정"
-            description="새로운 매장의 이름, 주소, 영업일지를 기입하고 시각적인 2D 드래그 앤 드롭 좌석 배치 설계도를 제작합니다."
+            title="1. 사업자 업장 관리 (도면 빌더)"
+            description="매장의 테이블 수, 20px 그리드 스냅 캔버스를 통해 실제 매장 좌석과 가구 배치도를 2D 드래그 앤 드롭으로 자유롭게 디자인합니다."
             icon={PlusCircle}
             onClick={() => navigate('/owner/store/new')}
-            actionText="매장 디자인 빌더 시작"
+            actionText="매장 도면 디자인 빌더 시작"
           />
 
-          {/* Start Operational Dashboard Action */}
+          {/* Module 2: Smart Kiosk & Ordering */}
           <StartCard
-            title="기존 매장 운영 시작"
-            description="현재 활성화된 매장 운영 대시보드를 열어 실시간 5분 선점 타이머, 당일 예약 명단 통계 및 맵 상태를 조율합니다."
-            icon={LayoutDashboard}
-            onClick={() => navigate('/owner/dashboard')}
-            actionText="관제 대시보드 바로가기"
+            title="2. 스마트 키오스크 & 주문 받기"
+            description="손님용 테이블 키오스크와 디지털 메뉴판을 개시합니다. 고객이 테이블을 탭하고 메뉴를 담으면 5분 임시 선점이 진행됩니다."
+            icon={UtensilsCrossed}
+            onClick={() => navigate('/reserve')}
+            actionText="테이블 키오스크 모드 열기"
+          />
+
+          {/* Module 3: Kitchen Display System (KDS) */}
+          <StartCard
+            title="3. 주방 조리 시스템 (KDS 관제)"
+            description="실시간 조리 대기열을 확인하고 완료된 요리를 체크합니다. 요리가 완료되면 자동으로 관제 대시보드와 수선서에 연동됩니다."
+            icon={ChefHat}
+            onClick={() => navigate('/owner/dashboard?tab=kds')}
+            actionText="주방 KDS 조리 관제실 진입"
+          />
+
+          {/* Module 4: Live Map & Receipts */}
+          <StartCard
+            title="4. 통합 관제 & 계산서 확인 (POS)"
+            description="실시간 좌석 점유 맵과 테이블별 계산서(Bill & Receipt) 수선서를 조회하고, 5분 타임아웃 롤백 및 결제 완료를 처리합니다."
+            icon={Receipt}
+            onClick={() => navigate('/owner/dashboard?tab=live')}
+            actionText="실시간 관제 & POS 모듈 진입"
           />
         </div>
+
       </div>
     </StartLayout>
   );

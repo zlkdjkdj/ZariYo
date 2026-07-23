@@ -18,10 +18,10 @@ export function StartLayout({ children }: StartLayoutProps) {
   };
 
   return (
-    <div className="bg-[#f9fafb] dark:bg-[#101012] text-[#191f28] dark:text-[#f9fafb] font-sans selection:bg-[#3182f6]/20 min-h-screen flex flex-col justify-between relative overflow-hidden transition-colors duration-300">
+    <div className="bg-slate-50 dark:bg-black text-neutral-900 dark:text-white font-sans selection:bg-[#3182f6]/20 min-h-screen flex flex-col justify-between relative overflow-hidden transition-colors duration-300">
       
-      {/* Toss Light Blue Glow spill */}
-      <div className="absolute top-[-20%] left-[50%] -translate-x-1/2 w-[70%] h-[50%] rounded-full bg-[#3182f6]/3 dark:bg-[#3182f6]/6 blur-[130px] pointer-events-none -z-10" />
+      {/* Light/Dark Responsive Blue Glow spill */}
+      <div className="absolute top-[-20%] left-[50%] -translate-x-1/2 w-[70%] h-[50%] rounded-full bg-[#3182f6]/4 dark:bg-[#3182f6]/5 blur-[130px] pointer-events-none -z-10" />
 
       {/* Top Navigation Header */}
       <header className="w-full max-w-7xl mx-auto px-6 md:px-12 py-6 flex items-center justify-between z-10 select-none">
@@ -32,8 +32,8 @@ export function StartLayout({ children }: StartLayoutProps) {
           <div className="w-6.5 h-6.5 rounded-lg bg-gradient-to-tr from-[#3182f6] to-[#4894fe] flex items-center justify-center shadow-[0_4px_10px_rgba(49,130,246,0.2)]">
             <LayoutGrid className="w-3.5 h-3.5 text-white" />
           </div>
-          <span className="text-lg font-black tracking-tight text-[#191f28] dark:text-white flex items-center">
-            ZariYo <span className="text-[#3182f6] dark:text-[#3182f6] font-mono text-[9px] ml-1.5 font-bold tracking-widest uppercase bg-[#3182f6]/10 px-2 py-0.5 rounded-full border border-[#3182f6]/20">Console</span>
+          <span className="text-lg font-black tracking-tight text-neutral-900 dark:text-white flex items-center">
+            ZariYo <span className="text-[#3182f6] font-mono text-[9px] ml-1.5 font-bold tracking-widest uppercase bg-[#3182f6]/10 px-2 py-0.5 rounded-full border border-[#3182f6]/20">Console</span>
           </span>
         </div>
 
@@ -41,7 +41,7 @@ export function StartLayout({ children }: StartLayoutProps) {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/5 hover:bg-neutral-100 dark:hover:bg-white/10 text-neutral-500 dark:text-neutral-400 hover:text-[#191f28] dark:hover:text-white transition-colors cursor-pointer"
+            className="p-2 rounded-full bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 hover:bg-neutral-200 dark:hover:bg-white/10 text-neutral-600 dark:text-white/60 hover:text-black dark:hover:text-white transition-colors cursor-pointer"
             aria-label="Toggle theme"
           >
             {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
@@ -50,7 +50,7 @@ export function StartLayout({ children }: StartLayoutProps) {
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-white/5 hover:bg-red-500/10 border border-neutral-200 dark:border-white/5 text-[11px] font-bold text-neutral-500 dark:text-neutral-400 hover:text-red-500 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-100 dark:bg-white/5 hover:bg-red-500/10 border border-neutral-200 dark:border-white/10 text-[11px] font-bold text-neutral-600 dark:text-white/60 hover:text-red-500 transition-all cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" />
             로그아웃
@@ -69,11 +69,13 @@ export function StartLayout({ children }: StartLayoutProps) {
       </motion.main>
 
       {/* Footer copyright */}
-      <footer className="w-full text-center py-6 text-[10px] text-neutral-400 dark:text-neutral-500 font-semibold font-mono border-t border-[#f2f4f6] dark:border-white/5 mt-auto">
+      <footer className="w-full text-center py-6 text-[10px] text-neutral-500 dark:text-white/20 font-semibold font-mono border-t border-neutral-200/50 dark:border-white/5 mt-auto">
         © 2026 ZariYo. All rights reserved.
       </footer>
     </div>
   );
 }
+
+
 
 
