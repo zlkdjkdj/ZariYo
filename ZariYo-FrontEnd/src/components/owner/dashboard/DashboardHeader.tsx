@@ -103,7 +103,7 @@ export function DashboardHeader({
         </div>
 
         <button
-          onClick={() => navigate('/owner/store-builder')}
+          onClick={() => navigate('/owner/store/new')}
           className="hidden sm:flex items-center gap-1.5 px-4 py-2 rounded-[3px] bg-neutral-100 dark:bg-white/10 hover:bg-neutral-200 dark:hover:bg-white/20 border border-neutral-300 dark:border-white/10 text-black dark:text-white font-extrabold text-xs cursor-pointer transition-all"
         >
           <Move className="w-4 h-4" />

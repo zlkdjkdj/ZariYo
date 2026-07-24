@@ -615,3 +615,44 @@
 
 ### [해결 방법]
 - 서브 컴포넌트들의 `.tsx` 선언부 인터페이스(`DashboardKpiProps`, `DashboardCanvasProps`, `TempOccupiedListProps`, `ReservationListProps`)를 직접 추적하여 exact props 구성을 파악하고, `DashboardPage.tsx`에서 `{...kpi}`, `onConfirm`, `onCancel`, `onComplete`, `onNoShow` 핸들러를 정확하게 연결함으로써 TS 컴파일 에러 10건을 100% 해소하고 빌드를 무결 성공시켰습니다.
+
+---
+
+## 31. 패키지 제거 후 npm install 수행 시 라이프사이클 스크립트 실행 실패 에러
+
+### [이슈 개요]
+- **일시**: 2026-07-24
+- **장애 요인**: `package.json`에서 미사용 패키지 3종 소거 후 `npm install` 실행 시 127 오류 발생.
+- **오류 메시지**:
+  ```text
+  npm ERR! code 127
+  npm ERR! command sh -c husky
+  npm ERR! sh: 1: husky: not found
+  ```
+
+### [원인 분석]
+- 본 프로젝트는 모노레포 관리 및 패키지 링크를 위해 `pnpm` (`pnpm-lock.yaml`, `pnpm-workspace.yaml`)을 기본 패키지 매니저로 사용하는 구조입니다. `npm install` 직접 실행 시 심볼릭 링크 구조 충돌 및 허스키 훅 트리거 실패가 발생했습니다.
+
+### [해결 방법]
+- 워크스페이스 표준 패키지 매니저인 `pnpm install`을 실행하여 의존성 트리 갱신 및 3개 미사용 패키지 제거(`Packages: -3`)를 정상적으로 완료했습니다.
+
+---
+
+## 32. react-router-dom No routes matched location "/owner/store-builder" 렌더링 경고
+
+### [이슈 개요]
+- **일시**: 2026-07-24
+- **장애 요인**: 사장님 대시보드 헤더의 `[좌석 배치]` 버튼 클릭 시 브라우저 콘솔에 라우트 불일치 경고 메시지 출력.
+- **오류 메시지**:
+  ```text
+  react-router-dom.js:170 No routes matched location "/owner/store-builder"
+  ```
+
+### [원인 분석]
+- `App.tsx` 라우터에는 2D 매장 도면 배치 빌더 화면이 `/owner/store/new` 경로로 등록되어 있었으나, `DashboardHeader.tsx` 내의 버튼 클릭 이벤트 핸들러가 `/owner/store-builder`로 잘못 이동하도록 하드코딩되어 발생한 매핑 미일치 결함이었습니다.
+
+### [해결 방법]
+- `DashboardHeader.tsx` 버튼 클릭 네비게이션 경로를 표준 `/owner/store/new`로 수정했습니다.
+- 동시에 `App.tsx` 라우터에 `/owner/store-builder` 별칭 라우트를 추가 등록하여 직관적인 URL 직접 입력 시에도 404/경고 없이 `StoreBuilderPage`가 즉시 렌더링되도록 조치했습니다.
+
+

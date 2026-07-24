@@ -1,7 +1,6 @@
 import { forwardRef } from 'react';
 import { motion } from 'framer-motion';
 import type { HTMLMotionProps } from 'framer-motion';
-import { cn } from '../../utils/cn';
 
 export interface ButtonProps extends Omit<HTMLMotionProps<"button">, "ref"> {
   variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
@@ -25,15 +24,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       lg: "px-8 py-4 text-lg rounded-[3px]"
     };
 
+    const combinedClassName = [
+      "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#000000]/50 disabled:opacity-50 disabled:pointer-events-none",
+      variants[variant],
+      sizes[size],
+      className
+    ].filter(Boolean).join(' ');
+
     return (
       <motion.button
         ref={ref}
-        className={cn(
-          "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#000000]/50 disabled:opacity-50 disabled:pointer-events-none",
-          variants[variant],
-          sizes[size],
-          className
-        )}
+        className={combinedClassName}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         {...props}

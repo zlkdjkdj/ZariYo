@@ -628,6 +628,44 @@
     - 시원한 얼음물, 일회용 앞치마, 앞접시/집기 추가, 물티슈/티슈, 얼음컵, 직원 직접 호출 등 6대 편의 서비스 다중 선택 요청 모달을 신설하고 관제 POS 실시간 릴레이 발송을 연동했습니다.
   - 개발 완료 후 `npm run build`를 구동하여 컴파일 오류 0건 무결 정적 번들링 성공을 입증했습니다.
 
+### 79. 전체 코드베이스 오버엔지니어링 & 사장 코드 정밀 감사 (/ponytail-audit)
+- **작업 일시**: 2026-07-24
+- **작업 내용**:
+  - **전체 코드베이스 린 / 오버엔지니어링 진단 완료 (`/ponytail-audit`)**:
+    - 프론트엔드(`ZariYo-FrontEnd`) 및 백엔드(`ZariYo-BackEnd`) 전체 디렉토리 트리 대상 사장 코드(Dead Code), 불필요한 추상화(YAGNI), 표준 라이브러리/플랫폼 대체 가능 항목, 미사용 npm 의존성을 감지 및 측정했습니다.
+  - **주요 감축 대상 추출 (총 16개 항목 / ~2,689 라인 감축 가능)**:
+    - 랜딩 페이지 9개 미사용 레거시 컴포넌트 (`AppleFeatureBlock.tsx`, `Hero.tsx`, `AppleCardsCarousel.tsx`, `SpaceShowcase.tsx`, `ModuleShowcase.tsx`, `Architecture.tsx`, `Features.tsx`, `Header.tsx`, `Footer.tsx`)
+    - 미사용 레거시 페이지 & 빈 파일 (`AboutPage.tsx`, `MockPages.tsx`, `App.css`)
+    - 미사용 UI 래퍼 컴포넌트 (`Card.tsx`, `Input.tsx`)
+    - 미사용 npm 의존성 패키지 (`zustand`, `clsx`, `tailwind-merge`)
+
+### 80. 미사용 코드/파일 15종 전면 제거 & 패키지 다이어트 완료
+- **작업 일시**: 2026-07-24
+- **작업 내용**:
+  - **15개 사장 파일 물리적 소거 (~2,689 라인 경량화)**:
+    - 레거시 랜딩 컴포넌트 9종: `AppleFeatureBlock.tsx`, `Hero.tsx`, `AppleCardsCarousel.tsx`, `SpaceShowcase.tsx`, `ModuleShowcase.tsx`, `Architecture.tsx`, `Features.tsx`, `Header.tsx`, `Footer.tsx` 삭제
+    - 미사용 레거시 페이지 & 빈 파일: `AboutPage.tsx`, `MockPages.tsx`, `App.css` 삭제
+    - 미사용 UI 래퍼 & 유틸: `Card.tsx`, `Input.tsx`, `cn.ts` 삭제
+  - **미사용 npm 패키지 3종 소거 (`package.json`)**:
+    - `zustand`, `clsx`, `tailwind-merge` 의존성 완전 제거 및 `pnpm install`로 node_modules 정돈
+  - **클래스 합치기 네이티브 교체 (`Button.tsx`)**:
+    - `cn(...)` 호출부를 JS 네이티브 배열 필터 결합 구문(`[...].filter(Boolean).join(' ')`)으로 리팩토링
+  - **빌드 검증**:
+    - `npm run build` 수행 결과 0개의 오류로 정적 프로덕션 번들링 완전 성공 입증
+
+### 81. StoreBuilder 라우팅 매핑 미일치 결함 수정 및 이중 라우트 별칭 지원
+- **작업 일시**: 2026-07-24
+- **작업 내용**:
+  - **라우팅 목적지 경로 동기화 ([DashboardHeader.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardHeader.tsx))**:
+    - 대시보드 상단 헤더의 `[좌석 배치]` 버튼 클릭 시 이동하던 잘못된 경로 `/owner/store-builder`를 표준 라우트인 `/owner/store/new`로 수정했습니다.
+  - **이중 별칭 라우트 마운트 ([App.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/App.tsx))**:
+    - 외부 링크나 사용자의 직관적인 URL 접근(`/owner/store-builder`)에서도 2D 매장 도면 빌더 화면(`StoreBuilderPage`)이 정상 렌더링되도록 별칭 라우트를 추가 마운트하여 "No routes matched location" 경고를 완전 차단했습니다.
+  - **빌드 검증**:
+    - `npm run build` 수행 결과 0건의 타입 에러로 빌드 완벽 성공.
+
+
+
+
 
 
 
