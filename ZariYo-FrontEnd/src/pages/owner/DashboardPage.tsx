@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { GripVertical, Layers } from 'lucide-react';
 import { ConsoleSidebar } from '../../components/owner/ConsoleSidebar';
 import { useDashboard } from '../../hooks/useDashboard';
@@ -19,11 +19,6 @@ import { AddMenuModal } from '../../components/owner/dashboard/AddMenuModal';
 
 // External Mock Data Imports
 import { 
-  INITIAL_STORE_INFO, 
-  INITIAL_TABLE_BILLS, 
-  INITIAL_DELIVERY_ORDERS, 
-  INITIAL_KDS_ORDERS, 
-  INITIAL_PLACED_ELEMENTS,
   type BillItem 
 } from '../../data/mockDashboard';
 
@@ -36,6 +31,7 @@ const DEFAULT_WIDGET_ORDER: WidgetId[] = [
 ];
 
 export function DashboardPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tabParam = (searchParams.get('tab') as 'live' | 'kds' | 'delivery') || 'live';
   const [activeTab, setActiveTab] = useState<'live' | 'kds' | 'delivery'>(tabParam);
@@ -62,23 +58,64 @@ export function DashboardPage() {
   const [discountAmount, setDiscountAmount] = useState<number>(0);
   const [youtubeVideoId, setYoutubeVideoId] = useState<string>('jfKfPfyJRdk');
 
-  // 외부 목업 데이터 모듈 연동
-  const [tableBills, setTableBills] = useState<Record<string, { items: BillItem[]; paymentMethod: string }>>(INITIAL_TABLE_BILLS);
-  const [deliveryOrders, setDeliveryOrders] = useState<DeliveryOrderItem[]>(INITIAL_DELIVERY_ORDERS);
-  const [kdsOrders, setKdsOrders] = useState<KdsOrderItem[]>(INITIAL_KDS_ORDERS);
+  // 실시간 실제 연동 주문 데이터 (목업 예시 제거)
+  const [tableBills, setTableBills] = useState<Record<string, { items: BillItem[]; paymentMethod: string }>>({});
+  const [deliveryOrders, setDeliveryOrders] = useState<DeliveryOrderItem[]>([]);
+  const [kdsOrders, setKdsOrders] = useState<KdsOrderItem[]>([]);
 
   // 모달 상태
   const [isAddMenuModalOpen, setIsAddMenuModalOpen] = useState(false);
 
-  const [storeInfo] = useState(() => {
+  // 동적 유저 커스텀 매장 정보 및 2D 배치도 최우선 로드
+  const [storeInfo, setStoreInfo] = useState(() => {
     const saved = localStorage.getItem('zariyo_store_info');
-    return saved ? JSON.parse(saved) : INITIAL_STORE_INFO;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.name) return parsed;
+      } catch (e) {}
+    }
+    return null;
   });
 
-  const [placedElements] = useState<PlacedElement[]>(() => {
+  const [placedElements, setPlacedElements] = useState<PlacedElement[]>(() => {
     const saved = localStorage.getItem('zariyo_store_layout');
-    return saved ? JSON.parse(saved) : INITIAL_PLACED_ELEMENTS;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+    }
+    return [];
   });
+
+  // 매장이 등록되어 있지 않은 경우 매장 생성 마법사로 자동 가이드 리다이렉트
+  useEffect(() => {
+    const savedInfo = localStorage.getItem('zariyo_store_info');
+    const savedLayout = localStorage.getItem('zariyo_store_layout');
+    
+    if (!savedInfo || !savedLayout) {
+      // 목업 대신 신규 등록 안내
+      alert('[매장 등록 안내]\n아직 등록된 나만의 매장이 없습니다!\n2D 매장 레이아웃 생성 마법사로 이동합니다.');
+      navigate('/owner/store/new');
+    }
+  }, [navigate]);
+
+  // 스토리지 동기화 이벤트 감지하여 매장 정보/배치도 실시간 갱신
+  useEffect(() => {
+    const syncStoreData = () => {
+      const savedInfo = localStorage.getItem('zariyo_store_info');
+      const savedLayout = localStorage.getItem('zariyo_store_layout');
+      if (savedInfo) setStoreInfo(JSON.parse(savedInfo));
+      if (savedLayout) setPlacedElements(JSON.parse(savedLayout));
+    };
+    window.addEventListener('storage', syncStoreData);
+    window.addEventListener('storage_sync', syncStoreData);
+    return () => {
+      window.removeEventListener('storage', syncStoreData);
+      window.removeEventListener('storage_sync', syncStoreData);
+    };
+  }, []);
 
   const {
     tableStates,
@@ -90,6 +127,7 @@ export function DashboardPage() {
     handleControlState,
     handleCompleteReservation,
     handleNoShowReservation,
+    isConnected,
     kpi
   } = useDashboard(placedElements);
 
@@ -278,13 +316,14 @@ export function DashboardPage() {
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[var(--bg-main)]">
         
         <DashboardHeader 
-          storeName={storeInfo.name}
+          storeName={storeInfo?.name || '내 매장 관제판'}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           deliveryCount={deliveryOrders.length}
           isEditMode={isEditMode}
           setIsEditMode={setIsEditMode}
           onResetWidgetOrder={handleResetWidgetOrder}
+          isConnected={isConnected}
         />
 
         {/* Dashboard Content Container */}

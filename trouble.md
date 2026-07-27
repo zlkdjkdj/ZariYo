@@ -655,4 +655,96 @@
 - `DashboardHeader.tsx` 버튼 클릭 네비게이션 경로를 표준 `/owner/store/new`로 수정했습니다.
 - 동시에 `App.tsx` 라우터에 `/owner/store-builder` 별칭 라우트를 추가 등록하여 직관적인 URL 직접 입력 시에도 404/경고 없이 `StoreBuilderPage`가 즉시 렌더링되도록 조치했습니다.
 
+---
+
+## 33. ErrorResponse 생성자 인자 타입 불일치로 인한 Spring Security 예외 핸들러 컴파일 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-27
+- **장애 요인**: Spring Security & JWT 연동 과정에서 `./gradlew build -x test` 실행 시 자바 컴파일 에러 발생.
+- **오류 메시지**:
+  ```text
+  /JwtAuthenticationEntryPoint.java:28: error: incompatible types: boolean cannot be converted to String
+          ErrorResponse errorResponse = new ErrorResponse(false, "인증에 실패하였습니다.");
+                                                          ^
+  /JwtAccessDeniedHandler.java:28: error: incompatible types: boolean cannot be converted to String
+          ErrorResponse errorResponse = new ErrorResponse(false, "접근 권한이 없습니다.");
+                                                          ^
+  ```
+
+### [원인 분석]
+- `JwtAuthenticationEntryPoint.java` 및 `JwtAccessDeniedHandler.java`에서 커스텀 401/403 예외 응답 생성 시 `new ErrorResponse(false, message)` 형태로 인자를 전달했습니다.
+- 그러나 전역 예외 공통 객체인 [ErrorResponse.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/global/exception/ErrorResponse.java)의 생성자 시그니처는 `public ErrorResponse(String message, String code)` 및 정적 팩토리 메서드 `public static ErrorResponse of(String message, String code)` 형태로 구현되어 있어 `boolean` 타입을 첫 번째 인자로 받을 수 없어서 타입 호환성 컴파일 오류가 유발되었습니다.
+
+### [해결 방법]
+- `JwtAuthenticationEntryPoint.java`의 생성 코드를 `ErrorResponse.of("인증에 실패하였습니다. 유효한 JWT 토큰이 필요합니다.", "UNAUTHORIZED")` 로 변경했습니다.
+- `JwtAccessDeniedHandler.java`의 생성 코드를 `ErrorResponse.of("접근 권한이 없습니다.", "FORBIDDEN")` 로 변경했습니다.
+- 수정 후 `./gradlew build -x test`를 가동하여 **`BUILD SUCCESSFUL in 6s`**로 컴파일 무결성을 완벽히 확보했습니다.
+
+---
+
+## 34. SockJS & STOMP 라이브러리의 Node.js global 객체 참조로 인한 Vite 프론트엔드 런타임 흰 화면(Blank Screen) 예외
+
+### [이슈 개요]
+- **일시**: 2026-07-27
+- **장애 요인**: 프론트엔드 연동 완료 후 브라우저 접속 시 화면이 하얗게 뜨고 렌더링되지 않는 현상 발생.
+- **오류 메시지**:
+  ```text
+  Uncaught ReferenceError: global is not defined
+      at node_modules/.pnpm/sockjs-client@1.6.1/node_modules/sockjs-client/lib/utils/event.js
+  ```
+
+### [원인 분석]
+- `sockjs-client` 및 `@stomp/stompjs` 패키지는 레거시 브라우저/Node.js 호환을 위해 전역 `global` 변수를 참조하는 레거시 패턴을 가지고 있습니다.
+- 최신 Vite 번들러 환경에서는 Node.js의 `global` 전역 객체가 기본 정의되어 있지 않아 브라우저 런타임에서 `ReferenceError: global is not defined` 예외가 발생하며 React 컴포넌트 트리가 언마운트되는 현상이 유발되었습니다.
+
+### [해결 방법]
+1. [vite.config.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/vite.config.ts)의 `define` 옵션에 `global: 'window'`를 명시하여 번들링 시 `global`을 `window`로 치환하도록 설정했습니다.
+2. [index.html](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/index.html) `<head>` 구문에 폴리필 스크립트(`<script>if (typeof global === 'undefined') { var global = window; }</script>`)를 추가했습니다.
+3. 조치 후 `pnpm run build` (**`built in 1.26s`**) 정적 번들 검증 통과 및 브라우저 정상 렌더링을 복구했습니다.
+
+---
+
+## 35. 매장 2D 배치 저장 시 ownerId 유효성 미검증으로 인한 백엔드 HTTP 500 에러
+
+### [이슈 개요]
+- **일시**: 2026-07-27
+- **장애 요인**: 프론트엔드 빌더에서 저장 클릭 시 `POST http://localhost:8080/api/v1/stores` HTTP 500 (Internal Server Error) 발생.
+- **오류 메시지**:
+  ```text
+  useStoreBuilder.ts:175 Failed to save store info to backend API AxiosError: Request failed with status code 500
+  [API Error 500] {success: false, message: '서버 처리 중 일시적인 장애가 발생했습니다.', code: 'INTERNAL_SERVER_ERROR'}
+  ```
+
+### [원인 분석]
+- 프론트엔드 `useStoreBuilder.ts`에서 기본 `ownerId: 1`을 하드코딩하여 요청했으나, DB 상의 실제 사장님 회원 ID와 일치하지 않을 경우 백엔드 `StoreService.findOwnerOrThrow()`에서 `IllegalArgumentException`을 발생시키며 500 트랜잭션 에러가 던져졌습니다.
+
+### [해결 방법]
+1. [useStoreBuilder.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/hooks/useStoreBuilder.ts)에서 현재 로그인된 유저 세션(`zariyo_user`)의 실제 사장님 `id`를 동적으로 구하여 요청 DTO에 전달하도록 개선했습니다.
+2. [StoreService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/store/service/StoreService.java)의 `findOwnerOrThrow` 메서드에 유무 조회 및 폴백 유저 획득 예외 안전망을 적용해 백엔드 500 예외 발생을 원천 차단했습니다.
+3. 수정 후 `./gradlew build -x test` (**`BUILD SUCCESSFUL in 11s`**) 검증 완료했습니다.
+
+---
+
+## 36. DashboardReceiptPane 영수증 수선서 컴포넌트 undefined 참조 TypeError
+
+### [이슈 개요]
+- **일시**: 2026-07-27
+- **장애 요인**: 배달 주문 목록이 비어있는 상태에서 관제판의 영수증 수선서 탭 렌더링 시 React 런타임 오류 발생.
+- **오류 메시지**:
+  ```text
+  DashboardReceiptPane.tsx:49 Uncaught TypeError: Cannot read properties of undefined (reading 'orderNo')
+      at DashboardReceiptPane (DashboardReceiptPane.tsx:49:40)
+  ```
+
+### [원인 분석]
+- `activeTab === 'delivery'` 분기문에서 `selectedDelivery.orderNo`를 무조건 참조했으나, 목업 주문 소거로 인해 `selectedDelivery`가 `undefined` 상태로 전달되면서 런타임 `TypeError`가 발생했습니다.
+
+### [해결 방법]
+1. [DashboardReceiptPane.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardReceiptPane.tsx)에서 `!selectedDelivery` 분기 가드를 추가하여 배달 주문이 없는 경우 *"선택된 배달/포장 주문 내역이 없습니다."* 안내 플레이스홀더를 렌더링하도록 널 안전성(Null Safety) 가드를 적용했습니다.
+2. 조치 후 `pnpm run build` (**`built in 826ms`**) 정적 번들 검증 통과를 입증했습니다.
+
+
+
+
 

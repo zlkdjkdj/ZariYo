@@ -1,4 +1,4 @@
-import { ToggleLeft, ToggleRight, Trash2 } from 'lucide-react';
+import { ToggleLeft, ToggleRight, Trash2, Edit } from 'lucide-react';
 
 export interface MenuOption {
   name: string;
@@ -20,12 +20,14 @@ interface MenuCardItemProps {
   menu: MenuManagementItem;
   onToggleSoldOut: (id: string) => void;
   onDeleteMenu: (id: string) => void;
+  onEditMenu: (menu: MenuManagementItem) => void;
 }
 
 export function MenuCardItem({
   menu,
   onToggleSoldOut,
   onDeleteMenu,
+  onEditMenu,
 }: MenuCardItemProps) {
   return (
     <div 
@@ -105,13 +107,22 @@ export function MenuCardItem({
           )}
         </button>
 
-        <button
-          onClick={() => onDeleteMenu(menu.id)}
-          className="p-1.5 rounded-none text-neutral-400 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
-          title="메뉴 삭제"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => onEditMenu(menu)}
+            className="p-1.5 rounded-none text-neutral-400 hover:text-emerald-500 hover:bg-emerald-500/10 transition-colors cursor-pointer"
+            title="메뉴 정보 및 이미지 수정"
+          >
+            <Edit className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => onDeleteMenu(menu.id)}
+            className="p-1.5 rounded-none text-neutral-400 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+            title="메뉴 삭제"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
     </div>

@@ -28,27 +28,27 @@ export function LandingCtaSection() {
 
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
           <button
-            onClick={() => navigate('/owner/dashboard')}
+            onClick={() => navigate('/login')}
             className="w-full sm:w-auto px-10 py-4.5 rounded-[3px] bg-white text-black hover:bg-neutral-200 font-black text-base cursor-pointer transition-all flex items-center justify-center gap-2 shadow-2xl hover:scale-105"
           >
-            <span>사장님 대시보드 바로가기</span>
+            <span>사장님 시작하기 (가입 & 로그인)</span>
             <ArrowRight className="w-5 h-5" />
           </button>
 
           <button
-            onClick={() => navigate('/kiosk')}
+            onClick={() => navigate('/reserve')}
             className="w-full sm:w-auto px-10 py-4.5 rounded-[3px] bg-white/10 hover:bg-white/20 text-white border border-white/20 font-black text-base cursor-pointer transition-all flex items-center justify-center gap-2 hover:scale-105 hover:border-orange-400/50"
           >
             <Utensils className="w-5 h-5 text-orange-400" />
-            <span>손님 키오스크 바로가기</span>
+            <span>손님 2D 예약 & 키오스크 바로가기</span>
           </button>
 
           <button
-            onClick={() => navigate('/guide')}
+            onClick={() => navigate('/owner/stores')}
             className="w-full sm:w-auto px-10 py-4.5 rounded-[3px] bg-white/10 hover:bg-white/20 text-white border border-white/20 font-black text-base cursor-pointer transition-all flex items-center justify-center gap-2 hover:scale-105 hover:border-emerald-400/50"
           >
             <BookOpen className="w-5 h-5 text-emerald-400" />
-            <span>시스템 사용설명서 & 세부 기능명세</span>
+            <span>내 매장 관제 대시보드 선택</span>
           </button>
         </div>
       </motion.div>

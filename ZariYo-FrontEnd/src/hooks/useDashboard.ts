@@ -1,16 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { PlacedElement, TempOccupiedItem, ReservationItem } from '../types/store';
+import { useWebSocket } from './useWebSocket';
+import type { SeatStatusResponse } from '../api/storeApi';
 
-export function useDashboard(placedElements: PlacedElement[]) {
-  // 1. 좌석별 실시간 상태 관리
+export function useDashboard(placedElements: PlacedElement[], storeId: number = 1) {
+  // 1. 좌석별 실시간 상태 관리 (전달된 placedElements ID 동적 동기화)
   const [tableStates, setTableStates] = useState<Record<string, 'empty' | 'using' | 'temp-occupied' | 'reserved'>>(() => {
     const saved = localStorage.getItem('zariyo_table_states');
-    return saved ? JSON.parse(saved) : {
-      '3': 'using',          // T-1 사용중
-      '4': 'temp-occupied',  // T-2 5분 점유중
-      '5': 'empty',          // T-3 비어있음
-      '6': 'reserved',       // 바석-A 예약됨
-    };
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to parse saved table states', e);
+      }
+    }
+    const initialMap: Record<string, 'empty' | 'using' | 'temp-occupied' | 'reserved'> = {};
+    placedElements.forEach((el) => {
+      initialMap[el.id] = 'empty';
+    });
+    // 기본 상위 2개 좌석에 시연용 상태 할당
+    if (placedElements[0]) initialMap[placedElements[0].id] = 'using';
+    if (placedElements[1]) initialMap[placedElements[1].id] = 'temp-occupied';
+    return initialMap;
   });
 
   // 2. 5분 임시 점유 목록
@@ -44,7 +55,7 @@ export function useDashboard(placedElements: PlacedElement[]) {
   // 5. 제어 팝업 대상 ID
   const [activeControlId, setActiveControlId] = useState<string | null>(null);
 
-  // 로컬 스토리지에 데이터 영속 저장 및 탭 전파
+  // 로컬 스토리지 데이터 동기화 함수
   const syncToLocalStorage = (
     newStates: Record<string, 'empty' | 'using' | 'temp-occupied' | 'reserved'>,
     newOccs: TempOccupiedItem[],
@@ -57,6 +68,53 @@ export function useDashboard(placedElements: PlacedElement[]) {
     localStorage.setItem('zariyo_logs', JSON.stringify(newLogs));
     window.dispatchEvent(new Event('storage_sync'));
   };
+
+  // 웹소켓 이벤트 수신 콜백 정의
+  const handleWebSocketOrder = useCallback((data: any) => {
+    const timeStr = new Date().toTimeString().split(' ')[0];
+    const logMsg = `[${timeStr}] 🔔 [STOMP 실시간 신규 주문] 주문번호 ${data.orderNumber} (테이블: ${data.tableNumber}, 금액: ${data.totalAmount?.toLocaleString()}원)`;
+    setLogs((prev) => [logMsg, ...prev]);
+  }, []);
+
+  const handleWebSocketStaffCall = useCallback((data: any) => {
+    const timeStr = new Date().toTimeString().split(' ')[0];
+    const logMsg = `[${timeStr}] 🙋‍♂️ [STOMP 실시간 직원 호출] [${data.tableNumber}번 테이블] 요청: ${data.requestItems}`;
+    setLogs((prev) => [logMsg, ...prev]);
+  }, []);
+
+  const handleWebSocketSeatStatus = useCallback((data: SeatStatusResponse[]) => {
+    const timeStr = new Date().toTimeString().split(' ')[0];
+    const newStates: Record<string, 'empty' | 'using' | 'temp-occupied' | 'reserved'> = {};
+    const newOccs: TempOccupiedItem[] = [];
+
+    data.forEach((seat) => {
+      let state: 'empty' | 'using' | 'temp-occupied' | 'reserved' = 'empty';
+      if (seat.status === 'held') {
+        state = 'temp-occupied';
+        newOccs.push({
+          id: `temp-${seat.elementId}`,
+          label: seat.label,
+          elementId: seat.elementId,
+          timeLeft: seat.timeLeft || 300,
+        });
+      } else if (seat.status === 'reserved') {
+        state = 'reserved';
+      }
+      newStates[seat.elementId] = state;
+    });
+
+    setTableStates((prev) => ({ ...prev, ...newStates }));
+    setTempOccupations(newOccs);
+    setLogs((prev) => [`[${timeStr}] ⚡ [STOMP 실시간 좌석 상태] 최신 2D 맵 동기화 수신 완료`, ...prev]);
+  }, []);
+
+  // STOMP 웹소켓 실시간 연결 훅 가동
+  const { isConnected } = useWebSocket({
+    storeId,
+    onOrderReceived: handleWebSocketOrder,
+    onStaffCallReceived: handleWebSocketStaffCall,
+    onSeatStatusReceived: handleWebSocketSeatStatus,
+  });
 
 
 
@@ -239,6 +297,7 @@ export function useDashboard(placedElements: PlacedElement[]) {
     handleControlState,
     handleCompleteReservation,
     handleNoShowReservation,
+    isConnected,
     kpi: {
       usingCount,
       tempOccupiedCount,

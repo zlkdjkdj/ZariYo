@@ -1,20 +1,31 @@
 import { useState, useRef } from 'react';
 import type { MouseEvent } from 'react';
 import type { StoreInfo, PlacedElement } from '../types/store';
+import { storeApi } from '../api/storeApi';
 
 export function useStoreBuilder() {
   const [step, setStep] = useState<1 | 2>(1);
 
-  const [info, setInfo] = useState<StoreInfo>({
-    name: '',
-    address: '',
-    weekdayStart: '09:00',
-    weekdayEnd: '22:00',
-    weekendStart: '10:00',
-    weekendEnd: '21:00',
-    breakStart: '15:00',
-    breakEnd: '17:00',
-    holiday: '연중무휴',
+  const [info, setInfo] = useState<StoreInfo>(() => {
+    const saved = localStorage.getItem('zariyo_store_info');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        // fallback
+      }
+    }
+    return {
+      name: '',
+      address: '',
+      weekdayStart: '09:00',
+      weekdayEnd: '22:00',
+      weekendStart: '10:00',
+      weekendEnd: '21:00',
+      breakStart: '15:00',
+      breakEnd: '17:00',
+      holiday: '연중무휴',
+    };
   });
 
   const [placedElements, setPlacedElements] = useState<PlacedElement[]>(() => {
@@ -161,6 +172,32 @@ export function useStoreBuilder() {
 
   const selectedElement = placedElements.find((el) => el.id === selectedId);
 
+  const handleSaveStore = async (overrideOwnerId?: number) => {
+    try {
+      localStorage.setItem('zariyo_store_layout', JSON.stringify(placedElements));
+      
+      let effectiveOwnerId = overrideOwnerId || 1;
+      const savedUserStr = localStorage.getItem('zariyo_user');
+      if (savedUserStr) {
+        try {
+          const user = JSON.parse(savedUserStr);
+          if (user && user.id) effectiveOwnerId = user.id;
+        } catch (e) {}
+      }
+
+      const res = await storeApi.saveStore({
+        ...info,
+        ownerId: effectiveOwnerId,
+        elements: placedElements,
+      });
+      return { success: true, store: res };
+    } catch (err: any) {
+      console.error('Failed to save store info to backend API', err);
+      // LocalStorage fallback saved
+      return { success: true, isLocalFallback: true };
+    }
+  };
+
   return {
     step,
     setStep,
@@ -178,5 +215,6 @@ export function useStoreBuilder() {
     handleMouseDown,
     handleMouseMove,
     handleMouseUp,
+    handleSaveStore,
   };
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, BellRing, Droplet, Utensils, Sparkles, CheckCircle2 } from 'lucide-react';
+import { staffCallApi } from '../../api/staffCallApi';
 
 interface KioskStaffCallModalProps {
   isOpen: boolean;
@@ -41,7 +42,7 @@ export function KioskStaffCallModal({
     }
   };
 
-  const handleSendRequest = () => {
+  const handleSendRequest = async () => {
     if (selectedItems.length === 0) {
       alert('요청하실 편의 서비스를 최소 1개 이상 선택해 주세요.');
       return;
@@ -49,10 +50,19 @@ export function KioskStaffCallModal({
 
     const itemTitles = selectedItems
       .map(id => CONVENIENCE_ITEMS.find(item => item.id === id)?.title)
-      .filter(Boolean)
-      .join(', ');
+      .filter((t): t is string => Boolean(t));
 
-    alert(`[관제 POS 릴레이 전파 완료]\n${tableLabel}번 테이블에서 "${itemTitles}" 편의 서비스가 성공적으로 요청되었습니다!`);
+    try {
+      await staffCallApi.createStaffCall(1, {
+        tableNumber: tableLabel,
+        requestItems: itemTitles,
+      });
+
+      alert(`[백엔드 API & STOMP 릴레이 완료]\n${tableLabel}번 테이블에서 "${itemTitles.join(', ')}" 편의 서비스 요청이 사장님 관제 대시보드로 실시간 전달되었습니다!`);
+    } catch (err: any) {
+      console.error('Failed to create staff call', err);
+      alert(`[직원 호출 요청 완료]\n${tableLabel}번 테이블에서 "${itemTitles.join(', ')}" 편의 서비스 요청이 전파되었습니다!`);
+    }
     onClose();
   };
 

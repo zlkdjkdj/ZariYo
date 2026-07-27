@@ -1,27 +1,27 @@
-# Gradle / Java Build artifacts
-ZariYo-BackEnd/.gradle/
-ZariYo-BackEnd/build/
-ZariYo-BackEnd/bin/
-ZariYo-BackEnd/out/
-
-# Node / Frontend Build artifacts
+# Root GitIgnore for ZariYo Project
 node_modules/
-ZariYo-FrontEnd/node_modules/
-ZariYo-FrontEnd/dist/
-ZariYo-FrontEnd/.tmp/
-ZariYo-FrontEnd/.vite/
-.vite/
-
-# IDE / OS Settings
-.DS_Store
-.project
-.classpath
-.factorypath
-
-# Environment secrets (for safety)
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
+*.env
 *.log
+
+# FrontEnd Build
+ZariYo-FrontEnd/dist/
+ZariYo-FrontEnd/node_modules/
+ZariYo-FrontEnd/.env
+
+# BackEnd Build & IDE
+ZariYo-BackEnd/build/
+ZariYo-BackEnd/bin/
+ZariYo-BackEnd/.gradle/
+ZariYo-BackEnd/application-secret.yml
+ZariYo-BackEnd/.classpath
+ZariYo-BackEnd/.project
+ZariYo-BackEnd/.settings/
+ZariYo-BackEnd/.factorypath
+
+# IDE & System
+.idea/
+.vscode/
+.DS_Store

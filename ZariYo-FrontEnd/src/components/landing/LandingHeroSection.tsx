@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, BookOpen, Utensils, Zap } from 'lucide-react';
+import { ArrowRight, Utensils, Zap } from 'lucide-react';
 
 export function LandingHeroSection() {
   const navigate = useNavigate();
@@ -62,27 +62,27 @@ export function LandingHeroSection() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
         >
           <button
-            onClick={() => navigate('/owner/dashboard')}
+            onClick={() => navigate('/signup')}
             className="w-full sm:w-auto px-8 py-4 rounded-[3px] bg-white text-black hover:bg-neutral-200 font-black text-sm cursor-pointer transition-all flex items-center justify-center gap-2 shadow-2xl hover:scale-105 hover:shadow-white/20"
           >
-            <span>사장님 실시간 관제판 체험</span>
+            <span>사장님 시작하기 (회원가입 & 매장등록)</span>
             <ArrowRight className="w-4 h-4" />
           </button>
 
           <button
-            onClick={() => navigate('/kiosk')}
+            onClick={() => navigate('/reserve')}
             className="w-full sm:w-auto px-8 py-4 rounded-[3px] bg-white/10 hover:bg-white/20 text-white border border-white/20 font-black text-sm cursor-pointer transition-all flex items-center justify-center gap-2 backdrop-blur-md hover:scale-105 hover:border-orange-400/50"
           >
             <Utensils className="w-4 h-4 text-orange-400" />
-            <span>손님 키오스크 바로가기</span>
+            <span>손님 2D 실시간 예약 & 키오스크</span>
           </button>
 
           <button
-            onClick={() => navigate('/guide')}
+            onClick={() => navigate('/owner/stores')}
             className="w-full sm:w-auto px-8 py-4 rounded-[3px] bg-white/10 hover:bg-white/20 text-white border border-white/20 font-black text-sm cursor-pointer transition-all flex items-center justify-center gap-2 backdrop-blur-md hover:scale-105 hover:border-emerald-400/50"
           >
-            <BookOpen className="w-4 h-4 text-emerald-400" />
-            <span>시스템 사용설명서 & 세부 스펙</span>
+            <Zap className="w-4 h-4 text-amber-400" />
+            <span>내 매장 선택 & 관제판 진입</span>
           </button>
         </motion.div>
 

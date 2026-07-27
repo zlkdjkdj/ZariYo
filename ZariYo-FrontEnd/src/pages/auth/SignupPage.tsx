@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Mail, Lock, User, LayoutGrid } from 'lucide-react';
+import { ArrowLeft, Mail, Lock, User, LayoutGrid, Shield } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { AuthInput } from '../../components/auth/AuthInput';
 import { Button } from '../../components/ui/Button';
+import { authApi } from '../../api/authApi';
 
 const signupSchema = z.object({
   name: z.string().min(1, '이름을 입력해주세요.'),
@@ -24,8 +25,9 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 export function SignupPage() {
   const navigate = useNavigate();
-  const [role, setRole] = useState<'owner' | 'customer'>('owner');
+  const [role] = useState<'owner' | 'customer'>('owner');
   const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const {
     register,
@@ -35,13 +37,29 @@ export function SignupPage() {
     resolver: zodResolver(signupSchema),
   });
 
-  const onSubmit = () => {
+  const onSubmit = async (data: SignupFormValues) => {
     setIsLoading(true);
-    setTimeout(() => {
+    setApiError(null);
+    try {
+      const rolePayload = role === 'owner' ? 'ROLE_OWNER' : 'ROLE_CUSTOMER';
+      const res = await authApi.signup({
+        name: data.name,
+        email: data.email,
+        role: rolePayload,
+      });
+
+      localStorage.setItem('zariyo_token', res.accessToken);
+      localStorage.setItem('zariyo_user', JSON.stringify(res.user));
+
+      alert(`${role === 'owner' ? '사장님' : '손님'} 회원가입에 성공했습니다! 매장 선택 게이트웨이로 이동합니다.`);
+      if (role === 'owner') navigate('/owner/stores');
+      else navigate('/reserve');
+    } catch (err: any) {
+      const msg = err.response?.data?.message || '회원가입에 실패했습니다. 다시 시도해 주세요.';
+      setApiError(msg);
+    } finally {
       setIsLoading(false);
-      alert(`${role === 'owner' ? '사장님' : '손님'} 회원가입에 성공했습니다! 로그인 페이지로 이동합니다.`);
-      navigate('/login');
-    }, 1000);
+    }
   };
 
   return (
@@ -118,30 +136,20 @@ export function SignupPage() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Role Select tabs */}
-            <div className="bg-neutral-200/40 dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-full p-1.5 flex gap-1 relative select-none mb-4">
-              <button
-                type="button"
-                onClick={() => setRole('owner')}
-                className={`flex-1 py-2.5 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 relative z-10 cursor-pointer ${
-                  role === 'owner'
-                    ? 'bg-gradient-to-r from-[#000000] to-[#000000] text-white shadow-none'
-                    : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                }`}
-              >
-                사장님 가입
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('customer')}
-                className={`flex-1 py-2.5 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 relative z-10 cursor-pointer ${
-                  role === 'customer'
-                    ? 'bg-gradient-to-r from-[#000000] to-[#000000] text-white shadow-none'
-                    : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-                }`}
-              >
-                손님 가입
-              </button>
+            {apiError && (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg text-xs font-bold text-center">
+                {apiError}
+              </div>
+            )}
+            {/* Owner Account Banner & Customer QR Notice */}
+            <div className="p-3.5 bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-lg text-xs space-y-1">
+              <div className="flex items-center gap-1.5 font-black text-emerald-600 dark:text-emerald-400">
+                <Shield className="w-4 h-4" />
+                <span>사장님 전용 계정 등록</span>
+              </div>
+              <p className="text-neutral-500 dark:text-neutral-400 text-[11px] font-semibold">
+                ※ 손님은 별도의 회원가입 없이 매장 테이블 QR 스티커 스캔 후 휴대폰 번호 간편 인증으로 즉시 주문하실 수 있습니다.
+              </p>
             </div>
 
             <AuthInput

@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { AuthInput } from '../../components/auth/AuthInput';
 import { Button } from '../../components/ui/Button';
+import { authApi } from '../../api/authApi';
 
 const loginSchema = z.object({
   email: z.string().min(1, '이메일을 입력해주세요.').email('올바른 이메일 형식이 아닙니다.'),
@@ -18,6 +19,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [role, setRole] = useState<'owner' | 'customer'>('owner');
   const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const {
     register,
@@ -27,14 +29,22 @@ export function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormValues) => {
+  const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      alert(`로그인 성공! (${data.email})`);
-      if (role === 'owner') navigate('/owner');
+    setApiError(null);
+    try {
+      const res = await authApi.login({ email: data.email });
+      localStorage.setItem('zariyo_token', res.accessToken);
+      localStorage.setItem('zariyo_user', JSON.stringify(res.user));
+
+      if (role === 'owner') navigate('/owner/stores');
       else navigate('/reserve');
-    }, 1000);
+    } catch (err: any) {
+      const msg = err.response?.data?.message || '로그인에 실패했습니다. 이메일을 확인해 주세요.';
+      setApiError(msg);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -111,6 +121,11 @@ export function LoginPage() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {apiError && (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-lg text-xs font-bold text-center">
+                {apiError}
+              </div>
+            )}
             {/* Role Select tabs */}
             <div className="bg-neutral-200/40 dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5 rounded-full p-1.5 flex gap-1 relative select-none">
               <button

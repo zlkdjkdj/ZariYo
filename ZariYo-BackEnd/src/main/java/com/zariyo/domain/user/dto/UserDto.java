@@ -64,4 +64,28 @@ public class UserDto {
             );
         }
     }
+
+    @Getter
+    @Schema(description = "JWT 토큰 발급 응답 데이터 모델")
+    public static class TokenResponse {
+        @Schema(description = "JWT Access Token (API 요청 Authorization 헤더에 Bearer 키워드와 함께 부착)", example = "eyJhbGciOiJIUzI1NiJ9...")
+        private String accessToken;
+
+        @Schema(description = "JWT Refresh Token", example = "eyJhbGciOiJIUzI1NiJ9...")
+        private String refreshToken;
+
+        @Schema(description = "토큰 타입", example = "Bearer")
+        private String tokenType;
+
+        @Schema(description = "인증된 회원 상세 정보")
+        private Response user;
+
+        public TokenResponse(String accessToken, String refreshToken, Response user) {
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
+            this.tokenType = "Bearer";
+            this.user = user;
+        }
+    }
 }
+

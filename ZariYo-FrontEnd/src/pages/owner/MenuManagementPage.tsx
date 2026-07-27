@@ -1,21 +1,78 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ConsoleSidebar } from '../../components/owner/ConsoleSidebar';
 import { UtensilsCrossed, PlusCircle } from 'lucide-react';
 import { MenuCardItem, type MenuManagementItem } from '../../components/owner/menu/MenuCardItem';
 import { AddMenuFormModal } from '../../components/owner/menu/AddMenuFormModal';
+import { EditMenuFormModal } from '../../components/owner/menu/EditMenuFormModal';
 import { INITIAL_MENU_ITEMS } from '../../data/mockMenuManagement';
+import { menuApi } from '../../api/menuApi';
 
 export function MenuManagementPage() {
   const [menuItems, setMenuItems] = useState<MenuManagementItem[]>(INITIAL_MENU_ITEMS);
-
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+  const [editingMenu, setEditingMenu] = useState<MenuManagementItem | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 
-  // 실시간 품절(Sold-Out) 토글 핸들러
-  const handleToggleSoldOut = (id: string) => {
+  // 메뉴 수정 모달 열기 핸들러
+  const handleOpenEditModal = (menu: MenuManagementItem) => {
+    setEditingMenu(menu);
+    setIsEditModalOpen(true);
+  };
+
+  // 메뉴 수정 저장 처리
+  const handleUpdateMenu = (updated: MenuManagementItem) => {
+    setMenuItems((prev) => prev.map((item) => (item.id === updated.id ? updated : item)));
+  };
+
+  // 1. 백엔드 DB에서 메뉴 목록 로드
+  useEffect(() => {
+    const fetchBackendMenus = async () => {
+      try {
+        const categoriesData = await menuApi.getCategories(1);
+        if (categoriesData && categoriesData.length > 0) {
+          const loadedBackendItems: MenuManagementItem[] = [];
+          categoriesData.forEach((cat: any) => {
+            if (cat.menuItems) {
+              cat.menuItems.forEach((m: any) => {
+                loadedBackendItems.push({
+                  id: String(m.id),
+                  name: m.name,
+                  category: cat.name,
+                  price: m.price,
+                  description: m.description || '',
+                  image: m.imageUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop',
+                  isSoldOut: !m.isAvailable,
+                  options: [],
+                });
+              });
+            }
+          });
+          if (loadedBackendItems.length > 0) {
+            setMenuItems(loadedBackendItems);
+          }
+        }
+      } catch (err) {
+        console.warn('Backend DB Menu API call fallback to active state:', err);
+      }
+    };
+    fetchBackendMenus();
+  }, []);
+
+  // 실시간 품절(Sold-Out) 토글 핸들러 (DB API 바인딩)
+  const handleToggleSoldOut = async (id: string) => {
+    const targetItem = menuItems.find(i => i.id === id);
+    const newSoldOut = targetItem ? !targetItem.isSoldOut : true;
+
     setMenuItems((prev) => 
       prev.map((item) => item.id === id ? { ...item, isSoldOut: !item.isSoldOut } : item)
     );
+    try {
+      const targetNum = parseInt(id.replace(/\D/g, ''), 10) || 1;
+      await menuApi.toggleSoldOut(targetNum, newSoldOut);
+    } catch (err) {
+      console.warn('Backend SoldOut Toggle API fallback', err);
+    }
   };
 
   // 메뉴 삭제 핸들러
@@ -98,6 +155,7 @@ export function MenuManagementPage() {
                 menu={menu}
                 onToggleSoldOut={handleToggleSoldOut}
                 onDeleteMenu={handleDeleteMenu}
+                onEditMenu={handleOpenEditModal}
               />
             ))}
           </div>
@@ -111,6 +169,14 @@ export function MenuManagementPage() {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onAddMenu={handleAddMenu}
+      />
+
+      {/* Edit Menu & Image Modal Component */}
+      <EditMenuFormModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        menu={editingMenu}
+        onUpdateMenu={handleUpdateMenu}
       />
 
     </div>

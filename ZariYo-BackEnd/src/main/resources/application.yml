@@ -32,3 +32,10 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.springframework.web: info
+
+# JWT Token Settings
+jwt:
+  secret: z2FyaXlvLXNlY3JldC1rZXktZm9yLWF1dGhlbnRpY2F0aW9uLWFuZC1hdXRob3JpemF0aW9uLXNlY3VyZS1rZXktMjAyNg==
+  access-token-expiration: 86400000 # 24시간 (ms)
+  refresh-token-expiration: 604800000 # 7일 (ms)
+

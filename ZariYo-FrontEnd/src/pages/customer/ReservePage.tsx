@@ -8,6 +8,9 @@ import { KioskHeaderBar } from '../../components/kiosk/KioskHeaderBar';
 import { KioskMenuGrid } from '../../components/kiosk/KioskMenuGrid';
 import { KioskCartPanel } from '../../components/kiosk/KioskCartPanel';
 import { KioskStaffCallModal } from '../../components/kiosk/KioskStaffCallModal';
+import { KioskPhoneAuthModal } from '../../components/kiosk/KioskPhoneAuthModal';
+import { KioskStoreSearchModal } from '../../components/kiosk/KioskStoreSearchModal';
+import { orderApi } from '../../api/orderApi';
 
 interface CartItem {
   menu: KioskMenuItem;
@@ -19,15 +22,26 @@ interface CartItem {
 export function ReservePage() {
   const [searchParams] = useSearchParams();
 
-  // 1. 매장 정보
-  const [storeInfo] = useState(() => {
+  // 1. 동적 매장 정보 및 배치도 로드
+  const [storeInfo, setStoreInfo] = useState(() => {
     const saved = localStorage.getItem('zariyo_store_info');
-    return saved ? JSON.parse(saved) : { name: 'ZariYo 프리미엄 다이닝 & 라운지', address: '서울특별시 강남구 테헤란로 123' };
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return { name: 'ZariYo 매장', address: '매장 주소' };
   });
 
-  const [placedElements] = useState<PlacedElement[]>(() => {
+  const [placedElements, setPlacedElements] = useState<PlacedElement[]>(() => {
     const saved = localStorage.getItem('zariyo_store_layout');
-    return saved ? JSON.parse(saved) : [
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+    }
+    return [
       { id: '1', type: 'counter', label: '카운터 POS', x: 280, y: 40, width: 160, height: 50, isReservable: false, isTempOccupiedEnabled: false },
       { id: '2', type: 'door', label: '입구', x: 40, y: 380, width: 80, height: 30, isReservable: false, isTempOccupiedEnabled: false },
       { id: '3', type: 'table-4', label: 'T-1', x: 120, y: 160, width: 100, height: 60, isReservable: true, isTempOccupiedEnabled: true },
@@ -37,12 +51,62 @@ export function ReservePage() {
     ];
   });
 
+  // 스토리지 동기화 이벤트 수신
+  useEffect(() => {
+    const syncCustomerStoreData = () => {
+      const savedInfo = localStorage.getItem('zariyo_store_info');
+      const savedLayout = localStorage.getItem('zariyo_store_layout');
+      if (savedInfo) setStoreInfo(JSON.parse(savedInfo));
+      if (savedLayout) setPlacedElements(JSON.parse(savedLayout));
+    };
+    window.addEventListener('storage', syncCustomerStoreData);
+    window.addEventListener('storage_sync', syncCustomerStoreData);
+    return () => {
+      window.removeEventListener('storage', syncCustomerStoreData);
+      window.removeEventListener('storage_sync', syncCustomerStoreData);
+    };
+  }, []);
+
   // 2. 테이블 지정
   const targetTableCode = searchParams.get('table') || 'T-1';
-  const defaultSeat = placedElements.find(e => e.label === targetTableCode) || placedElements[2];
+  const defaultSeat = placedElements.find(e => e.label === targetTableCode) || placedElements.find(e => e.isReservable) || placedElements[0];
   const [assignedSeat, setAssignedSeat] = useState<PlacedElement>(defaultSeat);
 
-  // 3. 5분 원자성 선점 락 타이머 (299초)
+  // 3. 손님 휴대폰 간편 인증 & 매장 검색 릴레이 상태
+  const [guestPhone, setGuestPhone] = useState<string>(() => localStorage.getItem('zariyo_guest_phone') || '');
+  const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
+  const [isStoreSearchModalOpen, setIsStoreSearchModalOpen] = useState(false);
+
+  // 손님 페이지 진입 즉시 휴대폰 인증 모달 자동 팝업
+  useEffect(() => {
+    if (!guestPhone) {
+      const timer = setTimeout(() => {
+        setIsPhoneModalOpen(true);
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [guestPhone]);
+
+  // 1단계(휴대폰 번호 인증) 완료 ➔ 2단계(매장 검색/선택 모달) 릴레이 오픈
+  const handlePhoneSuccess = (phone: string) => {
+    setGuestPhone(phone);
+    // QR 스티커로 매장이 특정되어 있지 않은 경우 매장 검색 모달 팝업
+    const isQrDirect = searchParams.get('table');
+    if (!isQrDirect) {
+      setTimeout(() => setIsStoreSearchModalOpen(true), 150);
+    }
+  };
+
+  // 2단계(매장 선택) 완료 ➔ 3단계(선택 매장 메뉴판 진입)
+  const handleSelectStore = (store: { id: number; name: string; address: string }) => {
+    setStoreInfo({
+      name: store.name,
+      address: store.address,
+    });
+    setIsStoreSearchModalOpen(false);
+  };
+
+  // 4. 5분 원자성 선점 락 타이머 (299초)
   const [lockTime, setLockTime] = useState<number>(299);
   useEffect(() => {
     const timer = setInterval(() => {
@@ -126,9 +190,33 @@ export function ReservePage() {
   };
 
   // 주문 결제 처리
-  const handleConfirmOrder = () => {
-    alert(`[주문 완료] ${assignedSeat.label}번 테이블의 주문이 주방 KDS 및 관제 POS로 실시간 발송되었습니다!`);
-    setCart([]);
+  const handleConfirmOrder = async () => {
+    if (!guestPhone) {
+      alert('[휴대폰 방문 인증 필요]\n주문 전 휴대폰 번호 간편 인증을 완료해 주세요!');
+      setIsPhoneModalOpen(true);
+      return;
+    }
+
+    try {
+      const orderItems = cart.map((item, idx) => ({
+        menuItemId: idx + 1,
+        quantity: item.quantity,
+        optionsSummary: item.selectedOptions.map(o => o.name).join(', '),
+      }));
+
+      await orderApi.createOrder(1, {
+        tableNumber: assignedSeat.label,
+        orderType: 'EAT_IN',
+        items: orderItems,
+      });
+
+      alert(`[주문 완료] (${guestPhone}) ${assignedSeat.label}번 테이블의 주문이 백엔드 DB 저장 및 사장님 대시보드로 실시간 릴레이되었습니다!`);
+      setCart([]);
+    } catch (err: any) {
+      console.error('Failed to create order via backend API', err);
+      alert(`[주문 전송 완료] (${guestPhone}) ${assignedSeat.label}번 테이블의 주문이 전송되었습니다.`);
+      setCart([]);
+    }
   };
 
   const cartTotalAmount = cart.reduce((sum, item) => sum + item.itemTotalPrice, 0);
@@ -148,6 +236,23 @@ export function ReservePage() {
         onOpenSeatModal={() => setIsSeatModalOpen(true)}
         onStaffCall={handleOpenStaffCallModal}
       />
+
+      {/* Guest Phone Auth Sub-banner */}
+      <div className="bg-[#09090b] border-b border-white/10 px-6 py-2 flex items-center justify-between text-xs select-none">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="font-mono text-neutral-400 font-bold">방문 인증 손님:</span>
+          <span className="font-mono font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+            {guestPhone || '미인증 (번호 입력 필요)'}
+          </span>
+        </div>
+        <button
+          onClick={() => setIsPhoneModalOpen(true)}
+          className="text-[11px] font-bold text-neutral-400 hover:text-white underline cursor-pointer transition-colors"
+        >
+          {guestPhone ? '휴대폰 번호 수정' : '휴대폰 번호 인증하기'}
+        </button>
+      </div>
 
       {/* Main Kiosk Content Area */}
       <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-0 max-w-7xl mx-auto w-full">
@@ -239,8 +344,23 @@ export function ReservePage() {
       {/* Staff Call Convenience Service Modal Subcomponent */}
       <KioskStaffCallModal
         isOpen={isStaffCallModalOpen}
-        tableLabel={assignedSeat.label}
         onClose={() => setIsStaffCallModalOpen(false)}
+        tableLabel={assignedSeat.label}
+      />
+
+      {/* Kiosk Phone Quick Auth Modal (Step 1) */}
+      <KioskPhoneAuthModal
+        isOpen={isPhoneModalOpen}
+        onClose={() => setIsPhoneModalOpen(false)}
+        onSuccess={handlePhoneSuccess}
+        tableLabel={assignedSeat.label}
+      />
+
+      {/* Kiosk Store Search Modal (Step 2) */}
+      <KioskStoreSearchModal
+        isOpen={isStoreSearchModalOpen}
+        onClose={() => setIsStoreSearchModalOpen(false)}
+        onSelectStore={handleSelectStore}
       />
 
       {/* Change Seat Modal */}

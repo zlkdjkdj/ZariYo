@@ -7,6 +7,7 @@ import { SignupPage } from './pages/auth/SignupPage';
 import { StartPage } from './pages/StartPage';
 import { ReservePage } from './pages/customer/ReservePage';
 import { StoreBuilderPage } from './pages/owner/StoreBuilderPage';
+import { StoreSelectPage } from './pages/owner/StoreSelectPage';
 import { DashboardPage } from './pages/owner/DashboardPage';
 import { AnalyticsPage } from './pages/owner/AnalyticsPage';
 import { MenuManagementPage } from './pages/owner/MenuManagementPage';
@@ -25,6 +26,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/owner" element={<StartPage />} />
+          <Route path="/owner/stores" element={<StoreSelectPage />} />
           <Route path="/owner/store/new" element={<StoreBuilderPage />} />
           <Route path="/owner/store-builder" element={<StoreBuilderPage />} />
           <Route path="/owner/dashboard" element={<DashboardPage />} />

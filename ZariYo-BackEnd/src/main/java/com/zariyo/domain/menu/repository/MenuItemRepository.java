@@ -1,0 +1,11 @@
+package com.zariyo.domain.menu.repository;
+
+import com.zariyo.domain.menu.entity.MenuItem;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
+    List<MenuItem> findByCategoryId(Long categoryId);
+    List<MenuItem> findByCategoryStoreId(Long storeId);
+}

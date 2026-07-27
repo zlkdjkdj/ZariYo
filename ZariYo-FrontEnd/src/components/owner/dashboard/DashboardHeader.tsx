@@ -11,6 +11,7 @@ interface DashboardHeaderProps {
   isEditMode: boolean;
   setIsEditMode: (val: boolean) => void;
   onResetWidgetOrder: () => void;
+  isConnected?: boolean;
 }
 
 export function DashboardHeader({
@@ -21,6 +22,7 @@ export function DashboardHeader({
   isEditMode,
   setIsEditMode,
   onResetWidgetOrder,
+  isConnected = false,
 }: DashboardHeaderProps) {
   const navigate = useNavigate();
 
@@ -28,9 +30,9 @@ export function DashboardHeader({
     <header className="sticky top-0 z-30 bg-white dark:bg-[#09090b] border-b border-neutral-300 dark:border-white/10 px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
         <div className="flex items-center gap-2.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+          <span className={`w-2.5 h-2.5 rounded-full ${isConnected ? 'bg-emerald-500 animate-ping' : 'bg-amber-500'}`} />
           <span className="text-[10px] font-mono font-black text-black dark:text-white uppercase tracking-widest bg-black/10 dark:bg-white/10 px-2 py-0.5 rounded-[3px]">
-            CYBER CONTROL ROOM
+            {isConnected ? 'STOMP WEBSOCKET LIVE' : 'CYBER CONTROL ROOM'}
           </span>
         </div>
         <h1 className="text-xl md:text-2xl font-black text-black dark:text-white mt-1">

@@ -11,6 +11,10 @@ export function ConsoleSidebar() {
   const currentPathWithSearch = location.pathname + location.search;
   const { theme, toggleTheme } = useTheme();
 
+  const savedStoreInfo = localStorage.getItem('zariyo_store_info');
+  const storeObj = savedStoreInfo ? JSON.parse(savedStoreInfo) : null;
+  const currentStoreName = storeObj?.name || 'ZariYo 강남 본점';
+
   const navItems = [
     { path: '/owner/dashboard', label: '2D 실시간 홀 관제 (POS)', icon: LayoutDashboard },
     { path: '/owner/dashboard?tab=kds', label: '주방 조리 관제 (KDS)', icon: ChefHat },
@@ -18,7 +22,7 @@ export function ConsoleSidebar() {
     { path: '/owner/analytics', label: '매출 분석 & 통계', icon: TrendingUp },
     { path: '/owner/menu-management', label: '메뉴 & 품절 관리', icon: UtensilsCrossed },
     { path: '/owner/order-history', label: '영수증 이력 & 환불', icon: Receipt },
-    { path: '/owner/store/new', label: '2D 도면 빌더', icon: PlusCircle },
+    { path: '/owner/store/new', label: '가게 정보 및 도면 수정', icon: PlusCircle },
     { path: '/guide', label: '시스템 사용설명서', icon: BookOpen },
   ];
 
@@ -30,15 +34,17 @@ export function ConsoleSidebar() {
         
         <div className="flex items-center justify-between">
           <div 
-            onClick={() => navigate('/owner')} 
+            onClick={() => navigate('/owner/stores')} 
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div className="w-9 h-9 rounded-none bg-black dark:bg-white flex items-center justify-center shadow-none">
               <Store className="w-5 h-5 text-white dark:text-black" />
             </div>
-            <div className="text-left">
-              <h2 className="text-base font-black text-neutral-900 dark:text-white leading-tight">ZariYo POS</h2>
-              <span className="text-[9px] font-extrabold font-mono text-black dark:text-white bg-black/10 dark:bg-white/10 px-2 py-0.5 rounded-full">CYBER CONSOLE</span>
+            <div className="text-left truncate">
+              <h2 className="text-sm font-black text-neutral-900 dark:text-white leading-tight truncate">
+                {currentStoreName}
+              </h2>
+              <span className="text-[9px] font-extrabold font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">LIVE STORE</span>
             </div>
           </div>
 
@@ -88,8 +94,17 @@ export function ConsoleSidebar() {
       <div className="pt-4 border-t border-neutral-200 dark:border-white/10 space-y-3">
         <div className="p-3 bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-none text-left">
           <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-mono font-bold">ZARIYO STORE ENGINE v2.5</p>
-          <p className="text-xs font-black text-neutral-800 dark:text-neutral-200 truncate mt-0.5">강남 테헤란로 1호점</p>
+          <p className="text-xs font-black text-neutral-800 dark:text-neutral-200 truncate mt-0.5">{currentStoreName}</p>
         </div>
+
+        <button
+          onClick={() => window.open('/reserve', '_blank')}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs transition-colors cursor-pointer rounded-none shadow-md"
+          title="새 탭에서 손님 키오스크/2D 예약을 띄워 실시간 STOMP 알림 테스트"
+        >
+          <UtensilsCrossed className="w-4 h-4" />
+          <span>손님 키오스크 화면 열기 ↗</span>
+        </button>
 
         <button
           onClick={() => navigate('/')}

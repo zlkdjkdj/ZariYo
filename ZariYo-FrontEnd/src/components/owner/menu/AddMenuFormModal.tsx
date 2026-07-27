@@ -112,17 +112,24 @@ export function AddMenuFormModal({
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-neutral-600 dark:text-neutral-400 mb-1">메뉴 이미지 샘플 선택</label>
+            <label className="block text-xs font-bold text-neutral-600 dark:text-neutral-400 mb-1">메뉴 이미지 URL (직접 입력 또는 샘플 선택)</label>
+            <input 
+              type="text"
+              placeholder="https://images.unsplash.com/... (이미지 인터넷 주소)"
+              value={newMenuImage}
+              onChange={(e) => setNewMenuImage(e.target.value)}
+              className="w-full px-3 py-2 mb-2 rounded-none bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-xs font-semibold text-neutral-900 dark:text-white focus:outline-none focus:border-black dark:focus:border-white"
+            />
             <div className="flex gap-2">
               {[
-                { label: '스테이크', path: '/images/menu/steak.png' },
-                { label: '파스타', path: '/images/menu/pasta.png' },
-                { label: '피자', path: '/images/menu/pizza.png' },
-                { label: '에이드', path: '/images/menu/ade.png' },
+                { label: '스테이크', path: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&auto=format&fit=crop' },
+                { label: '파스타', path: 'https://images.unsplash.com/photo-1621996346565-e3d5d6281318?w=500&auto=format&fit=crop' },
+                { label: '피자', path: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop' },
+                { label: '음료', path: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&auto=format&fit=crop' },
               ].map((img) => (
                 <button
                   type="button"
-                  key={img.path}
+                  key={img.label}
                   onClick={() => setNewMenuImage(img.path)}
                   className={`flex-1 py-1.5 rounded-none border text-[11px] font-bold cursor-pointer transition-all ${
                     newMenuImage === img.path 

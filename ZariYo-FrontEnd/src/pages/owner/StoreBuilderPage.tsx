@@ -27,13 +27,19 @@ export function StoreBuilderPage() {
     handleMouseDown,
     handleMouseMove,
     handleMouseUp,
+    handleSaveStore,
   } = useStoreBuilder();
 
-  const handleSaveLayout = () => {
+  const handleSaveLayout = async () => {
     localStorage.setItem('zariyo_store_info', JSON.stringify(info));
     localStorage.setItem('zariyo_store_layout', JSON.stringify(placedElements));
-    alert('매장 설정과 테이블 배치도가 안전하게 저장되었습니다!');
-    navigate('/owner/dashboard');
+    window.dispatchEvent(new Event('storage_sync'));
+
+    const result = await handleSaveStore(1);
+    if (result.success) {
+      alert(`[가게 정보 및 도면 수정 완료]\n"${info.name || '내 매장'}" 가게 정보와 2D 좌석 배치도가 성공적으로 갱신 저장되었습니다!\n등록하신 커스텀 매장의 관제 대시보드로 이동합니다.`);
+      navigate('/owner/dashboard');
+    }
   };
 
   return (
@@ -45,14 +51,14 @@ export function StoreBuilderPage() {
             <button
               onClick={() => {
                 if (step === 2) setStep(1);
-                else navigate('/owner');
+                else navigate('/owner/stores');
               }}
               className="p-2 rounded-none bg-white border border-neutral-200 dark:bg-white/5 dark:border-white/5 hover:bg-[#000000]/10 text-neutral-500 hover:text-[#191f28] dark:hover:text-white transition-all cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4 text-[#000000]" />
             </button>
             <span className="text-[10px] font-extrabold text-[#000000] font-mono uppercase bg-[#000000]/10 px-2 py-0.5 rounded border border-[#000000]/20 tracking-wider">
-              {step === 1 ? 'Step 1. Basic Profile' : 'Step 2. 2D Layout Design'}
+              가게 정보 및 도면 수정 ({step}/2단계)
             </span>
           </div>
 
@@ -76,7 +82,7 @@ export function StoreBuilderPage() {
               onNextStep={() => setStep(2)}
               isValid={isInfoValid}
             />
-            <StoreMapGuide storeName={info.name} />
+            <StoreMapGuide storeName={info.name} address={info.address} />
           </div>
         )}
 

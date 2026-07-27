@@ -37,29 +37,29 @@ export function LandingPage() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-4"
+          className="flex items-center gap-3"
         >
           <button
-            onClick={() => navigate('/guide')}
+            onClick={() => navigate('/reserve')}
             className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-[3px] bg-white/5 hover:bg-white/15 border border-white/10 text-neutral-300 hover:text-white font-extrabold text-xs cursor-pointer transition-all hover:scale-105"
           >
-            <BookOpen className="w-4 h-4 text-emerald-400" />
-            <span>사용설명서 & 세부 스펙</span>
+            <Utensils className="w-4 h-4 text-orange-400" />
+            <span>손님 2D 예약 & 키오스크</span>
           </button>
 
           <button
-            onClick={() => navigate('/kiosk')}
+            onClick={() => navigate('/guide')}
             className="hidden md:flex items-center gap-1.5 px-3.5 py-2 rounded-[3px] bg-white/5 hover:bg-white/15 border border-white/10 text-neutral-300 hover:text-white font-extrabold text-xs cursor-pointer transition-all hover:scale-105"
           >
-            <Utensils className="w-4 h-4 text-orange-400" />
-            <span>손님 키오스크</span>
+            <BookOpen className="w-4 h-4 text-emerald-400" />
+            <span>사용설명서</span>
           </button>
 
           <button
-            onClick={() => navigate('/owner/dashboard')}
+            onClick={() => navigate('/login')}
             className="px-5 py-2 rounded-[3px] bg-white text-black hover:bg-neutral-200 font-black text-xs cursor-pointer transition-all shadow-none flex items-center gap-1.5 hover:scale-105"
           >
-            <span>사장님 관제 시작</span>
+            <span>사장님 로그인 & 시작</span>
             <ChevronRight className="w-4 h-4" />
           </button>
         </motion.div>

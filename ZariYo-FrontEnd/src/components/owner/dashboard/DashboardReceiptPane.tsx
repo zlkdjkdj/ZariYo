@@ -46,8 +46,8 @@ export function DashboardReceiptPane({
           <div>
             <h3 className="text-base font-black text-black dark:text-white">
               {activeTab === 'delivery' 
-                ? `[${selectedDelivery.orderNo}] 배달/포장 수선서`
-                : selectedBillTable ? `${selectedBillTable.label} 영수증 수선서` : '테이블 선택 필요'}
+                ? (selectedDelivery ? `[${selectedDelivery.orderNo}] 배달/포장 수선서` : '배달/포장 주문 선택')
+                : (selectedBillTable ? `${selectedBillTable.label} 영수증 수선서` : '테이블 선택 필요')}
             </h3>
             <p className="text-[10px] font-mono text-neutral-500 font-semibold">SIDE-BY-SIDE LIVE RECEIPT</p>
           </div>
@@ -66,60 +66,68 @@ export function DashboardReceiptPane({
 
       {/* Delivery Specific Order Receipt Panel */}
       {activeTab === 'delivery' ? (
-        <div className="space-y-4 text-xs">
-          {/* Platform Badge & Status */}
-          <div className="p-3.5 rounded-[3px] bg-neutral-100 dark:bg-white/5 border border-neutral-300 dark:border-white/10 space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="font-extrabold text-black dark:text-white font-mono">주문번호: {selectedDelivery.orderNo}</span>
-              <span className="px-2 py-0.5 text-[9.5px] font-mono font-bold bg-orange-500 text-white rounded-[3px]">
-                {selectedDelivery.status.toUpperCase()}
-              </span>
-            </div>
-            
-            <div className="flex items-start gap-1.5 text-neutral-700 dark:text-neutral-300 pt-1">
-              <MapPin className="w-4 h-4 text-neutral-500 shrink-0 mt-0.5" />
-              <span className="font-bold">{selectedDelivery.address}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
-              <Phone className="w-4 h-4 text-neutral-500 shrink-0" />
-              <span className="font-mono">{selectedDelivery.phone}</span>
-            </div>
+        !selectedDelivery ? (
+          <div className="py-16 text-center space-y-2 border border-dashed border-neutral-300 dark:border-neutral-800 rounded-[3px]">
+            <Receipt className="w-8 h-8 mx-auto text-neutral-400" />
+            <p className="text-xs font-black text-neutral-500">선택된 배달/포장 주문 내역이 없습니다.</p>
+            <p className="text-[10px] text-neutral-400 font-mono">실시간 신규 주문 수신 시 수선서가 표시됩니다.</p>
           </div>
-
-          {/* Rider Special Note */}
-          <div className="p-3 rounded-[3px] bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 space-y-1">
-            <div className="flex items-center gap-1.5 font-extrabold">
-              <MessageSquare className="w-4 h-4" />
-              <span>라이더 요청사항 메모</span>
-            </div>
-            <p className="text-[11px] font-bold">{selectedDelivery.note}</p>
-          </div>
-
-          {/* Items List */}
-          <div className="space-y-2 border-t border-neutral-200 dark:border-white/10 pt-3">
-            <p className="font-mono text-neutral-500 font-bold text-[10px] uppercase">ORDER ITEMS SPECIFICATION</p>
-            {selectedDelivery.items.map((item, idx) => (
-              <div key={idx} className="flex justify-between items-center font-extrabold text-black dark:text-white py-1">
-                <span>{item.name} x{item.qty}</span>
-                <span className="font-mono">{(item.price * item.qty).toLocaleString()}원</span>
+        ) : (
+          <div className="space-y-4 text-xs">
+            {/* Platform Badge & Status */}
+            <div className="p-3.5 rounded-[3px] bg-neutral-100 dark:bg-white/5 border border-neutral-300 dark:border-white/10 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="font-extrabold text-black dark:text-white font-mono">주문번호: {selectedDelivery.orderNo}</span>
+                <span className="px-2 py-0.5 text-[9.5px] font-mono font-bold bg-orange-500 text-white rounded-[3px]">
+                  {selectedDelivery.status.toUpperCase()}
+                </span>
               </div>
-            ))}
-          </div>
+              
+              <div className="flex items-start gap-1.5 text-neutral-700 dark:text-neutral-300 pt-1">
+                <MapPin className="w-4 h-4 text-neutral-500 shrink-0 mt-0.5" />
+                <span className="font-bold">{selectedDelivery.address}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-300">
+                <Phone className="w-4 h-4 text-neutral-500 shrink-0" />
+                <span className="font-mono">{selectedDelivery.phone}</span>
+              </div>
+            </div>
 
-          {/* Pay & Action */}
-          <div className="p-4 rounded-[3px] bg-neutral-100 dark:bg-white/5 border border-neutral-300 dark:border-white/10 flex justify-between items-center font-black text-black dark:text-white text-sm">
-            <span>결제 금액 ({selectedDelivery.payMethod})</span>
-            <span className="font-mono">{selectedDelivery.totalPrice.toLocaleString()}원</span>
-          </div>
+            {/* Rider Special Note */}
+            <div className="p-3 rounded-[3px] bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 space-y-1">
+              <div className="flex items-center gap-1.5 font-extrabold">
+                <MessageSquare className="w-4 h-4" />
+                <span>라이더 요청사항 메모</span>
+              </div>
+              <p className="text-[11px] font-bold">{selectedDelivery.note}</p>
+            </div>
 
-          <button
-            onClick={() => onUpdateDeliveryStatus(selectedDelivery.id, 'rider-called')}
-            className="w-full py-3.5 rounded-[3px] bg-orange-500 hover:bg-orange-600 text-white font-black text-xs cursor-pointer flex items-center justify-center gap-2"
-          >
-            <Bike className="w-4 h-4" />
-            <span>라이더 배차 및 호출 승인</span>
-          </button>
-        </div>
+            {/* Items List */}
+            <div className="space-y-2 border-t border-neutral-200 dark:border-white/10 pt-3">
+              <p className="font-mono text-neutral-500 font-bold text-[10px] uppercase">ORDER ITEMS SPECIFICATION</p>
+              {selectedDelivery.items.map((item, idx) => (
+                <div key={idx} className="flex justify-between items-center font-extrabold text-black dark:text-white py-1">
+                  <span>{item.name} x{item.qty}</span>
+                  <span className="font-mono">{(item.price * item.qty).toLocaleString()}원</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Pay & Action */}
+            <div className="p-4 rounded-[3px] bg-neutral-100 dark:bg-white/5 border border-neutral-300 dark:border-white/10 flex justify-between items-center font-black text-black dark:text-white text-sm">
+              <span>결제 금액 ({selectedDelivery.payMethod})</span>
+              <span className="font-mono">{selectedDelivery.totalPrice.toLocaleString()}원</span>
+            </div>
+
+            <button
+              onClick={() => onUpdateDeliveryStatus(selectedDelivery.id, 'rider-called')}
+              className="w-full py-3.5 rounded-[3px] bg-orange-500 hover:bg-orange-600 text-white font-black text-xs cursor-pointer flex items-center justify-center gap-2"
+            >
+              <Bike className="w-4 h-4" />
+              <span>라이더 배차 및 호출 승인</span>
+            </button>
+          </div>
+        )
       ) : (
         /* Hall Seat Receipt Panel */
         selectedBillTable && currentBill ? (
