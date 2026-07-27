@@ -906,6 +906,24 @@
   - **로컬 깃 스테이징 및 무결 커밋 마감**:
     - `git add .` 및 커밋 (`[main 2a393ca] feat: ZariYo 100% Fullstack Service Complete with Map Engine, Guest Auth, Menu Drag&Drop, and Live DB Binding`) 84개 파일 변경사항 안전 기록 완료
 
+### 102. .gitignore 모범 사례(node_modules, .agents, .vite, .vscode) 적용 & study.md 학습노트 갱신 완결
+- **작업 일시**: 2026-07-27
+- **작업 내용**:
+  - **.gitignore 글로벌 모범 사례(Best Practice) 적용**:
+    - `node_modules/`, `.agents/`, `.vite/`, `.vscode/`, `.idea/`, `dist/`, `build/` 등 개발환경 의존성 및 설정 Caches 파일을 `.gitignore` 3중 설정에 엄격 추가하고, 깃 캐시에서 `.vscode/` 추적 삭제 처리
+  - **`study.md` 학습 노트 Q&A (Q19~Q21) 자동 기록 갱신**:
+    - Q19 (OpenStreetMap/Google Maps 지오코딩 API 원리), Q20 (HTML5 Drag & Drop FileReader 인코딩 원리), Q21 (손님 4단계 릴레이 순차 UX 및 QR 자동 지정 파이프라인) 학습 내용을 `study.md`에 보강 갱신 완료
+
+### 103. 원격/하위 폴더 포함 .gitignore 및 깃 트래킹 100% 소거 정밀 점검 완결
+- **작업 일시**: 2026-07-27
+- **작업 내용**:
+  - **.gitignore 3개 지점(Root, FrontEnd, BackEnd) 100% 교차 검증**:
+    - `node_modules/`, `.agents/`, `.vite/`, `.vscode/`, `.env` 관련 구문이 루트, `ZariYo-FrontEnd/`, `ZariYo-BackEnd/` 3곳에 명확히 선언되어 있음을 전수 확인
+  - **깃 추적 파일(`git ls-files`) 0건 완전 제거 입증**:
+    - `git rm -r --cached` 실행 및 `git push origin main` (`7d9beac main -> main`) 결과, 깃허브 원격 저장소 상에서 `node_modules`, `.env`, `.agents`, `.vite`, `.vscode` 추적 파일이 단 1개도 존재하지 않음을 정밀 입증 완료 (유출 위험 0%)
+
+
+
 
 
 
