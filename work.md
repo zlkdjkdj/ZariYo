@@ -922,6 +922,17 @@
   - **깃 추적 파일(`git ls-files`) 0건 완전 제거 입증**:
     - `git rm -r --cached` 실행 및 `git push origin main` (`7d9beac main -> main`) 결과, 깃허브 원격 저장소 상에서 `node_modules`, `.env`, `.agents`, `.vite`, `.vscode` 추적 파일이 단 1개도 존재하지 않음을 정밀 입증 완료 (유출 위험 0%)
 
+### 104. study-notes/ 일자별 노트 분할 정리 & 에이전트 자동 기록 규칙(AGENTS.md) 수립 완결
+- **작업 일시**: 2026-07-27
+- **작업 내용**:
+  - **`study-notes/` 폴더 하위 날짜별 학습 노트 분할 구축**:
+    - `study-notes/2026-07-10.md` (Q1~Q7: MySQL, Docker, JPA, ORM 개념)
+    - `study-notes/2026-07-13.md` (Q8~Q15: Spring Boot 아키텍처, Redisson 분산 락, Swagger)
+    - `study-notes/2026-07-27.md` (Q16~Q21: 3대 도메인, 지오코딩, Drag&Drop, 4단계 릴레이 UX)
+  - **에이전트 행동 지침(`AGENTS.md`) 자동 갱신 규칙 명시**:
+    - 기술 원리 및 Q&A 발생 시 `study.md` 및 `study-notes/YYYY-MM-DD.md`에 누락 없이 실시간 자동 갱신하도록 명시
+
+
 
 
 
