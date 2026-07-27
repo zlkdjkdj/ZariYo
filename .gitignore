@@ -6,12 +6,21 @@ node_modules/
 *.env
 *.log
 
-# FrontEnd Build
+# Agent & Vite & IDE Caches
+.agents/
+.vite/
+.vscode/
+.idea/
+.DS_Store
+
+# FrontEnd Build & Caches
 ZariYo-FrontEnd/dist/
 ZariYo-FrontEnd/node_modules/
 ZariYo-FrontEnd/.env
+ZariYo-FrontEnd/.vite/
+ZariYo-FrontEnd/.vscode/
 
-# BackEnd Build & IDE
+# BackEnd Build & Caches
 ZariYo-BackEnd/build/
 ZariYo-BackEnd/bin/
 ZariYo-BackEnd/.gradle/
@@ -20,8 +29,4 @@ ZariYo-BackEnd/.classpath
 ZariYo-BackEnd/.project
 ZariYo-BackEnd/.settings/
 ZariYo-BackEnd/.factorypath
-
-# IDE & System
-.idea/
-.vscode/
-.DS_Store
+ZariYo-BackEnd/.vscode/
