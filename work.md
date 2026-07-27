@@ -932,6 +932,13 @@
   - **에이전트 행동 지침(`AGENTS.md`) 자동 갱신 규칙 명시**:
     - 기술 원리 및 Q&A 발생 시 `study.md` 및 `study-notes/YYYY-MM-DD.md`에 누락 없이 실시간 자동 갱신하도록 명시
 
+### 105. README.md 최신 프로젝트 아키텍처 및 풀스택 기능 명세 대폭 갱신 완결
+- **작업 일시**: 2026-07-27
+- **작업 내용**:
+  - **`README.md` 전면 리팩토링 및 가독성 업그레이드 ([README.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/README.md))**:
+    - 지오코딩 실시간 맵핑 지점 엔진, 손님 회원가입 전면 소거 4단계 릴레이 UX, 메뉴 이미지 Drag & Drop 파일 업로더, Redis Redisson 분산 락 동시성 제어, WebSocket STOMP 양방향 알림, 백엔드 7대 코어 도메인 API 표 명세 및 실행 가이드 갱신 완결
+
+
 
 
 
