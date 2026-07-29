@@ -661,13 +661,25 @@
   - **이중 별칭 라우트 마운트 ([App.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/App.tsx))**:
     - 외부 링크나 사용자의 직관적인 URL 접근(`/owner/store-builder`)에서도 2D 매장 도면 빌더 화면(`StoreBuilderPage`)이 정상 렌더링되도록 별칭 라우트를 추가 마운트하여 "No routes matched location" 경고를 완전 차단했습니다.
   - **빌드 검증**:
-    - `npm run build` 수행 결과 0건의 타입 에러로 빌드 완벽 성공.
+  - **빌드 검증**: `npm run build` 수행 결과 0건의 타입 에러로 빌드 완벽 성공.
 
 ### 82. 코드베이스 재감사 및 최종 린 상태 검증 (/ponytail-audit)
 - **작업 일시**: 2026-07-24
 - **작업 내용**:
-  - **전체 코드베이스 재감사 수행 (`/ponytail-audit`)**:
-    - 리팩토링 및 깃 커밋/푸시 이후 프론트엔드 및 백엔드 전역 트리 재진단을 수행했습니다.
+  - **전체 코드베이스 재감사 수행**
+- **2026-07-29**: JWT Access Token 유효시간 30분 변경 및 하드코딩 전수 수색
+  - `application.yml`: `access-token-expiration`을 `1800000` (30분)으로 단축 세팅
+  - 전수 수색 결과: 소스 코드 상의 하드코딩 키 0건 (100% 환경변수 격리 보완)
+
+  - `src/api/index.ts`: API 모듈 통합 export 엔트리 생성 (`apiClient`, `authApi`, `adminApi`)
+  - `pages/GuidePage.tsx`: 구 `AboutGuidePage.tsx` 정리 및 명확한 도메인명 통일
+  - `App.tsx`: 5대 핵심 도메인별 라우트 가독성 주석 그룹화 배치
+
+  - `WebConfig.java`: SecurityConfig 전역 CORS 컨트롤러 이중 매핑 제거 및 클린업
+  - `AuthService.java`: `RestTemplate` 인스턴스화 싱글톤화, 불필요한 중간 복사 변수 삭제 및 이중 콘솔 로깅 제거
+  - `KakaoCallbackPage.tsx`: `sessionStorage` 문자열 IO 기반 동시성 락을 React `useRef` 락으로 다이어트
+  - `DataInitializer.java`: 불필요한 DDL ALTER 절 및 루프 가드 정리
+깃 커밋/푸시 이후 프론트엔드 및 백엔드 전역 트리 재진단을 수행했습니다.
     - 더 이상 제거 가능한 사장 코드, 불필요한 추상화, 미사용 의존성이 존재하지 않음을 확인하고 `Lean already. Ship.` 상태를 최종 확증했습니다.
 
 ## [2026-07-27]
@@ -936,7 +948,80 @@
 - **작업 일시**: 2026-07-27
 - **작업 내용**:
   - **`README.md` 전면 리팩토링 및 가독성 업그레이드 ([README.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/README.md))**:
-    - 지오코딩 실시간 맵핑 지점 엔진, 손님 회원가입 전면 소거 4단계 릴레이 UX, 메뉴 이미지 Drag & Drop 파일 업로더, Redis Redisson 분산 락 동시성 제어, WebSocket STOMP 양방향 알림, 백엔드 7대 코어 도메인 API 표 명세 및 실행 가이드 갱신 완결
+
+
+## [2026-07-29]
+
+### 106. 로그인 손님 탭 소거 및 관리자 전용 회원 관리 모드 개설
+- **작업 일시**: 2026-07-29
+- **작업 내용**:
+  - **로그인 페이지(`LoginPage.tsx`) 개편**:
+    - 로그인 화면에서 기존 "손님 로그인" 탭을 완전히 제거하고, "사장님 로그인"과 "관리자 로그인" 선택 탭 구조로 전환했습니다.
+    - 역할군 선택에 따른 이동 경로를 분기하여 사장님 로그인 시 `/owner/stores`, 관리자 로그인 시 `/admin/users`로 이동하도록 연동했습니다.
+  - **백엔드 유저 도메인 확장 및 Admin User API 구축**:
+    - [User.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/entity/User.java): `Role` Enum에 `ROLE_ADMIN` 추가, `UserStatus` Enum(`ACTIVE`, `SUSPENDED`, `INACTIVE`) 추가, `status` 및 `createdAt` 필드 및 도메인 업데이트 메서드(`updateRole`, `updateStatus`)를 추가했습니다.
+    - [AdminUserDto.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/dto/AdminUserDto.java): 권한 및 계정 상태 변경 요청 DTO, 회원 요약 통계 응답 DTO를 신설했습니다.
+    - [AdminUserService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/service/AdminUserService.java) & [AdminUserController.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/controller/AdminUserController.java): 전체 회원 조회, 이메일/이름 키워드 검색, 역할/상태별 필터링, 회원 권한/상태 변경, 회원 삭제 API(`/api/v1/admin/users`)를 구축했습니다.
+    - [DataInitializer.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/global/config/DataInitializer.java): 서버 기동 시 시스템 기본 관리자(`admin@zariyo.com`), 사장님 계정, 손님 계정이 구동 시 자동 생성되도록 초기화 클래스를 구현했습니다.
+  - **프론트엔드 관리자 회원 관리 대시보드 구축**:
+    - [adminApi.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/api/adminApi.ts): 관리자 회원 API 통신 모듈 및 오프라인/개발 환경 완벽 구동을 위한 Mock Fallback 지원.
+    - [AdminUserManagementPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/admin/AdminUserManagementPage.tsx): 요약 통계 카운터 카드(전체, 사장님, 고객, 관리자, 정지 계정), 키워드 검색 및 필터링, 회원 권한 변경 Dropdown, 계정 정지/해제 토글, 회원 영구 삭제 모달을 담은 세련된 관리자 대시보드를 완성했습니다.
+    - [App.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/App.tsx): `/admin` 및 `/admin/users` 라우트를 등록 완료했습니다.
+  - **검증 완료**:
+    - 백엔드 `./gradlew compileJava` 및 프론트엔드 `pnpm run build` 정적 번들 빌드를 100% 오류 없이 무결 통과했습니다.
+
+### 107. 손님 키오스크 3단계 순차 워크플로우(휴대폰 ➔ 가게선택 ➔ 주문) 보강 및 DB 연동 가이드 수립
+- **작업 일시**: 2026-07-29
+- **작업 내용**:
+  - **키오스크 3단계 워크플로우 시각화 ([ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx))**:
+    - 상단 서브 배너에 **Step 1. 휴대폰 인증 ➔ Step 2. 가게 선택 ➔ Step 3. 메뉴 주문** 릴레이 상태 인디케이터 배지를 탑재했습니다.
+    - 손님이 언제든 매장을 직관적으로 스위칭할 수 있도록 "가게 변경" 및 "휴대폰 수정" 액션 버튼을 배치했습니다.
+  - **랜딩페이지 키오스크 진입 통합 ([LandingHeroSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingHeroSection.tsx))**:
+    - 랜딩페이지 내 "손님 2D 실시간 예약 & 키오스크" 버튼을 누르면 즉각 `/reserve`로 연결되어 1단계 인증 ➔ 2단계 가게 선택 ➔ 3단계 주문 릴레이 모달이 가동되도록 연결 상태를 검증했습니다.
+  - **로그인 계정 DB 연동 확인 가이드 수립**:
+    - Swagger UI(`http://localhost:8080/swagger-ui/index.html`), 프론트엔드 실시간 관리자 모드(`/admin/users`), cURL 커맨드 3가지 방식으로 계정 DB 영속성을 검증하는 세부 절차 안내를 완성했습니다.
+
+### 108. Refresh Token 기반 무중단 자동 토큰 재발급(Silent Refreshing) 파이프라인 수립
+- **작업 일시**: 2026-07-29
+- **작업 내용**:
+  - **백엔드 Refresh API 구현**:
+    - [UserDto.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/dto/UserDto.java): `RefreshTokenRequest` DTO 추가
+    - [AuthService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/service/AuthService.java): Refresh Token 서명 및 만료 시간 검증 ➔ `userId` 추출 ➔ 정지 계정 여부 체크 ➔ 새 Access/Refresh 토큰 세트 반환 메서드(`refresh`) 구현
+    - [AuthController.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/controller/AuthController.java): `POST /api/v1/auth/refresh` 엔드포인트 개설
+  - **프론트엔드 Axios Interceptor Silent Refreshing 구현**:
+    - [authApi.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/api/authApi.ts): `refresh(refreshToken)` API 클라이언트 연동
+    - [client.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/api/client.ts): 401 Unauthorized 에러 감지 시, `zariyo_refresh_token`을 이용해 `/api/v1/auth/refresh`로 새로운 Access Token을 자동 재발급(Silent Refresh)받은 후 실패했던 원본 요청을 즉시 재시도하는 Interceptor 완성
+    - [LoginPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/LoginPage.tsx): 로그인 성공 시 `zariyo_refresh_token`을 LocalStorage에 함께 저장하도록 보완
+  - **검증 통과**:
+    - 백엔드 `./gradlew compileJava` 및 프론트엔드 `pnpm run build` 빌드 100% 오류 없이 무결 성공 입증
+
+### 109. Spring MVC & Security 전역 CORS(Cross-Origin Resource Sharing) 설정 적용
+- **작업 일시**: 2026-07-29
+- **작업 내용**:
+  - [WebConfig.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/global/config/WebConfig.java): `WebMvcConfigurer`를 구현하여 `addCorsMappings`로 프론트엔드 출처(`http://localhost:5173`, `http://localhost:3000` 등) 및 HTTP 메서드(`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`)와 `allowCredentials(true)` 전역 설정 추가
+  - [SecurityConfig.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/global/config/SecurityConfig.java): Spring Security FilterChain 레벨의 `corsConfigurationSource()` Bean 연동 상태 재점검
+  - **검증 완료**: cURL `OPTIONS` 프리플라이트 요청 테스트 시 `HTTP/1.1 200` 및 `Access-Control-Allow-Origin: http://localhost:5173` 정상 반환 입증
+
+### 110. 카카오 소셜 로그인(Kakao OAuth 2.0) 풀스택 연동 수립
+- **작업 일시**: 2026-07-29
+- **작업 내용**:
+  - **백엔드 카카오 소셜 파이프라인**:
+    - [UserDto.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/dto/UserDto.java): `KakaoLoginRequest` DTO 추가
+    - [application.yml](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/resources/application.yml): `kakao.client-id` 및 `kakao.redirect-uri` 프로퍼티 세팅
+    - [AuthService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/service/AuthService.java): 인가 코드로 `https://kauth.kakao.com/oauth/token` Access Token 교환 ➔ `https://kapi.kakao.com/v2/user/me` 유저 이메일/닉네임 추출 ➔ DB 자동가입/로그인 후 ZariYo 자체 JWT 토큰 세트 반환 메서드(`loginWithKakao`) 구축
+    - [AuthController.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/controller/AuthController.java): `POST /api/v1/auth/kakao` 엔드포인트 개설
+  - **프론트엔드 카카오 소셜 UI 및 콜백 처리**:
+    - [authApi.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/api/authApi.ts): `kakaoLogin` API 클라이언트 추가
+    - [KakaoCallbackPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/KakaoCallbackPage.tsx): URL `code` 파라미터를 읽어 백엔드로 인가 코드를 전달하고 JWT 수신 및 리다이렉트 처리 콜백 컴포넌트 신규 개발
+    - [App.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/App.tsx): `/auth/kakao/callback` 라우트 등록
+    - [LoginPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/LoginPage.tsx): **카카오 시그니처 옐로우 로그인 버튼(`bg-[#FEE500]`)** 배치 및 클릭 시 카카오 OAuth 2.0 인가 URL로 이동하도록 연동
+  - **검증 완료**:
+    - 백엔드 `./gradlew compileJava` 및 프론트엔드 `pnpm run build` 정적 번들 빌드를 100% 오류 없이 무결 통과했습니다.
+
+
+
+
+
 
 
 

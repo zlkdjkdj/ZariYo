@@ -43,7 +43,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
         log.error("알 수 없는 시스템 장애가 발생했습니다.", e);
-        ErrorResponse response = ErrorResponse.of("서버 처리 중 일시적인 장애가 발생했습니다. 관리자에게 문의해 주세요.", "INTERNAL_SERVER_ERROR");
+        String detailedMsg = e.getClass().getSimpleName() + ": " + (e.getMessage() != null ? e.getMessage() : e.toString());
+        ErrorResponse response = ErrorResponse.of(detailedMsg, "INTERNAL_SERVER_ERROR");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }

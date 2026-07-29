@@ -32,4 +32,14 @@ export const authApi = {
     const res = await apiClient.post<TokenResponse>('/api/v1/auth/login', data);
     return res.data;
   },
+
+  refresh: async (refreshToken: string): Promise<TokenResponse> => {
+    const res = await apiClient.post<TokenResponse>('/api/v1/auth/refresh', { refreshToken });
+    return res.data;
+  },
+
+  kakaoLogin: async (data: { code: string }): Promise<TokenResponse> => {
+    const res = await apiClient.post<TokenResponse>('/api/v1/auth/kakao', data);
+    return res.data;
+  },
 };

@@ -6,7 +6,7 @@ import { GuideSetupManualSection } from '../components/guide/GuideSetupManualSec
 import { DetailedFeatureShowcase } from '../components/landing/DetailedFeatureShowcase';
 import { GuideFaqSection } from '../components/guide/GuideFaqSection';
 
-export function AboutGuidePage() {
+export function GuidePage() {
   const navigate = useNavigate();
 
   return (
@@ -41,10 +41,10 @@ export function AboutGuidePage() {
           className="flex items-center gap-3"
         >
           <button
-            onClick={() => navigate('/owner/dashboard')}
+            onClick={() => navigate('/owner/stores')}
             className="px-4 py-2 rounded-[3px] bg-black dark:bg-white text-white dark:text-black font-extrabold text-xs cursor-pointer hover:opacity-90 flex items-center gap-1.5 hover:scale-105"
           >
-            <span>사장님 관제 체험하기</span>
+            <span>사장님 관제 대시보드 진입</span>
             <ChevronRight className="w-4 h-4" />
           </button>
         </motion.div>

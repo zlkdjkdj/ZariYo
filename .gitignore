@@ -21,6 +21,7 @@ ZariYo-FrontEnd/.vite/
 ZariYo-FrontEnd/.vscode/
 
 # BackEnd Build & Caches
+ZariYo-BackEnd/.env
 ZariYo-BackEnd/build/
 ZariYo-BackEnd/bin/
 ZariYo-BackEnd/.gradle/

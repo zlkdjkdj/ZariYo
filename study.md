@@ -831,18 +831,133 @@ API 요청이 성공했는지 확인하는 방법과 실제 도커(Docker) 컨�
 
 ---
 
-### [2026-07-27 14:45] Q21. 손님 회원가입 삭제 & 4단계 릴레이 순차 UX (전화번호 ➔ 매장검색 ➔ 메뉴창) 파이프라인
+
+---
+
+### [2026-07-29 07:49] Q22. 로그인 손님 탭 제거 및 시스템 관리자(ROLE_ADMIN) 모드와 상태 기반 회원 관리 설계
 **질문 (User)**:
-"손님한테 아이디 비밀번호 회원가입 시키는 건 번거로워. 전화번호 간단 입력 방문 로그와 매장 검색 순서로 릴레이 되는 UX 구조는 어떻게 설계해?"
+"로그인 화면에서 손님 로그인을 빼고 관리자 전용 회원 관리 모드를 도입했는데, 역할(Role)과 계정 상태(Status) 관리 및 초기 데이터 생성은 백엔드/프론트엔드에서 어떻게 처리되는 거야?"
 
 **답변 (Antigravity)**:
-실제 매장 이용 경험에 맞추어 손님의 복잡한 회원가입 절차를 전면 삭제하고, **휴대폰 번호 간편 입력 ➔ 매장 검색 ➔ 2D 메뉴판 ➔ 주문**의 4단계 순차 릴레이 워크플로우를 구축했습니다.
+손님(고객)은 테이블 키오스크(`?table=T-1`) 및 예약 전용 페이지로 진입하여 비회원으로도 직관적인 이용이 가능하도록 UX를 최적화하고, 로그인 페이지를 **사장님 로그인**과 **시스템 관리자 로그인** 전용 콘솔 게이트웨이로 전격 재구성했습니다.
 
-**[4단계 순차 릴레이 흐름]**:
-1. **1단계 (휴대폰 번호 입력 모달 `KioskPhoneAuthModal`)**: 손님이 페이지 진입 즉시 0.01초 만에 터치패드 모달이 강제 팝업되어 `010-XXXX-XXXX`를 입력하여 방문 세션을 남깁니다.
-2. **2단계 (방문 매장 검색 모달 `KioskStoreSearchModal`)**: 휴대폰 번호 입력 성공 시 매장 검색 팝업이 자동으로 릴레이 오픈되어 방문할 매장을 실시간 검색하고 선택합니다. *(단, 테이블 QR 스티커 `?table=T-1` 스캔으로 들어온 경우 매장이 자동 특정되므로 3단계로 바로 직행합니다)*
-3. **3단계 (메뉴창 이동 & 2D 좌석 5분 선점)**: 선택한 매장의 2D 좌석 5분 분산 락 타이머가 작동하고 메뉴판 뷰어가 시원하게 펼쳐집니다.
-4. **4단계 (주문 결제 & 직원 호출)**: 담아둔 메뉴를 결제하면 백엔드 DB 저장 및 사장님 관제 대시보드로 실시간 웹소켓(STOMP) 릴레이가 완성됩니다.
+**1. 백엔드 도메인 및 엔티티 확장 (`User.java` & `AdminUserController`)**:
+- `Role` Enum: `ROLE_CUSTOMER`(손님), `ROLE_OWNER`(사장님), `ROLE_ADMIN`(최고 관리자) 3단계 권한 구조 확립.
+- `UserStatus` Enum: `ACTIVE`(정상 활성), `SUSPENDED`(계정 정지), `INACTIVE`(탈퇴/비활성) 상태 필드 도입.
+- **Admin API**: `GET /api/v1/admin/users` 엔드포인트를 통해 이메일/이름 키워드 검색, 역할 및 계정 상태 필터링 조회를 지원하며, `PATCH` 메서드로 즉각적인 권한 전환 및 계정 정지/해제, `DELETE`로 계정 영구 삭제 기능을 구현했습니다.
+
+**2. 백엔드 초기 데이터 생성 (`DataInitializer.java`)**:
+
+---
+
+### [2026-07-29 07:59] Q23. 손님 키오스크 3단계 순차 워크플로우 및 로그인 계정 DB 연동 확인 방법
+**질문 (User)**:
+"랜딩페이지나 다른 곳에서 손님 키오스크로 이동할 때 휴대폰 번호 인증 - 가게 선택 - 주문 워크플로우로 동작했으면 좋겠어. 그리고 로그인 계정들이 DB랑 연동되는지 확인해보고 싶어, 확인하는 방법을 알려줘."
+
+**답변 (Antigravity)**:
+
+**1. 손님 주문 키오스크 3단계 순차 릴레이 워크플로우**:
+- **Step 1 (휴대폰 번호 인증 `KioskPhoneAuthModal`)**: 랜딩페이지에서 "손님 2D 실시간 예약 & 키오스크" 버튼을 누르면 `/reserve`로 이동하여 진입 즉시 010-XXXX-XXXX 터치패드 모달이 팝업됩니다.
+- **Step 2 (가게 선택 `KioskStoreSearchModal`)**: 번호 인증 완료 시 즉시 릴레이로 매장 검색/선택 팝업이 떠서 원하는 가게를 검색하고 확정합니다. (상단에 "가게 변경" 버튼 배치)
+- **Step 3 (메뉴 주문 `ReservePage`)**: 선택한 가게의 메뉴판 뷰어 및 2D 좌석 5분 선점 락이 활성화되며 장바구니 결제 및 주문 전송이 이루어집니다.
+
+**2. 로그인 계정 백엔드 DB 연동 실시간 확인 방법 (3가지)**:
+1. **Swagger UI를 통한 백엔드 DB 조회**:
+   - 웹 브라우저에서 `http://localhost:8080/swagger-ui/index.html` 접속
+   - `Admin User API` ➔ `GET /api/v1/admin/users` ➔ `Try it out` ➔ `Execute` 클릭 시 `admin@zariyo.com`, `owner@zariyo.com` 등 DB에 실제 저장된 회원 목록이 JSON으로 응답 출력됩니다.
+2. **프론트엔드 실시간 관리자 회원 관리 대시보드 사용**:
+   - `http://localhost:5173/login` 페이지 접속 ➔ "관리자 로그인" 탭 선택 ➔ 로그인 성공 시 `/admin/users` 페이지로 진입하여 전체 계정 통계 및 실시간 DB 회원 데이터를 관제합니다.
+
+---
+
+### [2026-07-29 08:15] Q24. Refresh Token과 Access Token 인증 아키텍처 및 무중단 자동 토큰 재발급(Silent Refreshing) 원리
+**질문 (User)**:
+"JWT Access Token 말고 Refresh Token을 써보려고 하는데, 백엔드와 프론트엔드에서 리프레시 토큰이 어떻게 동작하고 무중단 재발급(Silent Refreshing)이 이루어지는 거야?"
+
+**답변 (Antigravity)**:
+
+**1. Access Token과 Refresh Token의 이원화 아키텍처**:
+- **Access Token (단기 토큰 - 24시간)**: API 호출 시 `Authorization: Bearer <token>` 헤더에 실어 전달되는 실재 인증 수단입니다. 만료 시간이 짧아서 탈취되더라도 위험이 최소화됩니다.
+- **Refresh Token (장기 토큰 - 7일)**: Access Token이 만료되었을 때 매번 유저에게 다시 로그인하라고 요구하는 대신, 백엔드에 전송하여 **새로운 Access/Refresh 토큰 세트를 발급받는 안전 전용 키**입니다.
+
+**2. 백엔드 처리 로직 (`AuthController.java` & `AuthService.java`)**:
+- `POST /api/v1/auth/refresh` 엔드포인트 개설.
+- 요청으로 들어온 `refreshToken`의 서명 및 만료 시간을 검증 ➔ 토큰 내 `userId` 식별 ➔ 회원의 정지 상태(`SUSPENDED`) 여부를 검사 ➔ 정상 유저일 경우 0.01초 만에 새로운 Access Token과 Refresh Token 세트를 즉시 반환합니다.
+
+**3. 프론트엔드 Axios Interceptor 무중단 재발급 (Silent Refreshing)**:
+- 프론트엔드 API 클라이언트([client.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/api/client.ts))의 Response Interceptor가 모든 백엔드 응답을 감시합니다.
+- Access Token이 만료되어 백엔드로부터 `401 Unauthorized` 에러가 수신되면:
+  1. 유저 몰래 백그라운드에서 `localStorage`의 `zariyo_refresh_token`을 꺼냅니다.
+  2. `POST /api/v1/auth/refresh`로 새 토큰을 재발급받습니다.
+  3. 받은 새 Access Token으로 `localStorage`를 갱신하고, **실패했던 이전 API 요청의 헤더를 바꿔서 0.01초 만에 자동으로 재시도**합니다.
+---
+
+### [2026-07-29 08:17] Q25. JWT와 Refresh Token(리프레시 토큰)의 본질적인 개념 차이
+**질문 (User)**:
+"리프레시 토큰이랑 JWT의 차이가 뭐야?"
+
+**답변 (Antigravity)**:
+많은 개발자분들이 혼동하는 개념이지만, 두 용어는 비교 대상의 범주(Category)가 다릅니다. **JWT는 '토큰을 만드는 기술 규격(포맷)'** 이고, **Refresh Token은 그 토큰이 수행하는 '역할(용도)'** 입니다.
+
+**[핵심 차이 한눈에 보기]**:
+1. **JWT (JSON Web Token - 포맷/재질)**:
+   - **개념**: 토큰을 어떤 형식으로 암호화/서명할 것인가에 대한 **기술 포맷(포맷)**입니다. (Header.Payload.Signature 형태의 텍스트)
+   - **비유**: 놀이공원의 **"코팅된 종이 티켓"**이라는 포맷 그 자체입니다.
+2. **Access Token (단기 이용권 - 역할)**:
+   - **개념**: "나 인증됐어, 데이터 줘!" 하고 API를 부를 때 들고 가는 **실제 단기 사용 권한 키**(24시간)입니다. (보통 JWT 포맷으로 만듭니다)
+   - **비유**: 놀이기구를 탈 때마다 보여주는 **"1시간짜리 탑승권"**입니다.
+3. **Refresh Token (장기 재발급권 - 역할)**:
+   - **개념**: Access Token이 만료되었을 때 매번 다시 로그인하지 않도록 **새 Access Token을 재발급받을 수 있는 장기 재발급 전용 키**(7일)입니다. (이것도 보통 JWT 포맷으로 만듭니다!)
+   - **비유**: 1시간짜리 탑승권이 만료되었을 때, 매표소에 가서 새 탑승권을 받아올 수 있는 **"7일짜리 본인확인 재발급권"**입니다.
+
+---
+
+### [2026-07-29 08:18] Q26. 실무에서의 로그인 관리 아키텍처 (JWT + Redis + HTTP-Only Cookie + RTR)
+**질문 (User)**:
+"실무에서는 어떤 방식으로 로그인을 관리해?"
+
+**답변 (Antigravity)**:
+실무(빅테크 및 상용 서비스)에서는 보안성과 사용자 경험(무중단 로그인)의 균형을 맞추기 위해 **`JWT (Access Token) + Redis (Refresh Token) + HTTP-Only Cookie + RTR`** 조합을 표준으로 가장 많이 사용합니다.
+
+**1. 실무 로그인 관리 3대 핵심 기법**:
+1. **토큰 저장소의 분리 (보안 강화)**:
+   - **Access Token**: 유효기간 15분~1시간. 프론트엔드의 메모리(JS 변수/React State)나 Private Storage에 보관.
+   - **Refresh Token**: 유효기간 7일~30일. JS로 접근 불가능한 **`HTTP-Only + Secure Cookie`**에 저장하여 XSS(악성 스크립트) 공격 차단.
+2. **백엔드 Redis 중앙 저장소 연동**:
+   - 백엔드는 Refresh Token을 **Redis(In-Memory DB)**에 `userId: refreshToken` 형태(TTL 7일)로 저장합니다.
+   - 계정 정지, 비밀번호 변경, "다른 기기에서 로그아웃" 버튼 클릭 시 Redis에서 해당 Refresh Token을 즉시 삭제하여 **원격 강제 로그아웃**을 구현합니다.
+3. **RTR (Refresh Token Rotation - 1회용 토큰 갱신)**:
+   - Refresh Token으로 Access Token을 재발급받을 때, **Refresh Token도 새로운 값으로 함께 갱신**합니다. 만약 이전 Refresh Token이 재사용되면 탈취로 판단하여 해당 유저의 모든 토큰을 무효화합니다.
+
+---
+
+### [2026-07-29 08:45] Q27. 카카오 소셜 로그인(Kakao OAuth 2.0)연동 방법 및 4단계 아키텍처 흐름
+**질문 (User)**:
+"카카오 소셜 로그인 적용해보려고 방법들 알려줘"
+
+**답변 (Antigravity)**:
+카카오 소셜 로그인은 **OAuth 2.0 Authorization Code Grant** 방식을 사용하며, 사전 설정 ➔ 프론트엔드 인가 코드 획득 ➔ 백엔드 토큰 교환 및 유저 생성 ➔ ZariYo JWT 발급의 4단계로 연동됩니다.
+
+**1. Kakao Developers 사전 설정 절차**:
+1. [Kakao Developers](https://developers.kakao.com) 로그인 ➔ 애플리케이션 추가 ➔ **REST API 키** 복사
+2. `앱 설정` ➔ `플랫폼` ➔ `Web` ➔ 사이트 도메인 등록 (`http://localhost:5173`)
+3. `제품 설정` ➔ `카카오 로그인` ➔ 활성화(ON) 설정 및 Redirect URI 등록 (`http://localhost:5173/auth/kakao/callback`)
+4. `동의항목` ➔ 닉네임, 카카오계정(이메일) 필수/선택 설정
+
+**2. 4단계 실무 OAuth 2.0 연동 프로세스**:
+- **Step 1 (프론트엔드)**: 유저가 "카카오 로그인" 버튼 클릭 ➔ `https://kauth.kakao.com/oauth/authorize?client_id={REST_API_KEY}&redirect_uri={REDIRECT_URI}&response_type=code` 로 카카오 로그인 창 이동
+- **Step 2 (프론트엔드 콜백)**: 카카오 인증 성공 시 지정한 Redirect URI로 `code` 인가 코드가 전달됨 (`/auth/kakao/callback?code=XXXXX`)
+- **Step 3 (백엔드 전송)**: 프론트엔드가 인가 코드 `code`를 백엔드 API (`POST /api/v1/auth/kakao`)로 전달
+- **Step 4 (백엔드 유저 생성 및 ZariYo JWT 발급)**:
+  1. 백엔드가 `code`로 카카오 서버에 Access Token 요청
+  2. 카카오 사용자 정보 조회 API (`GET https://kapi.kakao.com/v2/user/me`)로 이메일/이름 획득
+  3. DB에 회원이 존재하지 않으면 자동 회원가입 처리 (`ROLE_CUSTOMER` / `ROLE_OWNER`)
+  4. ZariYo 서비스의 **Access Token & Refresh Token 세트를 발급**하여 응답
+
+
+
+
+
 
 
 

@@ -5,6 +5,29 @@ import { ArrowRight, Utensils, Zap } from 'lucide-react';
 export function LandingHeroSection() {
   const navigate = useNavigate();
 
+  const token = localStorage.getItem('zariyo_token');
+  const userStr = localStorage.getItem('zariyo_user');
+  let user: { role?: string; name?: string } | null = null;
+  if (userStr) {
+    try {
+      user = JSON.parse(userStr);
+    } catch (e) {
+      user = null;
+    }
+  }
+
+  const handleDashboardClick = () => {
+    if (!token || !user) {
+      navigate('/login');
+      return;
+    }
+    if (user.role === 'ROLE_ADMIN') {
+      navigate('/admin/users');
+    } else {
+      navigate('/owner/stores');
+    }
+  };
+
   return (
     <section className="relative min-h-[90vh] flex flex-col justify-center items-center px-6 text-center overflow-hidden border-b border-white/10 select-none">
       
@@ -61,13 +84,24 @@ export function LandingHeroSection() {
           transition={{ duration: 0.8, delay: 0.45 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
         >
-          <button
-            onClick={() => navigate('/signup')}
-            className="w-full sm:w-auto px-8 py-4 rounded-[3px] bg-white text-black hover:bg-neutral-200 font-black text-sm cursor-pointer transition-all flex items-center justify-center gap-2 shadow-2xl hover:scale-105 hover:shadow-white/20"
-          >
-            <span>사장님 시작하기 (회원가입 & 매장등록)</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          {token && user ? (
+            <button
+              onClick={handleDashboardClick}
+              className="w-full sm:w-auto px-8 py-4 rounded-[3px] bg-amber-400 text-black hover:bg-amber-300 font-black text-sm cursor-pointer transition-all flex items-center justify-center gap-2 shadow-2xl hover:scale-105"
+            >
+              <Zap className="w-4 h-4 text-black fill-black" />
+              <span>{user.role === 'ROLE_ADMIN' ? '어드민 관리판으로 이동' : '내 매장 대시보드로 진입'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate('/login')}
+              className="w-full sm:w-auto px-8 py-4 rounded-[3px] bg-white text-black hover:bg-neutral-200 font-black text-sm cursor-pointer transition-all flex items-center justify-center gap-2 shadow-2xl hover:scale-105 hover:shadow-white/20"
+            >
+              <span>사장님 시작하기 (로그인 / 가입)</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          )}
 
           <button
             onClick={() => navigate('/reserve')}
@@ -75,14 +109,6 @@ export function LandingHeroSection() {
           >
             <Utensils className="w-4 h-4 text-orange-400" />
             <span>손님 2D 실시간 예약 & 키오스크</span>
-          </button>
-
-          <button
-            onClick={() => navigate('/owner/stores')}
-            className="w-full sm:w-auto px-8 py-4 rounded-[3px] bg-white/10 hover:bg-white/20 text-white border border-white/20 font-black text-sm cursor-pointer transition-all flex items-center justify-center gap-2 backdrop-blur-md hover:scale-105 hover:border-emerald-400/50"
-          >
-            <Zap className="w-4 h-4 text-amber-400" />
-            <span>내 매장 선택 & 관제판 진입</span>
           </button>
         </motion.div>
 

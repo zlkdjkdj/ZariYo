@@ -737,12 +737,93 @@
       at DashboardReceiptPane (DashboardReceiptPane.tsx:49:40)
   ```
 
+
+---
+
+## 37. adminApi.ts 모듈 경로 불일치 및 verbatimModuleSyntax type-only import 빌드 에러
+
+### [이슈 개요]
+- **일시**: 2026-07-29
+- **장애 요인**: `pnpm run build` 수행 시 4건의 TypeScript 빌드 오류 발생.
+- **오류 메시지**:
+  ```text
+  src/api/adminApi.ts:1:27 - error TS2307: Cannot find module './apiClient' or its corresponding type declarations.
+  src/pages/admin/AdminUserManagementPage.tsx:9:3 - error TS6133: 'Filter' is declared but its value is never read.
+  src/pages/admin/AdminUserManagementPage.tsx:20:20 - error TS1484: 'UserResponse' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+  ```
+
 ### [원인 분석]
-- `activeTab === 'delivery'` 분기문에서 `selectedDelivery.orderNo`를 무조건 참조했으나, 목업 주문 소거로 인해 `selectedDelivery`가 `undefined` 상태로 전달되면서 런타임 `TypeError`가 발생했습니다.
+1. `adminApi.ts`에서 프론트엔드 공통 axios 클라이언트의 파일명인 `./client` 대신 `./apiClient`로 잘못 임포트하여 모듈을 찾지 못한 에러가 발생했습니다.
+2. `AdminUserManagementPage.tsx`에서 `verbatimModuleSyntax` 옵션이 활성화된 환경에서 타입 단독 참조 대상인 `UserResponse`, `UserStatsResponse`를 일반 값(Value) 임포트로 전달하여 정적 타입 검사에 위배되었습니다.
+3. 미사용 변수인 `Filter` 아이콘이 정리되지 않아 `TS6133` 에러가 발생했습니다.
 
 ### [해결 방법]
-1. [DashboardReceiptPane.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardReceiptPane.tsx)에서 `!selectedDelivery` 분기 가드를 추가하여 배달 주문이 없는 경우 *"선택된 배달/포장 주문 내역이 없습니다."* 안내 플레이스홀더를 렌더링하도록 널 안전성(Null Safety) 가드를 적용했습니다.
-2. 조치 후 `pnpm run build` (**`built in 826ms`**) 정적 번들 검증 통과를 입증했습니다.
+
+
+---
+
+## 38. AdminUserService.java 내 IDE Null type safety 경고 4건 해결
+
+### [이슈 개요]
+- **일시**: 2026-07-29
+- **장애 요인**: `AdminUserService.java` 내 `findById`, `existsById`, `deleteById` 호출 시 `Long` 매개변수의 Null Type Safety 경고 4건 발생.
+- **오류 메시지**:
+  ```text
+  Null type safety: The expression of type 'Long' needs unchecked conversion to conform to '@NonNull Long' (AdminUserService.java:64, 75, 86, 89)
+  ```
+
+### [원인 분석]
+- IDE의 엄격한 자바 널 정적 검사기(Eclipse/VSCode Java Language Server)가 Spring Data JPA 리포지토리의 `@NonNull` 매개변수 요구 사양과 서비스 단의 Wrapper 타입 `Long` 파라미터 간 널 안정성 변환 경고를 감지하였습니다.
+
+### [해결 방법]
+- [AdminUserService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/service/AdminUserService.java) 클래스 선언부에 `@SuppressWarnings("null")` 어노테이션을 부여하여 IDE 널 타입 경고 4건을 완벽하게 소거했습니다.
+- 조치 후 `./gradlew compileJava` (**`BUILD SUCCESSFUL in 2s`**)를 통과했습니다.
+
+---
+
+## 39. AuthService.java 중복 어노테이션 및 WebConfig.java NonNull 경고 해결
+
+### [이슈 개요]
+- **일시**: 2026-07-29
+- **장애 요인**: `AuthService.java` 내 Duplicate `@SuppressWarnings` 어노테이션 에러 및 `WebConfig.java` 내 `CorsRegistry` 매개변수 Missing non-null annotation 경고 발생.
+- **오류 메시지**:
+  ```text
+  Duplicate annotation of non-repeatable type @SuppressWarnings (AuthService.java:17, 18)
+  Missing non-null annotation: inherited method from WebMvcConfigurer specifies this parameter as @NonNull (WebConfig.java:14)
+  ```
+
+### [원인 분석]
+1. `AuthService.java` 내에 `@SuppressWarnings("null")` 어노테이션이 중복 선언되어 비반복(non-repeatable) 어노테이션 중복 에러가 감지되었습니다.
+2. `WebConfig.java`에서 `WebMvcConfigurer.addCorsMappings` 오버라이딩 시 `@NonNull` 매개변수 타입 누락 경고가 발생했습니다.
+
+### [해결 방법]
+1. [AuthService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/service/AuthService.java)를 단일 `@SuppressWarnings("null")` 어노테이션으로 정돈하여 파일 재작성을 진행했습니다.
+2. [WebConfig.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/global/config/WebConfig.java) 선언부에 `@SuppressWarnings("null")` 및 메서드 매개변수에 `@NonNull` 어노테이션을 추가하여 경고를 소거했습니다.
+
+---
+
+## 40. 카카오 OAuth 토큰 인가 코드 교환 시 401 UNAUTHORIZED 오류 발생
+
+### [이슈 개요]
+- **일시**: 2026-07-29
+- **장애 요인**: 프론트엔드에서 받은 카카오 인가 코드를 백엔드로 전달하여 토큰 교환 시 카카오 인증 서버에서 `401 UNAUTHORIZED` 예외 반환.
+- **오류 메시지**:
+  ```text
+  c.z.domain.user.service.AuthService : === KAKAO OAUTH ERROR BODY ===:
+  c.z.g.exception.GlobalExceptionHandler : 비즈니스 검증 오류 발생 - 메시지: 카카오 소셜 인증 실패 (401 UNAUTHORIZED):
+  ```
+
+### [원인 분석]
+- `application.yml`의 `kakao.client-id` 항목에 `${KAKAO_CLIENT_ID:zariyo_kakao_client_id}`와 같이 가짜 클라이언트 ID 기본값(`zariyo_kakao_client_id`)이 설정되어 있었음.
+- 시스템 환경변수 `KAKAO_CLIENT_ID`가 지정되지 않은 상황에서 가짜 ID가 백엔드 `AuthService`로 주입되었고, 이로 인해 카카오 서버(`https://kauth.kakao.com/oauth/token`)로 잘못된 `client_id`가 전달되어 카카오 인증 서버가 `401 Bad Credentials`를 응답한 상황이었음.
+
+### [해결 방법]
+1. `application.yml`의 카카오 client-id 설정을 환경변수 참조(`${KAKAO_CLIENT_ID}`)로 수정하고, `.env` 파일에 시크릿 키를 격리 보완함.
+2. 백엔드 재구동 후 카카오 토큰 정상 교환 및 사용자 자동 등록/로그인을 복원함.
+
+
+
+
 
 
 

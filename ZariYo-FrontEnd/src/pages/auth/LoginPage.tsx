@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, Lock, LayoutGrid } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -17,9 +17,26 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const [role, setRole] = useState<'owner' | 'customer'>('owner');
+  const [role, setRole] = useState<'owner' | 'admin'>('owner');
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('zariyo_token');
+    const userStr = localStorage.getItem('zariyo_user');
+    if (token && userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        if (user.role === 'ROLE_ADMIN') {
+          navigate('/admin/users');
+        } else {
+          navigate('/owner/stores');
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+  }, [navigate]);
 
   const {
     register,
@@ -35,10 +52,11 @@ export function LoginPage() {
     try {
       const res = await authApi.login({ email: data.email });
       localStorage.setItem('zariyo_token', res.accessToken);
+      localStorage.setItem('zariyo_refresh_token', res.refreshToken);
       localStorage.setItem('zariyo_user', JSON.stringify(res.user));
 
-      if (role === 'owner') navigate('/owner/stores');
-      else navigate('/reserve');
+      if (role === 'admin') navigate('/admin/users');
+      else navigate('/owner/stores');
     } catch (err: any) {
       const msg = err.response?.data?.message || '로그인에 실패했습니다. 이메일을 확인해 주세요.';
       setApiError(msg);
@@ -141,14 +159,14 @@ export function LoginPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setRole('customer')}
+                onClick={() => setRole('admin')}
                 className={`flex-1 py-2.5 rounded-full text-xs font-extrabold tracking-wide transition-all duration-300 relative z-10 cursor-pointer ${
-                  role === 'customer'
+                  role === 'admin'
                     ? 'bg-gradient-to-r from-[#000000] to-[#000000] text-white shadow-none'
                     : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                 }`}
               >
-                손님 로그인
+                관리자 로그인
               </button>
             </div>
 
@@ -187,6 +205,31 @@ export function LoginPage() {
                 '로그인'
               )}
             </Button>
+
+            {/* 카카오 소셜 로그인 구분선 및 버튼 */}
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-neutral-200 dark:border-neutral-800" />
+              </div>
+              <div className="relative flex justify-center text-[10px] uppercase">
+                <span className="bg-white dark:bg-neutral-900 px-3 text-neutral-400 font-bold">또는 소셜 로그인</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                const clientId = import.meta.env.VITE_KAKAO_CLIENT_ID || 'zariyo_kakao_client_id';
+                const redirectUri = encodeURIComponent('http://localhost:5173/auth/kakao/callback');
+                window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`;
+              }}
+              className="w-full py-3.5 px-4 bg-[#FEE500] hover:bg-[#FADA0A] text-[#191919] font-extrabold text-xs rounded-full flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+            >
+              <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                <path d="M12 3C6.477 3 2 6.477 2 10.772c0 2.766 1.83 5.19 4.607 6.558-.2.744-.725 2.695-.83 3.102-.132.51.187.502.392.366.162-.107 2.573-1.748 3.616-2.457.728.106 1.48.163 2.215.163 5.523 0 10-3.477 10-7.772S17.523 3 12 3z"/>
+              </svg>
+              카카오로 시작하기
+            </button>
           </form>
         </div>
 

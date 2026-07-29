@@ -21,7 +21,10 @@ public class UserDto {
         @Schema(description = "사용자 이름 또는 상호명", example = "홍길동", requiredMode = Schema.RequiredMode.REQUIRED)
         private String name;
 
-        @Schema(description = "사용자 역할군 (ROLE_CUSTOMER, ROLE_OWNER)", example = "ROLE_OWNER", requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(description = "비밀번호 (선택사항)", example = "Password123!")
+        private String password;
+
+        @Schema(description = "사용자 역할군 (ROLE_CUSTOMER, ROLE_OWNER, ROLE_ADMIN)", example = "ROLE_ADMIN", requiredMode = Schema.RequiredMode.REQUIRED)
         private Role role;
     }
 
@@ -31,6 +34,22 @@ public class UserDto {
     public static class LoginRequest {
         @Schema(description = "로그인할 사용자 이메일 주소", example = "owner@zariyo.com", requiredMode = Schema.RequiredMode.REQUIRED)
         private String email;
+    }
+
+    @Getter
+    @Setter
+    @Schema(description = "토큰 재발급 요청 데이터 모델")
+    public static class RefreshTokenRequest {
+        @Schema(description = "발급받았던 JWT Refresh Token", example = "eyJhbGciOiJIUzI1NiJ9...", requiredMode = Schema.RequiredMode.REQUIRED)
+        private String refreshToken;
+    }
+
+    @Getter
+    @Setter
+    @Schema(description = "카카오 소셜 로그인 인가 코드 요청 데이터 모델")
+    public static class KakaoLoginRequest {
+        @Schema(description = "카카오 인증 후 수신한 인가 코드", requiredMode = Schema.RequiredMode.REQUIRED)
+        private String code;
     }
 
     @Getter
@@ -48,11 +67,19 @@ public class UserDto {
         @Schema(description = "사용자 권한/역할군", example = "ROLE_OWNER")
         private String role;
 
-        public Response(Long id, String email, String name, String role) {
+        @Schema(description = "사용자 계정 상태", example = "ACTIVE")
+        private String status;
+
+        @Schema(description = "가입 일시", example = "2026-07-29T10:00:00")
+        private String createdAt;
+
+        public Response(Long id, String email, String name, String role, String status, String createdAt) {
             this.id = id;
             this.email = email;
             this.name = name;
             this.role = role;
+            this.status = status;
+            this.createdAt = createdAt;
         }
 
         public static Response from(User user) {
@@ -60,7 +87,9 @@ public class UserDto {
                 user.getId(),
                 user.getEmail(),
                 user.getName(),
-                user.getRole().name()
+                user.getRole() != null ? user.getRole().name() : "ROLE_CUSTOMER",
+                user.getStatus() != null ? user.getStatus().name() : "ACTIVE",
+                user.getCreatedAt() != null ? user.getCreatedAt().toString() : ""
             );
         }
     }

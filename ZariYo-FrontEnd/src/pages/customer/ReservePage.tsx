@@ -237,21 +237,50 @@ export function ReservePage() {
         onStaffCall={handleOpenStaffCallModal}
       />
 
-      {/* Guest Phone Auth Sub-banner */}
-      <div className="bg-[#09090b] border-b border-white/10 px-6 py-2 flex items-center justify-between text-xs select-none">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="font-mono text-neutral-400 font-bold">방문 인증 손님:</span>
-          <span className="font-mono font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-            {guestPhone || '미인증 (번호 입력 필요)'}
-          </span>
+      {/* Guest Phone Auth & Workflow Sub-banner */}
+      <div className="bg-[#09090b] border-b border-white/10 px-6 py-2.5 flex flex-wrap items-center justify-between text-xs select-none gap-2">
+        <div className="flex items-center gap-3">
+          {/* Step Badges */}
+          <div className="flex items-center gap-1.5 font-mono text-[10px] font-black uppercase">
+            <span className={`px-2 py-0.5 rounded-full border ${guestPhone ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20 animate-pulse'}`}>
+              1. 휴대폰 인증
+            </span>
+            <span className="text-neutral-600 font-normal">➔</span>
+            <span className={`px-2 py-0.5 rounded-full border ${storeInfo.name ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-neutral-800 text-neutral-400 border-white/10'}`}>
+              2. 가게 선택
+            </span>
+            <span className="text-neutral-600 font-normal">➔</span>
+            <span className="px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">
+              3. 메뉴 주문
+            </span>
+          </div>
+
+          <div className="h-3 w-px bg-white/10 hidden sm:block" />
+
+          {/* Current Visitor Phone Info */}
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-mono text-neutral-400 font-bold hidden md:inline">방문 손님:</span>
+            <span className="font-mono font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              {guestPhone || '미인증 (번호 입력 필요)'}
+            </span>
+          </div>
         </div>
-        <button
-          onClick={() => setIsPhoneModalOpen(true)}
-          className="text-[11px] font-bold text-neutral-400 hover:text-white underline cursor-pointer transition-colors"
-        >
-          {guestPhone ? '휴대폰 번호 수정' : '휴대폰 번호 인증하기'}
-        </button>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsStoreSearchModalOpen(true)}
+            className="text-[11px] font-extrabold text-blue-400 hover:text-blue-300 bg-blue-500/10 px-2.5 py-1 rounded border border-blue-500/20 transition-colors flex items-center gap-1 cursor-pointer"
+          >
+            가게 변경 ({storeInfo.name || '선택안됨'})
+          </button>
+          <button
+            onClick={() => setIsPhoneModalOpen(true)}
+            className="text-[11px] font-bold text-neutral-400 hover:text-white underline cursor-pointer transition-colors"
+          >
+            {guestPhone ? '휴대폰 수정' : '번호 인증하기'}
+          </button>
+        </div>
       </div>
 
       {/* Main Kiosk Content Area */}
