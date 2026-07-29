@@ -954,6 +954,30 @@ API 요청이 성공했는지 확인하는 방법과 실제 도커(Docker) 컨�
   3. DB에 회원이 존재하지 않으면 자동 회원가입 처리 (`ROLE_CUSTOMER` / `ROLE_OWNER`)
   4. ZariYo 서비스의 **Access Token & Refresh Token 세트를 발급**하여 응답
 
+---
+
+### [2026-07-29 19:43] Q22. Spring application.yml의 환경 변수(Environment Variable)와 기본값(Fallback Value) 매핑 패턴
+**질문 (User)**:
+"application.yml의 jwt.secret, 만료시간 설정 부분 하드코딩된 거 아니야?"
+
+**답변 (Antigravity)**:
+결론부터 말씀드리면, **완전히 고정된 하드코딩이 아니며, Spring의 환경 변수 주입(Environment Variable Injection)과 기본값(Fallback Default Value)을 결합한 유연한 구성 기법**입니다.
+
+#### 1. `${PROPERTY_NAME:DEFAULT_VALUE}` 문법의 동작 원리
+Spring Boot 프로퍼티 파서는 문자를 해석할 때 콜론(`:`)을 경계로 두 가지 단계로 판단합니다:
+```yaml
+jwt:
+  secret: ${JWT_SECRET:z2FyaXlvLXNlY3JldC1rZXkt...}
+  access-token-expiration: ${JWT_ACCESS_EXPIRATION:1800000}
+```
+1. **1순위 (운영/배포 환경)**: OS 시스템 환경 변수 또는 서버 구동 옵션(`-DJWT_SECRET=실제암호화키`)에 `JWT_SECRET` 값이 존재하면, 뒤의 텍스트를 무시하고 **외부에서 주입받은 환경 변수 값을 사용**합니다.
+2. **2순위 (로컬 개발 환경)**: 터미널이나 로컬 환경에 `JWT_SECRET` 변수가 없을 경우, 콜론(`:`) 뒤의 **기본값(Fallback)을 사용**하여 개발자가 매번 복잡하게 환경 변수를 세팅하지 않아도 백엔드 서버가 구동되도록 편의성을 제공합니다.
+
+#### 2. 프로덕션 보안 관점에서의 관리법
+- **깃허브(Git) 보안**: 소스코드에 실서버 암호화키(Secret Key)가 노출되는 것은 치명적이므로, 실운영 환경(Docker, K8s, AWS EC2/ECS 등)에서는 반드시 환경 변수로 `JWT_SECRET`과 `JWT_ACCESS_EXPIRATION`을 별도 주입해야 합니다.
+- **개선 조치**: 만료 시간 또한 운영 정책에 따라 변경될 수 있으므로, `${JWT_ACCESS_EXPIRATION:1800000}` 및 `${JWT_REFRESH_EXPIRATION:604800000}` 형태로 만료 시각 프로퍼티까지 환경 변수 가변 구조로 동기화 완료했습니다.
+
+
 
 
 

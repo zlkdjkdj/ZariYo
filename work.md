@@ -1018,6 +1018,49 @@
   - **검증 완료**:
     - 백엔드 `./gradlew compileJava` 및 프론트엔드 `pnpm run build` 정적 번들 빌드를 100% 오류 없이 무결 통과했습니다.
 
+### 111. 로컬 백엔드 실행(bootRun) 환경 변수 fallback 및 인프라 구동 가이드 정립
+- **작업 일시**: 2026-07-29
+- **작업 내용**:
+  - **`application.yml` 프로퍼티 fallback 보완**:
+    - [application.yml](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/resources/application.yml) 내 `kakao.client-id` 항목에 `${KAKAO_CLIENT_ID:zariyo_kakao_client_id}` 기본값을 부착하여 `KAKAO_CLIENT_ID` 환경 변수가 미선언된 환경에서도 스프링 `bootRun` 시작 시 `IllegalArgumentException: Could not resolve placeholder` 예외가 발생하는 결함을 원천 예방했습니다.
+  - **Docker Compose 네트워크 꼬임 및 DB 통신 거부 트러블슈팅 정립**:
+    - 백엔드 데이터베이스(MySQL 3306 포트) 및 레디스(Redis 6379 포트) 연결 거부(`Communications link failure`) 및 도커 가상 네트워크 불일치(`network zariyo_default does not exist`) 시 `docker compose down --remove-orphans` ➔ `docker compose up -d` 재구성 파이프라인 가이드를 수립했습니다.
+  - **트러블슈팅 이력 보존**:
+    - [trouble.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/trouble.md#L825-L900)에 41번, 42번, 43번 항목으로 예외 원인 및 해결책을 기록 완료했습니다.
+
+### 112. JWT 토큰 만료시간 프로퍼티 가변 환경변수 패턴 동기화 및 학습 기록
+- **작업 일시**: 2026-07-29
+- **작업 내용**:
+  - **`application.yml` 프로퍼티 가변화**:
+    - [application.yml](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/resources/application.yml#L36-L41)의 `jwt.access-token-expiration` 및 `jwt.refresh-token-expiration` 항목을 `${JWT_ACCESS_EXPIRATION:1800000}` 및 `${JWT_REFRESH_EXPIRATION:604800000}` 형태로 개편하여 실서버 환경 변수로 조율이 가능하도록 보완했습니다.
+  - **학습 이력 기록**:
+    - [study.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/study.md#L955-L980) 및 [study-notes/2026-07-29.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/study-notes/2026-07-29.md#L65-L75)에 질문 답변(Q22)과 프로퍼티 fallback 메커니즘 원리를 보존했습니다.
+
+### 113. API 키 및 보안 요소 하드코딩 금지 규칙 에이전트 수칙 수립
+- **작업 일시**: 2026-07-29
+- **작업 내용**:
+  - **에이전트 영구 제약 규칙 동기화**:
+    - [.agents/AGENTS.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/.agents/AGENTS.md#L17-L26) 파일에 **`## 2. API 키 및 보안 관련 민감 정보 하드코딩 금지 규칙 (Security & Secret Protection Constraint)`** 섹션을 제정 및 추가했습니다.
+    - 향후 백엔드/프론트엔드/인프라 등 모든 개발 영역에서 API Key, Secret Key, OAuth Secret, DB 패스워드, JWT Secret 등의 보안 키를 소스코드나 설정 파일에 하드코딩하지 않고 환경 변수(`.env` / OS Environment)를 통해서만 주입받도록 엄격 강제화하였습니다.
+
+### 114. Ponytail (Ultra Mode) 개발 강도 전환 및 YAGNI 최적화 수칙 활성화
+- **작업 일시**: 2026-07-29
+- **작업 내용**:
+  - **Ponytail Ultra 모드 스윗칭**:
+    - [SKILL.md](file:///home/jaehyeon/.gemini/config/plugins/potytail/skills/ponytail/SKILL.md) 지침에 맞춰 시니어 미니멀리즘 개발 모드(`Ponytail Ultra`)로 전환을 완료했습니다.
+    - [.agents/AGENTS.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/.agents/AGENTS.md#L26-L35)에 **`## 3. Ponytail (Ultra Mode) 미니멀리즘 개발 규칙`**을 반영하고, 오버엔지니어링 금지, YAGNI(You Aren't Gonna Need It) 철칙 준수, 불필요한 보일러플레이트 및 외부 의존성 제거 지침을 고도화했습니다.
+
+### 115. 모든 개발 작업 대상 Ponytail (Ultra Mode) 상시 의무 적용 규칙 확정
+- **작업 일시**: 2026-07-29
+- **작업 내용**:
+  - **상시 의무 적용 보증**:
+    - [.agents/AGENTS.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/.agents/AGENTS.md#L26-L35) 행동 수칙에 향후 백엔드/프론트엔드/인프라 등 모든 작업에 대해 **Ponytail (Ultra Mode)**를 단 한 순간도 빠짐없이 상시 기본 모드로 의무 적용하도록 최종 명시했습니다.
+
+
+
+
+
+
 
 
 

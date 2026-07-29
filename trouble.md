@@ -821,6 +821,86 @@
 1. `application.yml`의 카카오 client-id 설정을 환경변수 참조(`${KAKAO_CLIENT_ID}`)로 수정하고, `.env` 파일에 시크릿 키를 격리 보완함.
 2. 백엔드 재구동 후 카카오 토큰 정상 교환 및 사용자 자동 등록/로그인을 복원함.
 
+---
+
+## 41. 백엔드 인프라(MySQL/Redis) 미기동으로 인한 JDBC 연결 거부 및 bootRun 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-29
+- **장애 요인**: `ZariYo-BackEnd`에서 `./gradlew bootRun` 실행 시 Hibernate SessionFactory 생성 단계에서 JDBC 커넥션 에러 발생 및 애플리케이션 기동 실패.
+- **오류 메시지**:
+  ```text
+  Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+  The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+  Caused by: java.net.ConnectException: 연결이 거부됨
+  ```
+
+### [원인 분석]
+- Spring Boot 백엔드 애플리케이션 기동 시 JPA/Hibernate가 데이터베이스 메타데이터 조회 및 DDL 구동을 위해 `localhost:3306`의 MySQL 서버에 접속을 시도했습니다.
+- 로컬 Docker 환경에서 `zariyo-mysql`(MySQL 8.0) 및 `zariyo-redis`(Redis 7.2) 인프라 컨테이너가 가동되어 있지 않아 3306 포트 접속 시 TCP Connection Refused(연결이 거부됨) 및 Communications link failure 예외가 발생한 것입니다.
+
+### [해결 방법]
+- 프로젝트 루트 디렉토리에서 Docker Compose를 통해 백엔드 연동 인프라(MySQL, Redis) 컨테이너를 가동한 뒤 백엔드 애플리케이션을 구동합니다:
+  ```bash
+  # 1. 인프라 컨테이너 가동 (프로젝트 루트 경로)
+  docker compose up -d
+
+  # 2. 백엔드 실행
+  cd ZariYo-BackEnd
+  ./gradlew bootrun
+  ```
+
+---
+
+## 42. Docker Compose 실행 시 네트워크 꼬임 현상 (network zariyo_default does not exist)
+
+### [이슈 개요]
+- **일시**: 2026-07-29
+- **장애 요인**: `docker compose up -d` 구동 시 Docker 네트워킹 설정 실패로 컨테이너 가동 불가.
+- **오류 메시지**:
+  ```text
+  Error response from daemon: failed to set up container networking: failed to create endpoint zariyo-redis on network zariyo_default: network 7d475b93b7f22815f79b34c935e57417ca455b80f139795e5a5cfcccd03d32bf does not exist
+  ```
+
+### [원인 분석]
+- 이전 실행 흔적으로 인해 Docker 데몬 내부 데이터베이스에 삭제되었거나 불일치하는 네트워크 ID(`zariyo_default`) 정보가 잔존하여, 신규 엔드포인트를 생성하지 못해 발생한 도커 네트워크 싱크 오차 문제입니다.
+
+### [해결 방법]
+- 기존 잔존 네트워크 및 컨테이너 리소스를 완전히 다운(down) 시킨 후 재구성합니다:
+  ```bash
+  # 1. 기존 도커 상태 완전 초기화
+  docker compose down --remove-orphans
+
+  # 2. 네트워크 재생성 및 컨테이너 데몬 재구동
+  docker compose up -d
+  ```
+
+---
+
+## 43. 환경 변수 미선언 시 KAKAO_CLIENT_ID 플레이스홀더 미해결로 인한 bootRun 빈 생성 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-29
+- **장애 요인**: `./gradlew bootRun` 실행 시 스프링 컨텍스트 로딩 중 `authService` 빈 생성 실패로 인한 서버 구동 중단.
+- **오류 메시지**:
+  ```text
+  Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'KAKAO_CLIENT_ID' in value "${KAKAO_CLIENT_ID}"
+  ```
+
+### [원인 분석]
+- `application.yml` 파일 내 `kakao.client-id` 항목이 `${KAKAO_CLIENT_ID}`와 같이 기본값(fallback) 없이 환경 변수 단독 참조 형태로 선언되어 있었습니다.
+- 터미널 환경에서 `KAKAO_CLIENT_ID` 환경 변수를 별도로 선언하지 않고 로컬 실행(`bootRun`)을 시도할 경우, 스프링 프로퍼티 플레이스홀더 파서가 해당 값을 해석하지 못해 `authService` 빈 주입 단계에서 `IllegalArgumentException` 예외가 유발되어 애플리케이션 시작에 실패하였습니다.
+
+### [해결 방법]
+- `application.yml`의 `kakao.client-id` 설정에 기본값(fallback default value)을 추가하여 환경 변수가 지정되지 않은 로컬 개발 환경에서도 예외 없이 애플리케이션이 구동되도록 보완하였습니다:
+  ```yaml
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID:zariyo_kakao_client_id}
+  ```
+
+
+
+
 
 
 

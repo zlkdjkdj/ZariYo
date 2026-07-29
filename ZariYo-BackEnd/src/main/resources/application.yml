@@ -36,13 +36,15 @@ logging:
 # JWT Token Settings (Enhanced Security - 30 min Access Token)
 jwt:
   secret: ${JWT_SECRET:z2FyaXlvLXNlY3JldC1rZXktZm9yLWF1dGhlbnRpY2F0aW9uLWFuZC1hdXRob3JpemF0aW9uLXNlY3VyZS1rZXktMjAyNg==}
-  access-token-expiration: 1800000 # 30분 (초강력 보안 단기 토큰)
-  refresh-token-expiration: 604800000 # 7일 (자동 갱신 토큰)
+  access-token-expiration: ${JWT_ACCESS_EXPIRATION:1800000} # 30분 (초강력 보안 단기 토큰)
+  refresh-token-expiration: ${JWT_REFRESH_EXPIRATION:604800000} # 7일 (자동 갱신 토큰)
+
 
 # Kakao OAuth Settings
 kakao:
-  client-id: ${KAKAO_CLIENT_ID}
+  client-id: ${KAKAO_CLIENT_ID:zariyo_kakao_client_id}
   client-secret: ${KAKAO_CLIENT_SECRET:}
   redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:5173/auth/kakao/callback}
+
 
 
