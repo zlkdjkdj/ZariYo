@@ -37,7 +37,7 @@ logging:
 jwt:
   secret: ${JWT_SECRET:z2FyaXlvLXNlY3JldC1rZXktZm9yLWF1dGhlbnRpY2F0aW9uLWFuZC1hdXRob3JpemF0aW9uLXNlY3VyZS1rZXktMjAyNg==}
   access-token-expiration: ${JWT_ACCESS_EXPIRATION:1800000} # 30분 (초강력 보안 단기 토큰)
-  refresh-token-expiration: ${JWT_REFRESH_EXPIRATION:604800000} # 7일 (자동 갱신 토큰)
+  refresh-token-expiration: ${JWT_REFRESH_EXPIRATION:1800000} # 30분 (자동 갱신 토큰)
 
 
 # Kakao OAuth Settings

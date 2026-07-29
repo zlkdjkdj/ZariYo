@@ -12,8 +12,10 @@ import { TimelineLogs } from '../../components/owner/dashboard/TimelineLogs';
 // Refactored Subcomponents
 import { DashboardHeader } from '../../components/owner/dashboard/DashboardHeader';
 import { DashboardBgmPlayer } from '../../components/owner/dashboard/DashboardBgmPlayer';
-import { DashboardDeliveryPane, type DeliveryOrderItem } from '../../components/owner/dashboard/DashboardDeliveryPane';
-import { DashboardKdsPane, type KdsOrderItem } from '../../components/owner/dashboard/DashboardKdsPane';
+import { DashboardDeliveryPane } from '../../components/owner/dashboard/DashboardDeliveryPane';
+
+import { DashboardKdsPane } from '../../components/owner/dashboard/DashboardKdsPane';
+
 import { DashboardReceiptPane } from '../../components/owner/dashboard/DashboardReceiptPane';
 import { AddMenuModal } from '../../components/owner/dashboard/AddMenuModal';
 
@@ -60,8 +62,8 @@ export function DashboardPage() {
 
   // 실시간 실제 연동 주문 데이터 (목업 예시 제거)
   const [tableBills, setTableBills] = useState<Record<string, { items: BillItem[]; paymentMethod: string }>>({});
-  const [deliveryOrders, setDeliveryOrders] = useState<DeliveryOrderItem[]>([]);
-  const [kdsOrders, setKdsOrders] = useState<KdsOrderItem[]>([]);
+
+
 
   // 모달 상태
   const [isAddMenuModalOpen, setIsAddMenuModalOpen] = useState(false);
@@ -122,6 +124,11 @@ export function DashboardPage() {
     tempOccupations,
     reservations,
     logs,
+    tableMenuSummaries,
+    kdsOrders: liveKdsOrders,
+    onToggleKdsStatus,
+    deliveryOrders: liveDeliveryOrders,
+    onUpdateDeliveryStatus: liveUpdateDeliveryStatus,
     activeControlId,
     setActiveControlId,
     handleControlState,
@@ -130,6 +137,7 @@ export function DashboardPage() {
     isConnected,
     kpi
   } = useDashboard(placedElements);
+
 
   // 드래그 앤 드롭 핸들러
   const handleDragStart = (id: WidgetId) => setDraggedWidgetId(id);
@@ -164,10 +172,13 @@ export function DashboardPage() {
   const finalTotal = Math.max(0, subtotal - discountAmount);
 
   // 선택 배달 데이터
-  const selectedDelivery = deliveryOrders.find(d => d.id === selectedDeliveryId) || deliveryOrders[0];
+  const selectedDelivery = liveDeliveryOrders.find(d => d.id === selectedDeliveryId) || liveDeliveryOrders[0];
 
-  const handleUpdateDeliveryStatus = (id: string, nextStatus: DeliveryOrderItem['status']) => {
-    setDeliveryOrders(prev => prev.map(item => item.id === id ? { ...item, status: nextStatus } : item));
+
+
+
+  const handleToggleKdsStatus = (id: string) => {
+    onToggleKdsStatus(id);
   };
 
   const handleAddMenuItem = (menuName: string, price: number) => {
@@ -184,12 +195,6 @@ export function DashboardPage() {
       return { ...prev, [selectedBillTable.id]: { ...tableData, items: updatedItems } };
     });
     setIsAddMenuModalOpen(false);
-  };
-
-  const handleToggleKdsStatus = (id: string) => {
-    setKdsOrders(prev => prev.map(order => 
-      order.id === id ? { ...order, status: order.status === 'cooking' ? 'completed' : 'cooking' } : order
-    ));
   };
 
   // 위젯 콘텐츠 디스패처
@@ -213,6 +218,7 @@ export function DashboardPage() {
               <DashboardCanvas 
                 placedElements={placedElements}
                 tableStates={tableStates}
+                tableMenuSummaries={tableMenuSummaries}
                 activeControlId={activeControlId}
                 setActiveControlId={setActiveControlId}
                 onControlState={(elId, label, newState) => {
@@ -229,19 +235,19 @@ export function DashboardPage() {
         if (activeTab === 'kds') {
           return (
             <DashboardKdsPane 
-              kdsOrders={kdsOrders}
-              deliveryOrders={deliveryOrders}
+              kdsOrders={liveKdsOrders}
+              deliveryOrders={liveDeliveryOrders}
               onToggleKdsStatus={handleToggleKdsStatus}
-              onUpdateDeliveryStatus={handleUpdateDeliveryStatus}
+              onUpdateDeliveryStatus={liveUpdateDeliveryStatus}
             />
           );
         }
         return (
           <DashboardDeliveryPane 
-            deliveryOrders={deliveryOrders}
+            deliveryOrders={liveDeliveryOrders}
             selectedDeliveryId={selectedDeliveryId}
             setSelectedDeliveryId={setSelectedDeliveryId}
-            onUpdateDeliveryStatus={handleUpdateDeliveryStatus}
+            onUpdateDeliveryStatus={liveUpdateDeliveryStatus}
           />
         );
 
@@ -258,19 +264,20 @@ export function DashboardPage() {
             finalTotal={finalTotal}
             onOpenAddMenuModal={() => setIsAddMenuModalOpen(true)}
             onControlState={handleControlState}
-            onUpdateDeliveryStatus={handleUpdateDeliveryStatus}
+            onUpdateDeliveryStatus={liveUpdateDeliveryStatus}
           />
         );
 
       case 'delivery_summary':
         return (
           <DashboardDeliveryPane 
-            deliveryOrders={deliveryOrders}
+            deliveryOrders={liveDeliveryOrders}
             selectedDeliveryId={selectedDeliveryId}
             setSelectedDeliveryId={setSelectedDeliveryId}
-            onUpdateDeliveryStatus={handleUpdateDeliveryStatus}
+            onUpdateDeliveryStatus={liveUpdateDeliveryStatus}
           />
         );
+
 
       case 'bgm':
         return (
@@ -319,7 +326,8 @@ export function DashboardPage() {
           storeName={storeInfo?.name || '내 매장 관제판'}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          deliveryCount={deliveryOrders.length}
+          deliveryCount={liveDeliveryOrders.length}
+
           isEditMode={isEditMode}
           setIsEditMode={setIsEditMode}
           onResetWidgetOrder={handleResetWidgetOrder}

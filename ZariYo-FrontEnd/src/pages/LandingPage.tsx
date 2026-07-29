@@ -24,18 +24,17 @@ export function LandingPage() {
 
   const handleAuthAction = () => {
     if (!token || !user) {
-      navigate('/login');
+      navigate('/owner/dashboard');
       return;
     }
 
     if (user.role === 'ROLE_ADMIN') {
       navigate('/admin/users');
-    } else if (user.role === 'ROLE_OWNER') {
-      navigate('/owner/stores');
     } else {
-      navigate('/');
+      navigate('/owner/dashboard');
     }
   };
+
 
   const handleLogout = () => {
     localStorage.removeItem('zariyo_token');
@@ -88,33 +87,31 @@ export function LandingPage() {
             <span>사용설명서</span>
           </button>
 
-          {token && user ? (
-            <>
-              <button
-                onClick={handleAuthAction}
-                className="px-5 py-2 rounded-[3px] bg-amber-400 text-black hover:bg-amber-300 font-black text-xs cursor-pointer transition-all shadow-none flex items-center gap-1.5 hover:scale-105"
-              >
-                <span>{user.role === 'ROLE_ADMIN' ? '어드민 관리판 이동' : '내 매장 대시보드로 이동'}</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
+          <button
+            onClick={handleAuthAction}
+            className="px-5 py-2 rounded-[3px] bg-amber-400 text-black hover:bg-amber-300 font-black text-xs cursor-pointer transition-all shadow-none flex items-center gap-1.5 hover:scale-105"
+          >
+            <span>{user?.role === 'ROLE_ADMIN' ? '어드민 관리판 이동' : '내 매장 대시보드로 이동'}</span>
+            <ChevronRight className="w-4 h-4" />
+          </button>
 
-              <button
-                onClick={handleLogout}
-                className="px-3 py-2 rounded-[3px] bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-300 font-bold text-xs cursor-pointer transition-all"
-              >
-                로그아웃
-              </button>
-            </>
+          {token && user ? (
+            <button
+              onClick={handleLogout}
+              className="px-3 py-2 rounded-[3px] bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-300 font-bold text-xs cursor-pointer transition-all"
+            >
+              로그아웃
+            </button>
           ) : (
             <button
               onClick={() => navigate('/login')}
-              className="px-5 py-2 rounded-[3px] bg-white text-black hover:bg-neutral-200 font-black text-xs cursor-pointer transition-all shadow-none flex items-center gap-1.5 hover:scale-105"
+              className="px-4 py-2 rounded-[3px] bg-white/10 text-white hover:bg-white/20 border border-white/15 font-bold text-xs cursor-pointer transition-all flex items-center gap-1 hover:scale-105"
             >
-              <span>사장님 로그인 & 시작</span>
-              <ChevronRight className="w-4 h-4" />
+              <span>로그인</span>
             </button>
           )}
         </motion.div>
+
       </header>
 
       {/* Hero Section */}

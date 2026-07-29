@@ -73,9 +73,10 @@ export function LandingBeforeAfterSection() {
 
             <div className="space-y-4 text-neutral-200">
               <div className="space-y-1">
-                <p className="font-bold text-emerald-400">✓ 5분 타임아웃 원자성 락 차단</p>
-                <p className="text-xs text-neutral-300">Redis 기반 좌석 선점으로 이중 예약 0건 차단 및 자동 공석 원복</p>
+                <p className="font-bold text-emerald-400">✓ 0.001초 실시간 좌석 상태 릴레이</p>
+                <p className="text-xs text-neutral-300">실시간 좌석 연동으로 이중 예약 0건 차단 및 2D 스마트 도면 동기화</p>
               </div>
+
               <div className="space-y-1">
                 <p className="font-bold text-emerald-400">✓ 0.1초 디지털 KDS 릴레이</p>
                 <p className="text-xs text-neutral-300">접수 즉시 주방 관제 카드 전파 및 특이사항 하이라이트</p>

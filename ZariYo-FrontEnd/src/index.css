@@ -4,27 +4,94 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "YouandiNewKr", "YouandiNewKrTitle", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", sans-serif;
+  --font-sans: "SamsungOneKorean", "Samsung Sharp Sans", "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  --font-display: "Samsung Sharp Sans", "SamsungOneKorean", sans-serif;
 }
 
 @layer base {
   :root {
-    --bg-main: #ffffff;
-    --bg-card: #ffffff;
-    --text-main: #000000;
-    --text-muted: #444444; /* Enhanced contrast for light mode */
-    --border-main: #000000;
-    --brand-primary: #000000;
-    --brand-glow: rgba(0, 0, 0, 0.05);
+    --bg-canvas: #ffffff;
+    --bg-surface: #f7f7f7;
+    --text-primary: #000000;
+    --text-muted: #707070;
+    --border-color: #dddddd;
+    --samsung-blue: #0381fe;
+    --samsung-link: #007aff;
   }
 
   .dark {
-    --bg-main: #000000;
-    --bg-card: #111111;
-    --text-main: #ffffff;
-    --text-muted: #bbbbbb;
-    --border-main: #ffffff;
-    --brand-primary: #ffffff;
-    --brand-glow: rgba(255, 255, 255, 0.05);
+    --bg-canvas: #000000;
+    --bg-surface: #121214;
+    --text-primary: #ffffff;
+    --text-muted: #a0a0a0;
+    --border-color: #333333;
+    --samsung-blue: #0381fe;
+    --samsung-link: #3897ff;
   }
+}
+
+
+/* Samsung Design System Utilities */
+.samsung-cta-contained {
+  background-color: #000000;
+  color: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  padding: 10px 24px 9px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.dark .samsung-cta-contained {
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+}
+
+.samsung-cta-outlined {
+  background-color: transparent;
+  color: #000000;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  padding: 10px 24px 9px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.dark .samsung-cta-outlined {
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+.samsung-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+.dark .samsung-card {
+  background-color: #121214;
+}
+
+.samsung-oneui-badge {
+  background-color: rgba(3, 129, 254, 0.1);
+  color: #0381fe;
+  border: 1px solid rgba(3, 129, 254, 0.3);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 700;
 }

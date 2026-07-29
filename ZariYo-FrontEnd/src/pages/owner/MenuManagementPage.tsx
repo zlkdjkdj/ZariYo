@@ -104,65 +104,61 @@ export function MenuManagementPage() {
       <ConsoleSidebar />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[var(--bg-main)]">
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[var(--bg-main)] p-8">
         
-        {/* Top Control Bar */}
-        <header className="sticky top-0 z-30 bg-white dark:bg-[#09090b] border-b border-neutral-200 dark:border-white/10 px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <UtensilsCrossed className="w-5 h-5 text-black dark:text-white" />
-              <h1 className="text-xl font-black text-neutral-900 dark:text-white">메뉴 및 품절(Sold-Out) 관리</h1>
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-neutral-200 dark:border-neutral-800 select-none">
+          <div className="text-left">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-[20px] bg-[#0381fe]/10 text-[#0381fe] border border-[#0381fe]/30 text-[10px] font-bold font-mono mb-2">
+              <UtensilsCrossed className="w-3.5 h-3.5" /> SAMSUNG STORE MENU ENGINE
             </div>
-            <p className="text-xs text-neutral-400 font-extrabold mt-0.5 text-left">
-              매장 실시간 메뉴 상태 제어 및 곱빼기/토핑 커스텀 옵션 등록
+            <h1 className="text-2xl font-bold text-neutral-900 dark:text-white font-sans">메뉴 & 품절 관리</h1>
+            <p className="text-xs text-[#707070] dark:text-neutral-400 font-normal mt-1">
+              매장의 전체 메뉴 가격, 이미지 및 실시간 품절(Sold Out) 상태를 클릭 한 번으로 통제합니다.
             </p>
           </div>
 
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="px-4 py-2.5 rounded-none bg-black text-white dark:bg-white dark:text-black font-extrabold text-xs flex items-center justify-center gap-2 cursor-pointer hover:opacity-90 transition-all shadow-none"
+            className="h-[40px] px-5 bg-black text-white dark:bg-white dark:text-black font-bold text-xs cursor-pointer hover:opacity-90 flex items-center gap-2 transition-all rounded-[20px] shadow-sm"
           >
-            <PlusCircle className="w-4 h-4" />
+            <PlusCircle className="w-4 h-4 text-[#0381fe]" />
             <span>신규 메뉴 등록</span>
           </button>
-        </header>
+        </div>
 
-        {/* Category Filter & Cards Grid */}
-        <div className="p-8 space-y-6 max-w-7xl mx-auto w-full">
-          
-          {/* Category Filter Tabs */}
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-none text-xs font-black transition-all cursor-pointer border ${
-                  selectedCategory === cat
-                    ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-none'
-                    : 'bg-white dark:bg-[#09090b] text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-white/10 hover:border-black dark:hover:border-white'
-                }`}
-              >
-                {cat} ({cat === '전체' ? menuItems.length : menuItems.filter(i => i.category === cat).length})
-              </button>
-            ))}
-          </div>
+        {/* Category Tabs - Samsung 40px Pill Chips */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none select-none">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`h-[40px] px-6 py-2 rounded-[20px] text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${
+                selectedCategory === cat
+                  ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-sm'
+                  : 'bg-[#f7f7f7] dark:bg-white/5 text-neutral-800 dark:text-neutral-200 border-neutral-200 dark:border-white/10 hover:border-[#0381fe]'
+              }`}
+            >
+              {cat} ({cat === '전체' ? menuItems.length : menuItems.filter(i => i.category === cat).length})
+            </button>
+          ))}
+        </div>
 
-          {/* Menu Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredItems.map((menu) => (
-              <MenuCardItem 
-                key={menu.id}
-                menu={menu}
-                onToggleSoldOut={handleToggleSoldOut}
-                onDeleteMenu={handleDeleteMenu}
-                onEditMenu={handleOpenEditModal}
-              />
-            ))}
-          </div>
-
+        {/* Menu Grid Container */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredItems.map((menu) => (
+            <MenuCardItem 
+              key={menu.id}
+              menu={menu}
+              onToggleSoldOut={handleToggleSoldOut}
+              onDeleteMenu={handleDeleteMenu}
+              onEditMenu={handleOpenEditModal}
+            />
+          ))}
         </div>
 
       </main>
+
 
       {/* Add Menu Modal Component */}
       <AddMenuFormModal 

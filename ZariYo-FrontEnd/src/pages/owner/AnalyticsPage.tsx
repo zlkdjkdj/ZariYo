@@ -38,35 +38,35 @@ export function AnalyticsPage() {
       <main className="flex-1 p-8 overflow-y-auto">
         
         {/* Header Title with Export Actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-neutral-200 dark:border-white/5 select-none">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-neutral-200 dark:border-neutral-800 select-none">
           <div className="text-left">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#000000]/10 text-[#000000] text-[10px] font-bold font-mono mb-2">
-              <TrendingUp className="w-3.5 h-3.5" /> SALES & BUSINESS ANALYTICS
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-[20px] bg-[#0381fe]/10 text-[#0381fe] border border-[#0381fe]/30 text-[10px] font-bold font-mono mb-2">
+              <TrendingUp className="w-3.5 h-3.5" /> SAMSUNG HEALTH & SALES ANALYTICS
             </div>
-            <h1 className="text-2xl font-black text-neutral-900 dark:text-white">매출 분석 & 경영 보고서</h1>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 font-bold mt-1">
-              매장의 일별/시간대별 실시간 매출과 좌석 회전율, 시그니처 메뉴 판매 랭킹을 집계합니다.
+            <h1 className="text-2xl font-bold text-neutral-900 dark:text-white font-sans">매출 분석 & 경영 보고서</h1>
+            <p className="text-xs text-[#707070] dark:text-neutral-400 font-normal mt-1">
+              매장의 일별/시간대별 실시간 매출과 좌석 회전율, 시그니처 메뉴 판매 랭킹을 삼성 통계 모듈로 집계합니다.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Filter buttons */}
-            <div className="bg-neutral-200/50 dark:bg-white/5 p-1 rounded-full border border-neutral-300 dark:border-white/10 flex gap-1 font-bold text-xs select-none">
+            {/* Filter buttons - Samsung 40px Pill Controls */}
+            <div className="bg-[#f7f7f7] dark:bg-white/5 p-1 rounded-[20px] border border-neutral-200 dark:border-white/10 flex gap-1 font-bold text-xs select-none">
               <button
                 onClick={() => setTimeRange('today')}
-                className={`px-3 py-1.5 rounded-full transition-all cursor-pointer ${timeRange === 'today' ? 'bg-[#000000] text-white' : 'text-neutral-500'}`}
+                className={`h-[32px] px-4 rounded-[20px] transition-all cursor-pointer ${timeRange === 'today' ? 'bg-black text-white dark:bg-white dark:text-black shadow-sm' : 'text-[#707070]'}`}
               >
                 오늘
               </button>
               <button
                 onClick={() => setTimeRange('week')}
-                className={`px-3 py-1.5 rounded-full transition-all cursor-pointer ${timeRange === 'week' ? 'bg-[#000000] text-white' : 'text-neutral-500'}`}
+                className={`h-[32px] px-4 rounded-[20px] transition-all cursor-pointer ${timeRange === 'week' ? 'bg-black text-white dark:bg-white dark:text-black shadow-sm' : 'text-[#707070]'}`}
               >
                 이번 주
               </button>
               <button
                 onClick={() => setTimeRange('month')}
-                className={`px-3 py-1.5 rounded-full transition-all cursor-pointer ${timeRange === 'month' ? 'bg-[#000000] text-white' : 'text-neutral-500'}`}
+                className={`h-[32px] px-4 rounded-[20px] transition-all cursor-pointer ${timeRange === 'month' ? 'bg-black text-white dark:bg-white dark:text-black shadow-sm' : 'text-[#707070]'}`}
               >
                 이번 달
               </button>
@@ -74,65 +74,79 @@ export function AnalyticsPage() {
 
             <button
               onClick={handleExportCSV}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#000000] hover:bg-[#286fd7] text-white text-xs font-black cursor-pointer shadow-none transition-all"
+              className="h-[40px] px-4 rounded-[20px] bg-black text-white dark:bg-white dark:text-black font-bold text-xs cursor-pointer inline-flex items-center gap-2 hover:opacity-90 transition-all border border-black dark:border-white shadow-sm"
             >
-              <Download className="w-4 h-4" />
-              CSV 내보내기
+              <Download className="w-4 h-4 text-[#0381fe]" />
+              <span>CSV 내보내기</span>
             </button>
           </div>
         </div>
 
-        {/* Top 4 KPI Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8 select-none">
-          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 shadow-none text-left">
-            <span className="text-[10px] font-mono text-neutral-400 font-bold uppercase">TOTAL REVENUE</span>
-            <p className="text-2xl font-black text-neutral-900 dark:text-white mt-1">₩ 2,750,000</p>
-            <span className="text-[10.5px] text-emerald-500 font-bold flex items-center gap-0.5 mt-2">
-              <ArrowUpRight className="w-3.5 h-3.5" /> 지난주 대비 +18.4% 상승
-            </span>
+        {/* 4 Summary Stat Cards - Samsung 20px Rounded Module Card */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8 text-left">
+          <div className="bg-white dark:bg-[#121214] border border-[#dddddd] dark:border-neutral-800 p-6 rounded-[20px] space-y-2 shadow-sm">
+            <span className="text-[11px] font-bold text-[#707070] uppercase tracking-wider font-mono">TOTAL REVENUE</span>
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">2,850,000원</h2>
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 inline-flex items-center">
+                +14.2% <ArrowUpRight className="w-3.5 h-3.5" />
+              </span>
+            </div>
+            <p className="text-[11px] text-[#707070]">지난주 대비 +340,000원 증가</p>
           </div>
 
-          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 shadow-none text-left">
-            <span className="text-[10px] font-mono text-neutral-400 font-bold uppercase">AVERAGE TICKET (객단가)</span>
-            <p className="text-2xl font-black text-neutral-900 dark:text-white mt-1">₩ 44,200</p>
-            <span className="text-[10.5px] text-neutral-400 font-bold block mt-2">테이블당 평균 지출액</span>
+          <div className="bg-white dark:bg-[#121214] border border-[#dddddd] dark:border-neutral-800 p-6 rounded-[20px] space-y-2 shadow-sm">
+            <span className="text-[11px] font-bold text-[#707070] uppercase tracking-wider font-mono">TOTAL ORDERS</span>
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">84건</h2>
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 inline-flex items-center">
+                +8.5% <ArrowUpRight className="w-3.5 h-3.5" />
+              </span>
+            </div>
+            <p className="text-[11px] text-[#707070]">평균 객단가 33,900원</p>
           </div>
 
-          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 shadow-none text-left">
-            <span className="text-[10px] font-mono text-neutral-400 font-bold uppercase">SEAT TURNOVER (회전율)</span>
-            <p className="text-2xl font-black text-[#000000] mt-1">3.8 회 / 일</p>
-            <span className="text-[10.5px] text-[#000000] font-bold block mt-2">평균 좌석 점유 유지시간 45분</span>
+          <div className="bg-white dark:bg-[#121214] border border-[#dddddd] dark:border-neutral-800 p-6 rounded-[20px] space-y-2 shadow-sm">
+            <span className="text-[11px] font-bold text-[#707070] uppercase tracking-wider font-mono">TABLE ROTATION RATE</span>
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-2xl font-bold font-mono text-neutral-900 dark:text-white">3.4회</h2>
+              <span className="text-xs font-bold text-[#0381fe] font-mono">PEAK TIME 18:00</span>
+            </div>
+            <p className="text-[11px] text-[#707070]">평균 착석 유지시간 48분</p>
           </div>
 
-          <div className="bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 shadow-none text-left">
-            <span className="text-[10px] font-mono text-neutral-400 font-bold uppercase">PEAK TIME</span>
-            <p className="text-2xl font-black text-orange-500 mt-1">18:00 ~ 19:30</p>
-            <span className="text-[10.5px] text-orange-500 font-bold block mt-2">최대 피크 매출 기록</span>
+          <div className="bg-white dark:bg-[#121214] border border-[#dddddd] dark:border-neutral-800 p-6 rounded-[20px] space-y-2 shadow-sm">
+            <span className="text-[11px] font-bold text-[#707070] uppercase tracking-wider font-mono">DELIVERY / TAKEOUT</span>
+            <div className="flex items-baseline justify-between">
+              <h2 className="text-2xl font-bold font-mono text-[#0381fe]">28건 (33.3%)</h2>
+              <span className="text-xs font-bold text-[#0381fe] font-mono">DELIVERY RELAY</span>
+            </div>
+            <p className="text-[11px] text-[#707070]">배민 18건 / 쿠팡 6건 / 방문 4건</p>
           </div>
         </div>
 
         {/* Charts & Popular Menus Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* Hourly Sales Bar Chart (Left 7 cols) */}
-          <div className="lg:col-span-7 bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 md:p-8 shadow-none text-left select-none">
-            <h3 className="text-base font-black text-neutral-900 dark:text-white mb-6 flex items-center justify-between">
+          {/* Hourly Sales Bar Chart (Left 7 cols) - Samsung 20px Rounded Container */}
+          <div className="lg:col-span-7 bg-white dark:bg-[#121214] border border-[#dddddd] dark:border-neutral-800 rounded-[20px] p-6 md:p-8 shadow-sm text-left select-none">
+            <h3 className="text-base font-bold text-neutral-900 dark:text-white mb-6 flex items-center justify-between font-sans">
               <span className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-[#000000]" /> 시간대별 매출 추이
+                <BarChart3 className="w-5 h-5 text-[#0381fe]" /> 시간대별 매출 추이
               </span>
-              <span className="text-[10px] font-mono text-neutral-400">UNIT: KRW (₩)</span>
+              <span className="text-[10px] font-mono text-[#707070]">UNIT: KRW (₩)</span>
             </h3>
 
             <div className="space-y-4">
               {hourlySales.map((item) => (
-                <div key={item.hour} className="space-y-1">
-                  <div className="flex justify-between text-xs font-bold text-neutral-600 dark:text-neutral-300">
+                <div key={item.hour} className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-bold text-neutral-700 dark:text-neutral-300">
                     <span>{item.hour}</span>
-                    <span className="font-mono text-[#000000]">₩ {item.sales.toLocaleString()}</span>
+                    <span className="font-mono text-[#0381fe]">₩ {item.sales.toLocaleString()}</span>
                   </div>
-                  <div className="w-full h-3 bg-neutral-100 dark:bg-white/5 rounded-full overflow-hidden">
+                  <div className="w-full h-3 bg-[#f7f7f7] dark:bg-white/5 rounded-[20px] overflow-hidden">
                     <div 
-                      className="h-full bg-gradient-to-r from-[#000000] to-[#000000] rounded-full transition-all duration-500"
+                      className="h-full bg-[#0381fe] rounded-[20px] transition-all duration-500"
                       style={{ width: `${item.percentage}%` }}
                     />
                   </div>
@@ -141,21 +155,22 @@ export function AnalyticsPage() {
             </div>
           </div>
 
-          {/* Popular Menu Rankings TOP 5 (Right 5 cols) */}
-          <div className="lg:col-span-5 bg-white dark:bg-[#09090b] border border-neutral-200 dark:border-white/5 rounded-none p-6 md:p-8 shadow-none text-left select-none">
-            <h3 className="text-base font-black text-neutral-900 dark:text-white mb-6 flex items-center gap-2">
-              <Award className="w-5 h-5 text-orange-500" /> 인기 메뉴 판매 랭킹 TOP 4
+          {/* Popular Menu Rankings TOP 5 (Right 5 cols) - Samsung 20px Rounded Container */}
+          <div className="lg:col-span-5 bg-white dark:bg-[#121214] border border-[#dddddd] dark:border-neutral-800 rounded-[20px] p-6 md:p-8 shadow-sm text-left select-none">
+            <h3 className="text-base font-bold text-neutral-900 dark:text-white mb-6 flex items-center gap-2 font-sans">
+              <Award className="w-5 h-5 text-[#0381fe]" /> 인기 메뉴 판매 랭킹 TOP 4
             </h3>
 
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               {topMenuItems.map((menu) => (
-                <div key={menu.rank} className="flex items-center justify-between p-3.5 rounded-none bg-neutral-50 dark:bg-white/[0.01] border border-neutral-200 dark:border-white/5">
+                <div key={menu.rank} className="flex items-center justify-between p-4 rounded-[20px] bg-[#f7f7f7] dark:bg-white/5 border border-neutral-200 dark:border-white/10">
                   <div className="flex items-center gap-3">
-                    <span className={`w-7 h-7 rounded-none flex items-center justify-center font-black text-xs ${
-                      menu.rank === 1 ? 'bg-amber-500 text-white' : 'bg-neutral-200 dark:bg-white/10 text-neutral-600 dark:text-neutral-300'
+                    <span className={`w-8 h-8 rounded-[20px] flex items-center justify-center font-bold text-xs ${
+                      menu.rank === 1 ? 'bg-[#0381fe] text-white' : 'bg-neutral-200 dark:bg-white/10 text-neutral-700 dark:text-neutral-300'
                     }`}>
                       {menu.rank}
                     </span>
+
                     <div>
                       <h4 className="text-xs font-black text-neutral-900 dark:text-white">{menu.name}</h4>
                       <span className="text-[10px] text-neutral-400 font-semibold font-mono">판매수량: {menu.count}개</span>

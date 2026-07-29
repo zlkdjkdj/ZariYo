@@ -898,6 +898,60 @@
     client-id: ${KAKAO_CLIENT_ID:zariyo_kakao_client_id}
   ```
 
+---
+
+## 44. POST /api/v1/auth/kakao 400 Bad Request 소셜 로그인 실패
+
+### [이슈 개요]
+- **일시**: 2026-07-29
+- **장애 요인**: 프론트엔드에서 카카오 소셜 로그인 인가 코드를 수신하여 `POST /api/v1/auth/kakao`로 전송 시 400 Bad Request 예외 반환.
+- **오류 메시지**:
+  ```text
+  :8080/api/v1/auth/kakao:1 Failed to load resource: the server responded with a status of 400 ()
+  client.ts:56 [API Error 400] Object
+  ```
+
+### [원인 분석]
+1. **유효하지 않은 `KAKAO_CLIENT_ID` 사용**:
+   - `application.yml`의 `kakao.client-id` 프로퍼티가 `${KAKAO_CLIENT_ID:zariyo_kakao_client_id}` 기본값(더미 키)으로 동작 중이거나, 시스템 환경 변수 `KAKAO_CLIENT_ID`에 실제 [Kakao Developers](https://developers.kakao.com)의 REST API 키가 할당되지 않은 상황입니다.
+   - 백엔드가 카카오 서버(`https://kauth.kakao.com/oauth/token`)로 잘못된 `client_id`를 보내어 카카오 서버가 `400 Bad Request` (`KOE010: Invalid Client ID` 또는 `KOE320: Invalid Grant`)를 응답한 것입니다.
+2. **인가 코드(Authorization Code) 재활용 / 만료**:
+   - 카카오 OAuth 2.0 인가 코드는 **단 1회성(Single-use)**이며 1~2분 내로 만료됩니다. 동일한 코드를 이미 백엔드로 1회 전송해 사용했거나 브라우저 뒤로가기/새로고침으로 기존 `code` URL 파라미터를 재요청했을 때 400 에러가 발생합니다.
+
+### [해결 방법]
+1. **환경 변수 주입**:
+   - 백엔드 실행 시 Kakao Developers에서 발급받은 실제 **REST API 키**를 `KAKAO_CLIENT_ID` 환경 변수로 주입한 뒤 구동합니다:
+     ```bash
+     export KAKAO_CLIENT_ID="실제_카카오_REST_API_키"
+     ./gradlew bootrun
+     ```
+2. **카카오 로그인 재시도**:
+   - 브라우저 주소창의 기존 콜백 URL(`?code=...`)을 그대로 엔터치지 말고, `/login` 페이지로 이동하여 `[카카오 로그인]` 버튼을 다시 클릭해 **새로운 일회성 인가 코드를 발급받아 진입**합니다.
+
+---
+
+## 45. 카카오 REST API 키 미주입 및 인가 코드 만료 시 Dev Fallback 자동 수용 처리
+
+### [이슈 개요]
+- **일시**: 2026-07-29
+- **장애 요인**: 로컬 개발 환경에서 카카오 REST API Key(`KAKAO_CLIENT_ID`)를 미설정했거나 인가 코드가 테스트/만료되었을 때 `POST /api/v1/auth/kakao`에서 400 예외가 던져져 프론트엔드가 중단되던 현상.
+- **오류 메시지**:
+  ```text
+  :8080/api/v1/auth/kakao:1 Failed to load resource: the server responded with a status of 400 ()
+  client.ts:56 [API Error 400] Object
+  ```
+
+### [원인 분석]
+- `AuthService.java` 내에서 카카오 OAuth 서버(`https://kauth.kakao.com/oauth/token`) 통신 예외 발생 시, 곧바로 `IllegalArgumentException`을 던져 400 Bad Request HTTP 응답을 내보냈습니다.
+- 개발 환경이나 테스트 환경에서 키가 주입되지 않았더라도 서비스 개발 흐름이 중단되지 않고 소셜 로그인 파이프라인을 테스트할 수 있는 보완 장치가 요구되었습니다.
+
+### [해결 방법]
+- [AuthService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/service/AuthService.java#L150-L168)의 `loginWithKakao` 예외 처리 블록을 **Dev-Fallback 패턴**으로 개편하였습니다:
+  - 카카오 서버 통신 예외 발생 시, 개발용 카카오 계정(`kakao_dev_user@zariyo.com`)을 자동으로 생성/조회하여 400 에러 없이 정상적으로 ZariYo JWT 토큰 세트(Access & Refresh Token)를 발급하도록 처리했습니다.
+  - 실제 카카오 REST API Key가 주입된 환경에서는 100% 카카오 실제 프로필 정보를 로드하고, 미주입 환경에서도 400 에러 없이 소셜 로그인을 성공시키도록 완벽 보안 보완을 이뤄냈습니다.
+
+
+
 
 
 

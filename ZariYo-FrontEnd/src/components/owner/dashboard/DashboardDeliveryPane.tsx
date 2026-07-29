@@ -26,18 +26,20 @@ export function DashboardDeliveryPane({
   onUpdateDeliveryStatus,
 }: DashboardDeliveryPaneProps) {
   return (
-    <div className="bg-white dark:bg-[#09090b] border border-neutral-300 dark:border-neutral-800 rounded-[3px] p-6 space-y-5 h-full text-left">
-      <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-white/10">
+    <div className="bg-white dark:bg-[#121214] border border-[#dddddd] dark:border-neutral-800 rounded-[20px] p-6 space-y-5 h-full text-left shadow-sm">
+      <div className="flex items-center justify-between pb-3.5 border-b border-neutral-200 dark:border-neutral-800">
         <div>
-          <span className="text-[10px] font-mono font-bold text-orange-500 uppercase tracking-widest">
-            DELIVERY & TAKEOUT RELAY PANE
+          <span className="text-[10px] font-mono font-bold text-[#0381fe] uppercase tracking-widest">
+            SAMSUNG COMMERCE DELIVERY RELAY
           </span>
-          <h3 className="text-base font-black text-black dark:text-white mt-0.5">실시간 배달/포장 주문 릴레이 관제</h3>
+          <h3 className="text-base font-bold text-neutral-900 dark:text-white mt-0.5 font-sans">실시간 배달/포장 주문 릴레이 관제</h3>
         </div>
-        <span className="text-xs font-mono font-bold bg-orange-500/10 text-orange-500 px-3 py-1 rounded-[3px]">
+        <span className="text-xs font-mono font-bold bg-[#0381fe]/15 text-[#0381fe] border border-[#0381fe]/30 px-3 py-1.5 rounded-[20px]">
           {deliveryOrders.length}건 전체 수신
         </span>
       </div>
+
+
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {deliveryOrders.map((d) => {

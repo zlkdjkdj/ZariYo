@@ -55,6 +55,19 @@ export function useDashboard(placedElements: PlacedElement[], storeId: number = 
   // 5. 제어 팝업 대상 ID
   const [activeControlId, setActiveControlId] = useState<string | null>(null);
 
+  // 6. 테이블별 실시간 주문 메뉴명 요약 (2D 관제 표출용)
+  const [tableMenuSummaries, setTableMenuSummaries] = useState<Record<string, string>>(() => {
+    const saved = localStorage.getItem('zariyo_table_menu_summary');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  // 7. KDS 주방 조리 대기열 리스트
+  const [kdsOrders, setKdsOrders] = useState<any[]>(() => {
+    const saved = localStorage.getItem('zariyo_kds_orders');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+
   // 로컬 스토리지 데이터 동기화 함수
   const syncToLocalStorage = (
     newStates: Record<string, 'empty' | 'using' | 'temp-occupied' | 'reserved'>,
@@ -118,26 +131,66 @@ export function useDashboard(placedElements: PlacedElement[], storeId: number = 
 
 
 
-  // 다른 탭(손님 예약 페이지)에서 일어난 데이터 변화 감지
+  // 8. 배달/포장 주문 릴레이 리스트
+  const [deliveryOrders, setDeliveryOrders] = useState<any[]>(() => {
+    const saved = localStorage.getItem('zariyo_delivery_orders');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // 배달 상태 변경 핸들러
+  const handleUpdateDeliveryStatus = (id: string, nextStatus: string) => {
+    const updated = deliveryOrders.map(item => item.id === id ? { ...item, status: nextStatus } : item);
+    setDeliveryOrders(updated);
+    localStorage.setItem('zariyo_delivery_orders', JSON.stringify(updated));
+    window.dispatchEvent(new Event('storage_sync'));
+  };
+
+  // 다른 탭(손님 예약 페이지)에서 일어난 데이터 및 주문/선점 변화 감지 (BroadcastChannel + Storage Event)
   useEffect(() => {
     const handleStorageSync = () => {
       const savedStates = localStorage.getItem('zariyo_table_states');
       const savedOccs = localStorage.getItem('zariyo_temp_occupations');
       const savedRes = localStorage.getItem('zariyo_reservations');
       const savedLogs = localStorage.getItem('zariyo_logs');
+      const savedMenuSummaries = localStorage.getItem('zariyo_table_menu_summary');
+      const savedKds = localStorage.getItem('zariyo_kds_orders');
+      const savedDelivery = localStorage.getItem('zariyo_delivery_orders');
+
       if (savedStates) setTableStates(JSON.parse(savedStates));
       if (savedOccs) setTempOccupations(JSON.parse(savedOccs));
       if (savedRes) setReservations(JSON.parse(savedRes));
       if (savedLogs) setLogs(JSON.parse(savedLogs));
+      if (savedMenuSummaries) setTableMenuSummaries(JSON.parse(savedMenuSummaries));
+      if (savedKds) setKdsOrders(JSON.parse(savedKds));
+      if (savedDelivery) setDeliveryOrders(JSON.parse(savedDelivery));
     };
+
+
+    handleStorageSync();
 
     window.addEventListener('storage', handleStorageSync);
     window.addEventListener('storage_sync', handleStorageSync);
+
+    // 네이티브 브라우저 창/탭 간 0.001초 고속 브로드캐스트 채널
+    let bc: BroadcastChannel | null = null;
+    try {
+      bc = new BroadcastChannel('zariyo_realtime_sync');
+      bc.onmessage = (event) => {
+        if (event.data?.type === 'ORDER_CREATED' || event.data?.type === 'SEAT_UPDATED' || event.data?.type === 'SYNC_ALL') {
+          handleStorageSync();
+        }
+      };
+    } catch (e) {
+      console.warn('BroadcastChannel not supported in this environment', e);
+    }
+
     return () => {
       window.removeEventListener('storage', handleStorageSync);
       window.removeEventListener('storage_sync', handleStorageSync);
+      if (bc) bc.close();
     };
-  }, [logs]);
+  }, []);
+
 
   // 5분 임시 선점 카운트다운 타이머 루프
   useEffect(() => {
@@ -287,11 +340,30 @@ export function useDashboard(placedElements: PlacedElement[], storeId: number = 
   const reservedCount = Object.values(tableStates).filter((s) => s === 'reserved').length;
   const emptyCount = totalTables - usingCount - tempOccupiedCount - reservedCount;
 
+  // KDS 조리 완료 토글 핸들러
+  const handleToggleKdsStatus = (id: string) => {
+    const updatedKds = kdsOrders.map(item => {
+      if (item.id === id) {
+        const nextStatus = item.status === 'cooking' ? ('completed' as const) : ('cooking' as const);
+        return { ...item, status: nextStatus };
+      }
+      return item;
+    });
+    setKdsOrders(updatedKds);
+    localStorage.setItem('zariyo_kds_orders', JSON.stringify(updatedKds));
+    window.dispatchEvent(new Event('storage_sync'));
+  };
+
   return {
     tableStates,
     tempOccupations,
     reservations,
     logs,
+    tableMenuSummaries,
+    kdsOrders,
+    onToggleKdsStatus: handleToggleKdsStatus,
+    deliveryOrders,
+    onUpdateDeliveryStatus: handleUpdateDeliveryStatus,
     activeControlId,
     setActiveControlId,
     handleControlState,
@@ -306,5 +378,7 @@ export function useDashboard(placedElements: PlacedElement[], storeId: number = 
       totalTables,
     }
   };
+
 }
+
 

@@ -84,27 +84,27 @@ export function OrderHistoryPage() {
       {/* Main Content */}
       <main className="flex-1 p-8 overflow-y-auto">
         
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-neutral-200 dark:border-white/5 select-none">
+        {/* Header Title with Search Bar */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-neutral-200 dark:border-neutral-800 select-none">
           <div className="text-left">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#000000]/10 text-[#000000] text-[10px] font-bold font-mono mb-2">
-              <Receipt className="w-3.5 h-3.5" /> ORDER HISTORY & PAYMENT METHODS
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-[20px] bg-[#0381fe]/10 text-[#0381fe] border border-[#0381fe]/30 text-[10px] font-bold font-mono mb-2">
+              <Receipt className="w-3.5 h-3.5" /> SAMSUNG RECEIPT AUDIT & REFUND
             </div>
-            <h1 className="text-2xl font-black text-neutral-900 dark:text-white">영수증 이력 & 결제 수단 명세</h1>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 font-bold mt-1">
-              결제 완료된 영수증 내역과 결제 수단(신용카드/카카오페이/현금)을 조회하고 환불을 실행합니다.
+            <h1 className="text-2xl font-bold text-neutral-900 dark:text-white font-sans">영수증 이력 & 결제 환불</h1>
+            <p className="text-xs text-[#707070] dark:text-neutral-400 font-normal mt-1">
+              매장에서 결제 완료된 영수증 수선서 내역을 조회하고 실시간 결제 취소(Refund)를 승인합니다.
             </p>
           </div>
 
-          {/* Search Bar */}
-          <div className="relative w-full md:w-72 select-none">
-            <Search className="w-4 h-4 text-neutral-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
+          {/* Search Control - Samsung 40px Pill Control */}
+          <div className="relative w-full md:w-80">
+            <Search className="w-4 h-4 text-[#0381fe] absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input 
               type="text"
               placeholder="영수증 번호 또는 테이블 검색..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-full bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-xs font-bold focus:outline-none focus:border-[#000000]"
+              className="w-full h-[40px] pl-10 pr-4 rounded-[20px] bg-[#f7f7f7] dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-xs font-bold text-neutral-900 dark:text-white focus:outline-none focus:border-[#0381fe]"
             />
           </div>
         </div>

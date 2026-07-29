@@ -1,252 +1,264 @@
 ---
-id: "hyundaicard"
-name: "Hyundai Card"
+id: samsung
+name: Samsung
+display_name_kr: 삼성전자
 country: KR
-category: fintech
-homepage: "https://www.hyundaicard.com"
+category: consumer-tech
+homepage: "https://www.samsung.com/sec/"
 primary_color: "#000000"
 logo:
-  type: favicon
-  slug: "https://newsroom.hyundaicard.com/images/favicon.ico"
+  type: simpleicons
+  slug: samsung
 verified: "2026-07-13"
 omd: "0.1"
 ds:
-  name: Hyundai Card Design Library
-  url: "https://newsroom.hyundaicard.com/front/board/Hyundai-Card-Design-Library?country=en"
-  type: brand
-  description: A Hyundai Card cultural space, not a public component design-system specification.
+  name: Samsung One UI Design System
+  url: "https://developer.samsung.com/one-ui"
+  type: system
+  description: Samsung's official platform design guidance. Its component and color rules are a separate evidence domain from the captured Samsung Korea public web surfaces.
 verification_v2:
   schema: 2
   checked: "2026-07-13"
   surfaces:
-    - { id: home, kind: product, url: "https://www.hyundaicard.com/index.jsp", inspected: "2026-07-13" }
-    - { id: corporate-ceh, kind: corporate-information, url: "https://www.hyundaicard.com/about/ceh/ho/cehho0101_01.hc", inspected: "2026-07-13" }
-    - { id: corporate-ckh, kind: corporate-information, url: "https://www.hyundaicard.com/about/ckh/ho/ckhho0101_01.hc", inspected: "2026-07-13" }
+    - { id: home, kind: marketing, url: "https://www.samsung.com/sec/", inspected: "2026-07-13" }
+    - { id: ai-products, kind: public-product, url: "https://www.samsung.com/sec/ai-products/", inspected: "2026-07-13" }
+    - { id: brand-identity, kind: official-doc, url: "https://www.samsung.com/sec/about-us/brand-identity/", inspected: "2026-07-13" }
   sources:
-    - { id: collector-home, kind: product-surface, url: "https://www.hyundaicard.com/index.jsp", captured: "2026-07-13" }
-    - { id: collector-ceh, kind: product-surface, url: "https://www.hyundaicard.com/about/ceh/ho/cehho0101_01.hc", captured: "2026-07-13" }
-    - { id: collector-ckh, kind: product-surface, url: "https://www.hyundaicard.com/about/ckh/ho/ckhho0101_01.hc", captured: "2026-07-13" }
-    - { id: youandi-official, kind: official-doc, url: "https://newsroom.hyundaicard.com/front/board/Hyundai-Card-branding-through-typeface?country=en", captured: "2026-07-13" }
-  claims:
-    "tokens.colors.ink": &home { surface_id: home, source_id: collector-home, method: computed-style, captured: "2026-07-13" }
-    "tokens.colors.canvas": *home
-    "tokens.colors.inverse": &corporate { surface_id: corporate-ceh, source_id: collector-ceh, method: computed-style, captured: "2026-07-13" }
-    "tokens.colors.link-product": *home
-    "tokens.colors.link-corporate": *corporate
-    "tokens.typography.family.sans": &font { surface_id: home, source_id: collector-home, method: computed-style-fontfaceset-source, captured: "2026-07-13" }
-    "tokens.typography.hero.size": *font
-    "tokens.typography.hero.weight": *font
-    "tokens.typography.hero.lineHeight": *font
-    "tokens.typography.hero.use": *font
-    "tokens.typography.corporate-hero.size": *corporate
-    "tokens.typography.corporate-hero.weight": *corporate
-    "tokens.typography.corporate-hero.lineHeight": *corporate
-    "tokens.typography.corporate-hero.use": *corporate
-    "tokens.typography.nav.size": *font
-    "tokens.typography.nav.weight": *font
-    "tokens.typography.nav.lineHeight": *font
-    "tokens.typography.nav.use": *font
-    "tokens.typography.card-title.size": *home
-    "tokens.typography.card-title.weight": *home
-    "tokens.typography.card-title.lineHeight": *home
-    "tokens.typography.card-title.use": *home
-    "tokens.spacing.nav-inline": *font
-    "tokens.spacing.corporate-action-inline": *corporate
-    "tokens.rounded.corporate-outline-action": *corporate
-    "tokens.rounded.carousel-control": *home
-    "tokens.shadow.flat": *home
-    "tokens.components.product-card-link.type": *home
-    "tokens.components.product-card-link.fg": *home
-    "tokens.components.product-card-link.font": *home
-    "tokens.components.product-card-link.use": *home
+    - { id: home-live, kind: product-surface, url: "https://www.samsung.com/sec/", captured: "2026-07-13" }
+    - { id: ai-live, kind: product-surface, url: "https://www.samsung.com/sec/ai-products/", captured: "2026-07-13" }
+    - { id: brand-live, kind: product-surface, url: "https://www.samsung.com/sec/about-us/brand-identity/", captured: "2026-07-13" }
+    - { id: one-ui-color, kind: official-doc, url: "https://developer.samsung.com/one-ui/color/system.html", captured: "2026-07-13" }
+    - { id: samsungone-font, kind: official-doc, url: "https://developer.samsung.com/design-system/font", captured: "2026-07-13" }
+    - { id: sharp-sans-brand, kind: official-doc, url: "https://www.samsung.com/bd/about-us/brand-identity/color-and-typo/", captured: "2026-07-13" }
+    - { id: brand-story, kind: official-doc, url: "https://www.samsung.com/sec/about-us/brand-identity/brand-story/", captured: "2026-07-13" }
   conflicts: []
+  claims:
+    "tokens.colors.primary": &home { surface_id: home, source_id: home-live, method: live-inspect, captured: "2026-07-13" }
+    "tokens.colors.canvas": *home
+    "tokens.colors.surface": &ai { surface_id: ai-products, source_id: ai-live, method: live-inspect, captured: "2026-07-13" }
+    "tokens.colors.foreground": *ai
+    "tokens.colors.muted": *home
+    "tokens.colors.border": *home
+    "tokens.colors.link": *home
+    "tokens.colors.one-ui-primary": &oneui { surface_id: brand-identity, source_id: one-ui-color, method: official-doc, captured: "2026-07-13" }
+    "tokens.typography.family.display": &sharp { surface_id: home, source_id: home-live, method: fontfaceset-and-computed-style, captured: "2026-07-13" }
+    "tokens.typography.family.ui": &ui { surface_id: home, source_id: home-live, method: fontfaceset-and-computed-style, captured: "2026-07-13" }
+    "tokens.typography.display.size": *sharp
+    "tokens.typography.display.weight": *sharp
+    "tokens.typography.display.lineHeight": *sharp
+    "tokens.typography.display.use": *sharp
+    "tokens.typography.body.size": *ai
+    "tokens.typography.body.weight": *ai
+    "tokens.typography.body.lineHeight": *ai
+    "tokens.typography.body.use": *ai
+    "tokens.typography.action.size": *home
+    "tokens.typography.action.weight": *home
+    "tokens.typography.action.lineHeight": *home
+    "tokens.typography.action.use": *home
+    "tokens.spacing.nav-inline": *home
+    "tokens.spacing.action-inline": *home
+    "tokens.spacing.card-inset": *ai
+    "tokens.rounded.sharp": *ai
+    "tokens.rounded.pill": *home
+    "tokens.rounded.chip": *ai
+    "tokens.shadow.flat": *ai
+    "tokens.components.ai-product-tabs.type": *ai
+    "tokens.components.ai-product-tabs.fg": *ai
+    "tokens.components.ai-product-tabs.radius": *ai
+    "tokens.components.ai-product-tabs.padding": *ai
+    "tokens.components.ai-product-tabs.font": *ai
+    "tokens.components.ai-product-tabs.states": *ai
+    "tokens.components.ai-product-tabs.use": *ai
 tokens:
-  source: reconciled
+  source: live-extract
   extracted: "2026-07-13"
-  note: "Current product home and corporate-information surfaces are separate from DIVE, marketing, and unobserved interaction states."
   colors:
-    ink: "#000000"
+    primary: "#000000"
     canvas: "#ffffff"
-    inverse: "#ffffff"
-    link-product: "#0070f0"
-    link-corporate: "#1e75d6"
+    surface: "#f7f7f7"
+    foreground: "#000000"
+    muted: "#707070"
+    border: "#dddddd"
+    link: "#007aff"
+    one-ui-primary: "#0381fe"
   typography:
-    family: { sans: "YouandiNewKr" }
-    hero: { size: 40, weight: 600, lineHeight: 52, use: "Product-home h2 headings" }
-    corporate-hero: { size: 54, weight: 700, lineHeight: 80, use: "Corporate-information h2 headings on the two captured routes" }
-    nav: { size: 18, weight: 500, lineHeight: 26, use: "Product-home second-level navigation links" }
-    card-title: { size: 16, weight: 500, lineHeight: 22, use: "Product-card title labels" }
-  spacing:
-    nav-inline: 20
-    corporate-action-inline: 29
-  rounded:
-    corporate-outline-action: 3
-    carousel-control: 5
+    family: { display: "Samsung Sharp Sans", ui: "SamsungOneKorean" }
+    display: { size: 24, weight: 700, lineHeight: 32, use: "Observed product-card heading on the AI products surface" }
+    body: { size: 16, weight: 400, lineHeight: 21.2798, use: "Observed product-card body on the AI products surface" }
+    action: { size: 14, weight: 700, lineHeight: 19, use: "Observed contained CTA label on the Samsung Korea homepage" }
+  spacing: { nav-inline: 12, action-inline: 24, card-inset: 32 }
+  rounded: { sharp: 0, pill: 20, chip: 40 }
   shadow:
     flat: "none"
   components:
-    product-card-link: { type: card, fg: "#000000", font: "16px / 400 / platform system stack", use: "Product-home card link; transparent, borderless default" }
+    ai-product-tabs: { type: tab, fg: "#000000", radius: 0, padding: "4px 0px", font: "18px/700 SamsungOneKorean", states: "selected / tab-selected observed", use: "AI products `tab__item-title`; selector surface-2::[data-omd-capture=\"25\"]" }
   components_harvested: true
 ---
+
 ## 1. Visual Theme & Atmosphere
 
-Hyundai Card is a Korean credit-card company whose identity reaches beyond payment products into card design, cultural programming, and branded libraries. Its most recognizable visual asset is Youandi: the company introduced the proprietary typeface in 2003, then renewed it as YouandiNew for contemporary digital media. Hyundai Card’s own account places the card plate’s proportions inside the letterforms, treating type as a carrier of brand identity rather than as a decorative layer. That history is visible on the current captured product home, where loaded YouandiNewKr leads product headings and navigation, while the corporate-information routes use a larger white-on-dark display treatment. The live product routes are not a uniform monochrome system: black and white form the common base, but their product and corporate links use distinct blue values. DIVE, the Design Library, and other cultural/marketing surfaces are meaningful brand context, but were not used to fill product tokens in this reference.
+Samsung Electronics presents consumer devices, services, and its Galaxy ecosystem across a broad public web estate. Its Korean public commerce and AI-product pages use a quiet product frame: white or pale-gray surfaces, black typography, contained black calls to action, and large device imagery. Samsung’s official brand story frames this product work within human-driven innovation and describes its expression as bold, genuine, contemporary, and playful; the captured commerce treatment is one restrained application of that wider identity rather than a substitute for it. The official One UI system is a separate platform domain, designed for comfortable and responsive experiences across Galaxy devices. This reference therefore preserves the observed public-web grammar while keeping One UI’s documented blue and component guidance separate from web-commerce claims. [Samsung brand story](https://www.samsung.com/sec/about-us/brand-identity/brand-story/) · [One UI overview](https://developer.samsung.com/one-ui/index.html)
+
+The supplied 2026-07-13 evidence covers a Korean homepage, an AI-products page, and the Korean brand-identity page at one desktop viewport. The homepage provides the measured contained and outlined CTA patterns; the AI page provides the product-card and selected-tab patterns; the brand-identity page is retained as an official brand/documentation surface. It does not cover checkout, sign-in, native Galaxy apps, or a general Samsung component library.
+
+**Key characteristics:**
+- Black `#000000` contained CTA and primary text on the captured Korean public web surfaces
+- White `#ffffff` canvas and `#f7f7f7` product/search surface, with no representative box shadow
+- Samsung Sharp Sans for observed display headings and SamsungOneKorean for observed Korean UI/body text
+- 20px contained-CTA and AI-product media-card corners; 0px selected-tab title treatment
+- One UI blue `#0381fe` is an official mobile-system token, not a substitute for the captured commerce CTA
 
 ## 2. Color Palette & Roles
 
-The three supplied current captures share black text and white page fields. Two blue link treatments are surface-specific, so neither is promoted as a universal brand primary.
+### Captured Korean public web surfaces
+- **Primary action and foreground** (`#000000`): observed on the homepage contained CTA and across the AI-product card/title treatments.
+- **Canvas** (`#ffffff`): observed homepage and product-card background.
+- **Product/search surface** (`#f7f7f7`): observed on the AI page’s pressed search control and on official/commerce surface treatments.
+- **Muted text** (`#707070`): repeated computed text color in the supplied capture; retain for secondary content only.
+- **Border** (`#dddddd`): observed on homepage carousel-control chrome; not promoted as a universal product-card border.
+- **Link** (`#007aff`): observed homepage text/link color; it is separate from the black contained CTA.
 
-| Role | Value | Usage and evidence boundary |
-| --- | --- | --- |
-| Ink | #000000 | Current product home and both corporate-information routes; text and border observations |
-| Canvas | #FFFFFF | Current captured surface background observations |
-| Inverse text | #FFFFFF | Corporate-information hero/action context; not a global text token |
-| Product link | #0070F0 | Product-home detail links only |
-| Corporate link | #1E75D6 | Corporate-information links only |
-
-The prior DIVE-only red and green content tags are omitted: they were not observed in this product/corporate packet and cannot describe the current product token set.
+### One UI documentation boundary
+- **One UI primary** (`#0381fe`): Samsung’s official One UI color guidance assigns it to floating action buttons and sliders. It belongs to the platform design-system source, not to the captured Korean commerce CTA. [Color system and usage](https://developer.samsung.com/one-ui/color/system.html)
 
 ## 3. Typography Rules
 
-**Official product-use.** Hyundai Card says that it has used Youandi for product branding and official company documents since 2003; the 2021 renewal, YouandiNew, was designed for digital environments, readability, Korean/English balance, and variable-font use. The official account describes it as a proprietary corporate typeface, not a public web-font distribution or open-license announcement.
+### Evidence classes
 
-**Live computed surface-use.** `YouandiNewKr` is the only verified branded family in this packet: it is the computed family on 60 visible heading, navigation, and text observations, has a loaded FontFace match, and resolves to Hyundai Card-hosted `YouandiNewKrTitle` font files. The product home uses 40px/600/52px `h2` headings and 18px/500/26px second-level links; the two corporate-information pages use 54px/700/80px `h2` headings.
+**Official product-use and brand context.** Samsung’s design-system font page describes SamsungOne as the family that gives its products a consistent voice, with localized fonts supporting a universal Samsung experience. Samsung’s official brand-identity typography page separately identifies Samsung Sharp Sans Bold and Medium as brand type specimens. Those pages establish family and brand context; they do not turn every official face into a public-web UI token. [Samsung fonts](https://developer.samsung.com/design-system/font) · [Samsung Sharp Sans specimens](https://www.samsung.com/bd/about-us/brand-identity/color-and-typo/)
 
-**System use.** A platform stack is the first computed family on 351 ordinary body, card, button, and text observations. It is an observed runtime fallback/utility stack, not a substitute rendering of YouandiNewKr and not a brand-font claim. Product-card labels are observed at 16px/500/22px in that stack.
+**Live computed surface-use.** The supplied capture records `SamsungOneKorean` as loaded/high with 1,297 visible uses across body, button, menu, tab, card, and heading roles, with `@font-face` sources on Samsung domains. `SamsungSharpSans` is likewise loaded/high with 76 visible heading/text uses and Samsung-hosted FontFace sources. On the AI-products page, a repeated heading is 24px/700/32px Samsung Sharp Sans; a repeated product-card body is approximately 16px/400/21.2798px SamsungOneKorean. The homepage contained CTA is 14px/700/19px SamsungOneKorean.
 
-**Declared-only assets.** `Spoqa Han Sans Neo`, `YouandiModernHEB`, `YouandiModernTR`, and `YouandModern` have `@font-face` source declarations in the capture but no visible first-family usage. They remain declared-only. A password-input face named `pass` is loaded for two inputs and is not a brand type token.
+**Official distributed brand asset / license boundary.** Samsung Design publishes SamsungOne specimens and a PDF download, but the first-party sources reviewed here do not provide a transferable public font-license grant. Keep official specimen and history material as context; do not infer permission to redistribute the webfont files or substitute a system font. [SamsungOne](https://design.samsung.com/global/contents/samsungone/index.html)
 
-**License boundary.** The official font history establishes Hyundai Card’s ownership and internal product/document use. No public redistribution license or browser-consumable licensing terms were found in the official sources consulted; do not infer permission to ship the font outside its supplied Hyundai Card sources.
+**Declared-only.** The artifact found Samsung Korea Sans, SamsungOne, SamsungSharpGraphic, SamsungSSBody, SamsungSSHead, Samsung Sharp Sans mixed/normal, NanumBarunBold, and several icon faces declared with `@font-face` but without visible computed use. They remain declared assets, not UI-family tokens.
+
+**System/unresolved.** Dotum, Apple SD Gothic Neo, Arial, and `sans-serif` occur only as fallbacks in the captured computed stacks. No runtime availability authorizes their use as Samsung substitutes. Additional locales, native One UI font behavior, and all uncaptured pages remain unresolved.
 
 ## 4. Component Stylings
 
-### Product-home navigation link
+### Homepage calls to action
 
-**Second-level link**
-- Background: transparent
-- Text: #000000
-- Border: none
+**Contained CTA — Korean homepage**
+- Background: `#000000`
+- Text: `#ffffff`
+- Border: 1px solid `#000000`
+- Radius: 20px
+- Padding: 10px 24px 9px
+- Height: 40px
+- Font: 14px / 700 / SamsungOneKorean
+- Use: `home::[data-omd-capture="26"]`, class `cta cta-ntrns-fild`; 36 occurrences on the captured homepage.
+
+**Outlined CTA — Korean homepage**
+- Text: `#000000`
+- Border: 1px solid `#000000`
+- Radius: 20px
+- Padding: 10px 24px 9px
+- Height: 40px
+- Font: 14px / 700 / SamsungOneKorean
+- Use: `home::[data-omd-capture="20"]`, class `cta cta-outl`; six homepage occurrences. Its computed background is transparent, so no white fill is asserted.
+
+### AI-product content
+
+**Product media card — AI products**
+- Background: `#ffffff`
+- Radius: 20px
+- Use: `surface-2::div`, class `showcase-card-tab-card__img-wrap`; a 330px-square observed media wrapper. The surrounding card is not asserted as a universal commerce-card pattern.
+
+**Selected product tab title — AI products**
+- Text: `#000000`
 - Radius: 0px
-- Padding: 0px 20px
-- Font: 18px / 500 / YouandiNewKr
-- Use: `home::[data-omd-capture="1"–"7"]` static second-level navigation links on the product home
+- Padding: 4px 0px
+- Font: 18px / 700 / SamsungOneKorean
+- Use: `surface-2::[data-omd-capture="25"]`, class `tab__item-title`.
+- Selected: `selected` and `tab-selected` were observed by three collector tab interactions. No selected underline, panel geometry, or unmeasured color is inferred.
 
-### Product-card link
+### Observed state boundaries
 
-**Default**
-- Background: transparent
-- Text: #000000
-- Border: none
-- Radius: 0px
-- Font: 16px / 400 / platform system stack
-- Use: `home::[data-omd-capture="55"–"84"]` product-card links; only the default was captured
+The capture records a pressed underlined CTA on the homepage, pressed search controls on the AI and brand-identity surfaces, disabled carousel arrows on the homepage, three selected-tab interactions on the AI-products surface, and an expanded/menu-open brand-identity menu. Only the selected product-tab state has enough matching component provenance to be represented in the machine-readable component token. No generic hover, focus, error, dialog, toast, or checkout state is asserted.
 
-### Corporate-information action
-
-**Outline action**
-- Background: transparent
-- Text: #FFFFFF
-- Border: 1px solid rgba(255,255,255,0.6)
-- Radius: 3px
-- Padding: 0px 29px
-- Font: 16px / 400 / platform system stack
-- Use: `surface-2::[data-omd-capture="11"]` and `surface-3::[data-omd-capture="12"]`; corporate-information routes only
-
-No hover, focus, pressed, disabled, error, menu, dialog, or toast state is included: the supplied collector reports zero interaction expansions and zero observed states.
+---
+**Verified:** 2026-07-13
+**Tier 1 sources:** https://www.samsung.com/sec/, https://www.samsung.com/sec/ai-products/, https://www.samsung.com/sec/about-us/brand-identity/, https://developer.samsung.com/one-ui/color/system.html, https://developer.samsung.com/design-system/font
+**Tier 2 sources:** https://getdesign.md/samsung and https://styles.refero.design/?q=samsung were both attempted through built-in web retrieval; both returned an internal error, so neither supplied a value or an absence determination.
+**Resolution note:** The prior universal e-commerce filter/input/card/shadow/state rules were removed because this packet did not observe their matching current component provenance. One UI blue remains documentation-only rather than a commerce CTA token.
+**Conflicts unresolved:** none
 
 ## 5. Layout Principles
 
-The captured product home establishes hierarchy through a 40px YouandiNewKr heading, 18px second-level navigation, and transparent product-card links rather than a documented card-container recipe. Corporate-information routes use a separate 54px inverse hero and compact 3px outline action. Treat those as surface-specific compositions; there is no captured evidence for a shared responsive grid, spacing scale, or universal card treatment.
+The one captured desktop viewport repeatedly exposes 12px navigation insets, 24px horizontal CTA padding, and a 32px product-card text inset. Treat these as local, observed spacing values rather than a complete Samsung grid scale. The capture does not compare breakpoints, measure a checkout layout, or establish a universal product-listing grid.
 
 ## 6. Depth & Elevation
 
-The captured representatives report `box-shadow: none`. This supports a flat default for the retained components only. It does not establish that Hyundai Card never uses shadows, gradients, or elevation on other product, marketing, or native-app surfaces.
+Representative contained CTAs, AI-product cards, tabs, and menu structures in the artifact report `box-shadow: none`. Hierarchy in these observed surfaces comes from product imagery, white versus `#f7f7f7` planes, typography, and borders. No modal, tooltip, or floating-panel elevation is claimed.
 
 ## 7. Do's and Don'ts
 
 ### Do
-
-- Use YouandiNewKr only when it is licensed and actually available from Hyundai Card-controlled sources.
-- Preserve the product/corporate split: black-and-white foundation, product link #0070F0, corporate link #1E75D6.
-- Keep the observed product navigation and card links transparent and borderless.
-- Use the 3px corporate outline action only for the corporate-information context from which it was measured.
+- Use the contained homepage CTA only with the measured black/white, 20px-corner, 40px-high treatment.
+- Keep SamsungOneKorean and Samsung Sharp Sans tied to their recorded live-use roles and loaded FontFace evidence.
+- Treat the AI-product selected tab as its own 18px/700, 0px-radius pattern with the observed selected state.
+- Keep One UI documentation values visibly separate from Korean public-commerce measurements.
 
 ### Don't
-
-- Treat DIVE tag colors or Design Library visuals as current payment-product tokens.
-- Replace unavailable YouandiNewKr with a system face while labeling it Youandi.
-- Generalize the corporate white outline action into a product-home primary button.
-- Invent interaction states, motion, a spacing scale, or component variants absent from the capture.
+- Do not promote declared-only faces or system fallbacks as loaded Samsung UI fonts.
+- Do not apply One UI `#0381fe` as a replacement for the captured black public-web CTA.
+- Do not infer a product-card shadow, checkout field, generic filter control, or error state from unobserved variants.
+- Do not treat the brand-identity documentation page as native Galaxy-app evidence.
 
 ## 8. Responsive Behavior
 
-The supplied evidence is desktop-only at 1440×900. It establishes typography and default component values on the listed routes, not a responsive contract. Preserve the surface split and remeasure at target breakpoints before assigning mobile dimensions, stacking behavior, or touch states.
+No viewport comparison was included in the supplied artifact. The values above describe the captured desktop surfaces only; no Samsung-specific mobile navigation, grid collapse, touch target, or breakpoint geometry is asserted.
 
 ## 9. Agent Prompt Guide
 
-When using the verified current Hyundai Card web cues, prompt for a restrained black-and-white base with surface-local blue links, not a generic monochrome luxury system. Use licensed YouandiNewKr for verified display/nav moments only; otherwise keep the observed platform stack honestly labeled. On a product-home composition, use transparent 18px/500 YouandiNewKr second-level links with 20px inline padding and transparent product-card links. Do not import DIVE category tags, a 48px pill, Noto Sans KR, or any invented state behavior. Keep the 54px inverse corporate hero and 3px white outline action confined to corporate-information-like contexts.
+### Quick reference
+- Homepage contained CTA: `#000000` background, `#ffffff` text, 1px black border, 20px radius, 10px 24px 9px padding, 40px height, SamsungOneKorean 14px/700.
+- AI-product selected tab: black 18px/700 SamsungOneKorean text, 4px 0px padding, sharp corners; selected/tab-selected is observed.
+- AI-product media wrapper: white, 20px radius, no observed shadow.
+
+### Boundary-aware prompt
+- "Create a Korean public-web CTA using Samsung’s captured homepage treatment: black background, white text, 20px radius, 40px height, 10px 24px 9px padding, and SamsungOneKorean 14px/700. Do not use One UI blue or infer hover/focus values."
 
 ## 10. Voice & Tone
 
-The official materials frame Hyundai Card as a financial company that has deliberately built a wider culture-and-design practice through its branded spaces, card plates, and typeface. The usable voice is therefore precise, design-literate, and concrete rather than “luxury” by default.
-
-| Do | Don't |
-| --- | --- |
-| Describe a specific product, design choice, or cultural program plainly. | Claim an unmeasured visual rule as a universal brand mandate. |
-| Let Youandi’s card-derived construction carry a factual brand story. | Use vague premium language in place of evidence. |
-| Keep product and cultural surfaces named and separated. | Fold DIVE or library material into payment-product UI claims. |
+Samsung’s official brand story calls its expression bold, genuine, contemporary, and playful. On the captured Korean public surfaces, that broader tone becomes direct category and action language rather than a claim about every channel or locale. Use concise, specific labels that name the product or action; do not invent marketing superlatives, price claims, or product benefits. [Samsung brand story](https://www.samsung.com/sec/about-us/brand-identity/brand-story/)
 
 ## 11. Brand Narrative
 
-Hyundai Card pairs credit-card products with a long-running cultural and design program. Its official company overview describes a current move toward a technology-company identity while continuing the cultural work expressed through libraries, performance programs, branded spaces, card plates, and Youandi. That makes the company’s visual story broader than one web page or one card campaign.
+Samsung’s official Korean brand story dates the company’s story to 1969 and states a purpose of creating human-driven innovations that overcome barriers for a better world. It also describes people and their concerns as central to what Samsung creates, and names values around people, excellence, change, integrity, and co-prosperity. This provides context for the consumer-device and service ecosystem; it does not prove a specific public-web token. [Samsung brand story](https://www.samsung.com/sec/about-us/brand-identity/brand-story/)
 
-Youandi is the clearest continuity thread. Hyundai Card developed the first version in 2003; its official account says the original letterforms drew from the physical shape and proportions of a card. The 2021 YouandiNew renewal rebuilt that asset for evolving digital media, expanded its range, and added variable-font capability. The current web capture corroborates that the newer family is not merely historical: `YouandiNewKr` is loaded and visible on current product and corporate headings.
+The current design expression spans more than the captured commerce pages. Samsung’s brand material treats color, typography, logo, and sound as distinct visual/experiential assets, while One UI documents a platform system for phones, tablets, wearables, earbuds, and PCs. This reference retains those domains separately so a marketplace CTA is not presented as a native One UI control. [Brand identity](https://www.samsung.com/sec/about-us/brand-identity/) · [One UI overview](https://developer.samsung.com/one-ui/index.html)
 
 ## 12. Principles
 
-1. **Build identity into useful assets.** Youandi is presented as a brand asset used in product branding and official documents.
-   *UI implication:* preserve the verified family distinction instead of approximating it with a system font.
-2. **Let the product and the cultural program remain distinct evidence domains.** The company’s libraries and DIVE expand brand context, but they are not product-component documentation.
-   *UI implication:* do not transfer their colors or patterns into payment-product tokens without direct proof.
-3. **Use surface-local rules.** The current product home and corporate-information routes intentionally expose different link and inverse-action treatments.
-   *UI implication:* name a component’s source surface before reusing its geometry or colors.
+1. **Put people and tasks first.** Samsung’s brand story and One UI guidance both center human experience and focused tasks. *UI implication:* state the action clearly and avoid decorative flow interruptions.
+2. **Use a connected typographic voice.** Samsung positions SamsungOne as a localized, universal family. *UI implication:* preserve the observed SamsungOneKorean UI role; do not substitute a system face as if it were SamsungOne.
+3. **Keep surface domains distinct.** The public Korean web and One UI are both official but have different evidence and component contexts. *UI implication:* use `#0381fe` only when implementing the documented One UI platform context, not as a generic Samsung-commerce action color.
+4. **Retain observed component boundaries.** The packet has exact evidence for CTA, media-card, and selected-tab treatments only. *UI implication:* leave unobserved variants absent instead of filling them from a generic Samsung pattern.
 
 ## 13. Personas
 
-These are service-context archetypes, not claims about private user research.
+No first-party audience research suitable for named personas was collected in this packet. Do not invent demographic personas.
 
-- **Card product visitor** — needs a product route whose navigation, cards, and links remain clear without relying on cultural-site styling.
-- **Corporate-information reader** — encounters a high-contrast informational hero and outline action on Hyundai Card’s company pages.
-- **Culture-program visitor** — may meet DIVE or a Hyundai Card library; that context can inform brand understanding but must not be mistaken for payment-product UI evidence.
+- **[FILL IN: validated Samsung Korea public-web audience]** — add only with a Samsung first-party audience or product-research source.
+- **[FILL IN: validated Galaxy platform audience]** — add only with a Samsung first-party audience or product-research source.
 
 ## 14. States
 
-The packet captured default styles only. It reports `interactionCount: 0`, `interactionKinds: 0`, and `observedStates: 0`; no state token is published. Reinspect the relevant live surface before specifying any of the following:
+| State | Captured evidence boundary |
+|---|---|
+| Selected tab | AI-products `tab__item-title` records `selected` and `tab-selected`; color/padding/type are retained in §4. |
+| Pressed text CTA | Homepage underlined CTA records `pressed`; it is a distinct text-link treatment, not a primary-CTA state value. |
+| Pressed search control | AI-products and brand-identity search controls record `pressed`; their values are not promoted into a generic search component. |
+| Disabled carousel arrow | Homepage carousel arrows record `disabled`; no opacity or disabled-button rule is asserted. |
+| Expanded menu | Brand-identity navigation records `expanded` / `menu-open`; panel geometry and shadow were not promoted. |
 
-| Category | Status |
-| --- | --- |
-| Default | Observed only for the three §4 component defaults |
-| Hover | Not observed |
-| Focus | Not observed |
-| Pressed | Not observed |
-| Disabled | Not observed |
-| Error | Not observed |
-| Loading | Not observed |
-| Success | Not observed |
-| Empty | Not observed |
-| Skeleton | Not observed |
+No current capture evidence supports universal loading, empty, form-error, success, skeleton, or modal-state rules.
 
 ## 15. Motion & Easing
 
-No transition duration, easing curve, or motion state was observed in the supplied capture. Do not derive motion guidance from the flat default component styles; retain motion as unresolved until a relevant live surface is measured.
-
----
-**Verified:** 2026-07-13
-**Tier 1 sources:** https://www.hyundaicard.com/index.jsp (current product home, supplied computed-style capture), https://www.hyundaicard.com/about/ceh/ho/cehho0101_01.hc and https://www.hyundaicard.com/about/ckh/ho/ckhho0101_01.hc (current corporate-information routes, supplied capture), https://newsroom.hyundaicard.com/front/board/Hyundai-Card-branding-through-typeface?country=en (official Youandi/YouandiNew history and product-use context), https://img.hyundaicard.com/about/common/en/pageView.hc?id=ceabi0201_01 (official company overview), https://newsroom.hyundaicard.com/front/board/Hyundai-Card-Design-Library?country=en (official cultural/design context; not token evidence)
-**Tier 2 sources:** https://getdesign.md/hyundaicard (attempted; built-in fetch path rejected the direct URL and search yielded no importable record), https://styles.refero.design/?q=Hyundai%20Card (attempted; built-in fetch path rejected the direct URL and search yielded no importable record). No Tier 2 values were promoted.
-**Resolution note:** Prior DIVE-only palette, Noto Sans KR body, 26px heading, 24px/48px pill, category tags, and interaction guidance were removed because this packet did not corroborate them on current product/corporate routes.
-**Conflicts unresolved:** none
-**Proof:** see .verification.md (## Proof — Tier 1 live inspect)
+The artifact records state and interaction kinds, not timing curves or transition durations. One UI documentation includes a separate motion section, but no motion token is promoted here without a matching captured surface/value. Preserve reduced-motion and accessibility requirements in an implementation without presenting them as measured Samsung commerce motion.
 
 
 ---

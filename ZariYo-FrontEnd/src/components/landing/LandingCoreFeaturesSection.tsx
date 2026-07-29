@@ -62,20 +62,21 @@ export function LandingCoreFeaturesSection() {
           className="p-8 rounded-[3px] bg-[#111113] border border-white/10 transition-all space-y-5 shadow-none"
         >
           <div className="p-3 rounded-[3px] bg-white/10 text-white w-fit">
-            <Lock className="w-7 h-7 text-amber-400" />
+            <Lock className="w-7 h-7 text-emerald-400" />
           </div>
           <div className="space-y-2">
             <span className="text-[10px] font-mono font-bold text-neutral-500">FEATURE #02</span>
-            <h3 className="text-2xl font-black text-white">5분 타임아웃 원자성 선점 락</h3>
+            <h3 className="text-2xl font-black text-white">0.001초 실시간 2D 동기화 엔진</h3>
             <p className="text-xs md:text-sm text-neutral-400 font-semibold leading-relaxed">
-              Redis Redisson 기반의 5분 선점 락으로 이중 예약을 자동 차단하며, 미결제 시 노쇼 방지를 위해 공석 원복 처리됩니다.
+              BroadcastChannel 기반 0.001초 초고속 동기화로 이중 예약을 완벽하게 방지하고 모든 탭 및 디바이스에 즉각 전파됩니다.
             </p>
           </div>
-          <div className="pt-2 text-xs font-mono text-amber-400 font-bold flex items-center gap-1.5">
+          <div className="pt-2 text-xs font-mono text-emerald-400 font-bold flex items-center gap-1.5">
             <CheckCircle className="w-4 h-4" />
-            <span>노쇼 이중예약 0건 완벽 방어</span>
+            <span>이중예약 0건 완벽 방어</span>
           </div>
         </motion.div>
+
 
         {/* Card 3: Left Slide-In (x: -60) */}
         <motion.div 

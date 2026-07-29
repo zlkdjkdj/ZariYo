@@ -37,32 +37,36 @@ export function DashboardReceiptPane({
   onUpdateDeliveryStatus,
 }: DashboardReceiptPaneProps) {
   return (
-    <div className="bg-white dark:bg-[#09090b] border border-neutral-300 dark:border-neutral-800 rounded-[3px] p-6 space-y-6 text-left select-none">
+    <div className="bg-white dark:bg-[#121214] border border-[#dddddd] dark:border-neutral-800 rounded-[20px] p-6 space-y-6 text-left select-none shadow-sm">
       
       {/* Header depending on Active Tab */}
-      <div className="flex items-center justify-between pb-4 border-b border-neutral-200 dark:border-white/10">
-        <div className="flex items-center gap-2">
-          <Receipt className="w-5 h-5 text-black dark:text-white" />
+      <div className="flex items-center justify-between pb-4 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2.5 bg-[#f7f7f7] dark:bg-white/10 rounded-[20px] text-black dark:text-white">
+            <Receipt className="w-5 h-5 text-[#0381fe]" />
+          </div>
           <div>
-            <h3 className="text-base font-black text-black dark:text-white">
+            <h3 className="text-base font-bold text-neutral-900 dark:text-white font-sans">
               {activeTab === 'delivery' 
                 ? (selectedDelivery ? `[${selectedDelivery.orderNo}] 배달/포장 수선서` : '배달/포장 주문 선택')
                 : (selectedBillTable ? `${selectedBillTable.label} 영수증 수선서` : '테이블 선택 필요')}
             </h3>
-            <p className="text-[10px] font-mono text-neutral-500 font-semibold">SIDE-BY-SIDE LIVE RECEIPT</p>
+            <p className="text-[10px] font-mono text-[#0381fe] font-bold tracking-widest uppercase">SAMSUNG LIVE COMMERCE RECEIPT</p>
           </div>
         </div>
         
         {activeTab !== 'delivery' && selectedBillTable && (
           <button
             onClick={onOpenAddMenuModal}
-            className="px-3 py-1.5 rounded-[3px] bg-black dark:bg-white text-white dark:text-black font-extrabold text-xs flex items-center gap-1.5 cursor-pointer hover:opacity-90"
+            className="h-[40px] px-4 py-2 rounded-[20px] bg-black text-white dark:bg-white dark:text-black font-bold text-xs flex items-center gap-1.5 cursor-pointer hover:opacity-90 transition-all border border-black dark:border-white"
           >
-            <PlusCircle className="w-4 h-4" />
+            <PlusCircle className="w-4 h-4 text-[#0381fe]" />
             <span>메뉴 추가</span>
           </button>
         )}
       </div>
+
+
 
       {/* Delivery Specific Order Receipt Panel */}
       {activeTab === 'delivery' ? (
@@ -181,34 +185,37 @@ export function DashboardReceiptPane({
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Action Buttons - Samsung Contained & Outlined CTA Pattern */}
             <div className="grid grid-cols-2 gap-3 pt-2">
               <button
                 onClick={() => {
                   if (selectedBillTable) {
                     onControlState(selectedBillTable.id, selectedBillTable.label, 'empty');
-                    alert(`${selectedBillTable.label} 번 테이블 결제 승인 및 퇴석 원복 처리가 완료되었습니다.`);
+                    alert(`${selectedBillTable.label} 번 테이블 삼성 페이 원터치 결제 승인 및 퇴석 처리가 완료되었습니다.`);
                   }
                 }}
-                className="py-3.5 rounded-[3px] bg-black dark:bg-white text-white dark:text-black font-black text-xs cursor-pointer hover:opacity-90 flex items-center justify-center gap-1.5"
+                className="h-[40px] rounded-[20px] bg-black text-white dark:bg-white dark:text-black font-bold text-xs cursor-pointer hover:opacity-90 flex items-center justify-center gap-2 border border-black dark:border-white shadow-sm"
               >
-                <CreditCard className="w-4 h-4" />
-                <span>결제 & 퇴석 완료</span>
+                <CreditCard className="w-4 h-4 text-[#0381fe]" />
+                <span>삼성 페이 원터치 결제</span>
               </button>
 
               <button
                 onClick={() => {
                   if (selectedBillTable) {
                     onControlState(selectedBillTable.id, selectedBillTable.label, 'empty');
-                    alert(`${selectedBillTable.label} 번 테이블의 5분 선점 락이 강제 해제되었습니다.`);
+                    alert(`${selectedBillTable.label} 번 테이블이 빈 좌석으로 초기화되었습니다.`);
                   }
                 }}
-                className="py-3.5 rounded-[3px] bg-neutral-100 dark:bg-white/10 hover:bg-neutral-200 dark:hover:bg-white/20 text-neutral-800 dark:text-neutral-200 font-extrabold text-xs cursor-pointer border border-neutral-300 dark:border-white/10 flex items-center justify-center gap-1.5"
+
+                className="h-[40px] rounded-[20px] bg-transparent text-black dark:text-white font-bold text-xs cursor-pointer border border-black dark:border-white flex items-center justify-center gap-1.5 hover:bg-[#f7f7f7] dark:hover:bg-white/10"
               >
                 <X className="w-4 h-4" />
-                <span>선점 락 해제</span>
+                <span>테이블 수동 비우기</span>
               </button>
             </div>
+
+
 
           </div>
         ) : (

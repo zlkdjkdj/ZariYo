@@ -29,90 +29,118 @@ export function LandingHeroSection() {
   };
 
   return (
-    <section className="relative min-h-[90vh] flex flex-col justify-center items-center px-6 text-center overflow-hidden border-b border-white/10 select-none">
+    <section className="relative min-h-[92vh] flex flex-col justify-center items-center px-6 py-20 overflow-hidden select-none bg-[#000000] text-white">
       
-      {/* Visual Background Image Layer */}
-      <motion.div 
-        initial={{ scale: 1.15, opacity: 0.2 }}
-        animate={{ scale: 1.0, opacity: 0.35 }}
-        transition={{ duration: 1.8, ease: "easeOut" }}
-        className="absolute inset-0 bg-cover bg-center mix-blend-luminosity"
-        style={{ backgroundImage: `url('/images/hero_fullscreen_bg.png')` }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/80 to-transparent" />
-      
-      <div className="relative z-10 max-w-5xl mx-auto space-y-8 py-16">
+      {/* Visual Background Glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#0381fe]/15 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="relative z-10 max-w-6xl mx-auto space-y-12 text-center">
         
+        {/* Top One UI Pill Badge */}
         <motion.div 
-          initial={{ opacity: 0, y: -20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-[3px] bg-white/10 border border-white/20 backdrop-blur-md hover:border-amber-400/50 transition-colors"
+          className="inline-flex items-center gap-2.5 px-5 py-2 rounded-[20px] bg-[#f7f7f7]/10 border border-[#0381fe]/40 backdrop-blur-md"
         >
-          <Zap className="w-4 h-4 text-amber-400 fill-amber-400 animate-bounce" />
-          <span className="text-xs font-mono font-black text-white tracking-widest uppercase">
-            REDEFINING CYBER STORE CONTROL ROOM
+          <span className="w-2.5 h-2.5 rounded-full bg-[#0381fe] animate-ping" />
+          <span className="text-xs font-mono font-bold text-[#0381fe] tracking-widest uppercase">
+            SAMSUNG ONE UI 6.0 STORE CONTROL ENGINE
           </span>
         </motion.div>
 
-        <motion.h1 
+        {/* Samsung Sharp Sans Main Display Heading */}
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.15 }}
-          className="text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.1]"
+          className="space-y-4"
         >
-          매장 관제의 패러다임을<br />
-          <span className="underline decoration-amber-400/50 underline-offset-8 bg-gradient-to-r from-white via-neutral-200 to-neutral-400 bg-clip-text text-transparent">
-            완전히 바꾸다
-          </span>
-        </motion.h1>
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-white tracking-tight leading-[1.12] font-display">
+            스마트 매장 관제의 미래,<br />
+            <span className="text-[#0381fe]">ZariYo One UI Ecosystem</span>
+          </h1>
+          <p className="text-base sm:text-xl text-[#707070] dark:text-neutral-300 font-normal max-w-3xl mx-auto leading-relaxed font-sans pt-2">
+            2D 실시간 도면 관제, 0.001초 주방 KDS 릴레이 및 배달/포장 통합 오케스트레이션.<br />
+            삼성 One UI 디자인 철학을 담아 가장 직관적이고 아름답게 통제하세요.
+          </p>
+        </motion.div>
 
-        <motion.p 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-base sm:text-xl text-neutral-300 font-semibold max-w-3xl mx-auto leading-relaxed"
-        >
-          실시간 2D 매장 좌석 관제, 5분 원자성 선점 락, 주방 KDS 조리 릴레이 및 배달/포장 통합 관제 시스템.<br />
-          복잡한 매장 운영을 클릭 한 번으로 완벽하게 제어하세요.
-        </motion.p>
-
-        {/* Dual Power CTA Buttons */}
+        {/* Samsung Contained & Outlined CTA Pattern */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.45 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
         >
           {token && user ? (
             <button
               onClick={handleDashboardClick}
-              className="w-full sm:w-auto px-8 py-4 rounded-[3px] bg-amber-400 text-black hover:bg-amber-300 font-black text-sm cursor-pointer transition-all flex items-center justify-center gap-2 shadow-2xl hover:scale-105"
+              className="w-full sm:w-auto h-[44px] px-[28px] rounded-[20px] bg-white text-black hover:bg-neutral-200 font-bold text-[14px] leading-[19px] cursor-pointer transition-all flex items-center justify-center gap-2.5 shadow-xl hover:scale-[1.02]"
             >
-              <Zap className="w-4 h-4 text-black fill-black" />
-              <span>{user.role === 'ROLE_ADMIN' ? '어드민 관리판으로 이동' : '내 매장 대시보드로 진입'}</span>
-              <ArrowRight className="w-4 h-4" />
+              <Zap className="w-4 h-4 text-[#0381fe] fill-[#0381fe]" />
+              <span>{user.role === 'ROLE_ADMIN' ? '어드민 대시보드 진입' : '내 매장 대시보드로 이동'}</span>
+              <ArrowRight className="w-4 h-4 text-[#0381fe]" />
             </button>
           ) : (
             <button
               onClick={() => navigate('/login')}
-              className="w-full sm:w-auto px-8 py-4 rounded-[3px] bg-white text-black hover:bg-neutral-200 font-black text-sm cursor-pointer transition-all flex items-center justify-center gap-2 shadow-2xl hover:scale-105 hover:shadow-white/20"
+              className="w-full sm:w-auto h-[44px] px-[28px] rounded-[20px] bg-white text-black hover:bg-neutral-200 font-bold text-[14px] leading-[19px] cursor-pointer transition-all flex items-center justify-center gap-2.5 shadow-xl hover:scale-[1.02]"
             >
-              <span>사장님 시작하기 (로그인 / 가입)</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>사장님 시작하기 (무료 체계)</span>
+              <ArrowRight className="w-4 h-4 text-[#0381fe]" />
             </button>
           )}
 
           <button
             onClick={() => navigate('/reserve')}
-            className="w-full sm:w-auto px-8 py-4 rounded-[3px] bg-white/10 hover:bg-white/20 text-white border border-white/20 font-black text-sm cursor-pointer transition-all flex items-center justify-center gap-2 backdrop-blur-md hover:scale-105 hover:border-orange-400/50"
+            className="w-full sm:w-auto h-[44px] px-[28px] rounded-[20px] bg-transparent text-white border border-white/60 hover:bg-white/10 font-bold text-[14px] leading-[19px] cursor-pointer transition-all flex items-center justify-center gap-2.5 backdrop-blur-md hover:scale-[1.02]"
           >
-            <Utensils className="w-4 h-4 text-orange-400" />
+            <Utensils className="w-4 h-4 text-[#0381fe]" />
             <span>손님 2D 실시간 예약 & 키오스크</span>
           </button>
         </motion.div>
 
+        {/* Samsung Modular Interactive Feature Cards - 3 Column Layout */}
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.45 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-10 text-left"
+        >
+          <div className="p-8 rounded-[20px] bg-[#121214] border border-[#333333] space-y-4 hover:border-[#0381fe] transition-all group">
+            <div className="w-12 h-12 rounded-[20px] bg-[#0381fe]/15 text-[#0381fe] flex items-center justify-center font-bold text-lg">
+              01
+            </div>
+            <h3 className="text-xl font-bold text-white group-hover:text-[#0381fe] transition-colors">2D 실시간 관제 OS</h3>
+            <p className="text-xs text-[#707070] leading-relaxed">
+              매장 도면 위에서 실시간 좌석 상태, 영수증 수선서, 입금 및 퇴석 상태를 한눈에 통제합니다.
+            </p>
+          </div>
+
+          <div className="p-8 rounded-[20px] bg-[#121214] border border-[#333333] space-y-4 hover:border-[#0381fe] transition-all group">
+            <div className="w-12 h-12 rounded-[20px] bg-[#0381fe]/15 text-[#0381fe] flex items-center justify-center font-bold text-lg">
+              02
+            </div>
+            <h3 className="text-xl font-bold text-white group-hover:text-[#0381fe] transition-colors">0.001초 STOMP 릴레이</h3>
+            <p className="text-xs text-[#707070] leading-relaxed">
+              손님 키오스크에서 주문 넣는 순간 0.001초 만에 사장님 포스와 주방 KDS 화면에 동시 전파됩니다.
+            </p>
+          </div>
+
+          <div className="p-8 rounded-[20px] bg-[#121214] border border-[#333333] space-y-4 hover:border-[#0381fe] transition-all group">
+            <div className="w-12 h-12 rounded-[20px] bg-[#0381fe]/15 text-[#0381fe] flex items-center justify-center font-bold text-lg">
+              03
+            </div>
+            <h3 className="text-xl font-bold text-white group-hover:text-[#0381fe] transition-colors">통합 배달/포장 관제</h3>
+            <p className="text-xs text-[#707070] leading-relaxed">
+              배민, 쿠팡, 요기요 및 포장 수신부터 라이더 자동 배차 호출까지 단 하나의 스크린으로 완성합니다.
+            </p>
+          </div>
+        </motion.div>
+
       </div>
     </section>
+
   );
 }

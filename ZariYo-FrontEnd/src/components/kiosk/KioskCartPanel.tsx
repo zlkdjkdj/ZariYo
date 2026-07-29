@@ -22,53 +22,55 @@ export function KioskCartPanel({
   onConfirmOrder,
 }: KioskCartPanelProps) {
   return (
-    <div className="bg-white dark:bg-[#09090b] border-t md:border-t-0 md:border-l border-neutral-200 dark:border-white/10 p-6 flex flex-col justify-between select-none text-left h-full">
-      <div className="space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-white/10">
-          <div className="flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5 text-black dark:text-white" />
-            <h3 className="font-black text-base text-neutral-900 dark:text-white">주문 장바구니</h3>
+    <div className="bg-white dark:bg-[#121214] border-t md:border-t-0 md:border-l border-neutral-200 dark:border-neutral-800 p-5 sm:p-6 flex flex-col justify-between select-none text-left h-full shadow-sm">
+      <div className="space-y-5">
+        <div className="flex items-center justify-between pb-3.5 border-b border-neutral-200 dark:border-neutral-800">
+          <div className="flex items-center gap-2.5">
+            <ShoppingBag className="w-6 h-6 text-[#0381fe]" />
+            <h3 className="font-bold text-lg sm:text-xl text-neutral-900 dark:text-white font-sans">주문 장바구니</h3>
           </div>
-          <span className="text-xs font-mono font-bold text-neutral-500">{cart.length}개 메뉴</span>
+          <span className="text-xs sm:text-sm font-mono font-bold text-[#0381fe] bg-[#0381fe]/10 border border-[#0381fe]/30 px-3 py-1 rounded-[20px]">
+            {cart.length}개 메뉴
+          </span>
         </div>
 
         {cart.length === 0 ? (
-          <div className="py-16 text-center text-neutral-400 space-y-2">
-            <ShoppingBag className="w-10 h-10 mx-auto opacity-30" />
-            <p className="text-xs font-bold">장바구니가 비어 있습니다.<br />메뉴를 선택해 장바구니에 담아주세요.</p>
+          <div className="py-16 text-center text-neutral-400 space-y-3">
+            <ShoppingBag className="w-12 h-12 mx-auto opacity-30 text-[#0381fe]" />
+            <p className="text-sm font-bold leading-relaxed text-[#707070]">장바구니가 비어 있습니다.<br />메뉴를 선택해 장바구니에 담아주세요.</p>
           </div>
         ) : (
-          <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-1">
+          <div className="space-y-3.5 max-h-[50vh] overflow-y-auto pr-1">
             {cart.map((item, idx) => (
-              <div key={idx} className="p-3 bg-neutral-50 dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-none space-y-2">
+              <div key={idx} className="p-4 bg-[#f7f7f7] dark:bg-white/5 border border-neutral-200 dark:border-white/10 rounded-[20px] space-y-2.5 shadow-sm">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-black text-xs text-neutral-900 dark:text-white">{item.menu.name}</h4>
+                    <h4 className="font-bold text-sm sm:text-base text-neutral-900 dark:text-white leading-tight font-sans">{item.menu.name}</h4>
                     {item.selectedOptions.length > 0 && (
-                      <p className="text-[10px] text-neutral-500 font-bold">
+                      <p className="text-xs text-[#707070] font-bold mt-0.5">
                         {item.selectedOptions.map(o => `+${o.name}`).join(', ')}
                       </p>
                     )}
                   </div>
-                  <span className="font-mono text-xs font-black text-black dark:text-white">
+                  <span className="font-mono text-sm sm:text-base font-bold text-neutral-900 dark:text-white">
                     {item.itemTotalPrice.toLocaleString()}원
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center pt-1 border-t border-neutral-200/50 dark:border-white/5">
-                  <div className="flex items-center border border-neutral-300 dark:border-white/20">
-                    <button 
+                <div className="flex justify-between items-center pt-2 border-t border-neutral-200 dark:border-white/10">
+                  <div className="flex items-center border border-neutral-300 dark:border-white/20 rounded-[20px]">
+                    <button
                       onClick={() => onUpdateQty(idx, -1)}
-                      className="p-1 hover:bg-neutral-200 dark:hover:bg-white/10 text-neutral-700 dark:text-neutral-300 cursor-pointer"
+                      className="p-1.5 hover:bg-neutral-200 dark:hover:bg-white/10 rounded-l-[20px] transition-colors cursor-pointer"
                     >
-                      <Minus className="w-3 h-3" />
+                      <Minus className="w-3.5 h-3.5" />
                     </button>
-                    <span className="px-3 text-xs font-mono font-black">{item.quantity}</span>
-                    <button 
+                    <span className="px-3 font-mono font-bold text-xs">{item.quantity}</span>
+                    <button
                       onClick={() => onUpdateQty(idx, 1)}
-                      className="p-1 hover:bg-neutral-200 dark:hover:bg-white/10 text-neutral-700 dark:text-neutral-300 cursor-pointer"
+                      className="p-1.5 hover:bg-neutral-200 dark:hover:bg-white/10 rounded-r-[20px] transition-colors cursor-pointer"
                     >
-                      <Plus className="w-3 h-3" />
+                      <Plus className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
@@ -78,26 +80,27 @@ export function KioskCartPanel({
         )}
       </div>
 
-      {/* Cart Summary & Order Button */}
-      <div className="pt-4 border-t border-neutral-200 dark:border-white/10 space-y-3 mt-4">
-        <div className="flex justify-between items-center font-black text-base text-neutral-900 dark:text-white">
-          <span>총 결제 예정 금액</span>
-          <span className="font-mono text-xl">{cartTotalAmount.toLocaleString()}원</span>
+      {/* Cart Summary & Order Action Button - Samsung Pay 20px Pill Button */}
+      <div className="pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-4">
+        <div className="flex justify-between items-center text-lg sm:text-xl font-bold font-sans">
+          <span>총 결제금액</span>
+          <span className="font-mono text-[#0381fe]">{cartTotalAmount.toLocaleString()}원</span>
         </div>
 
         <button
-          disabled={cart.length === 0}
           onClick={onConfirmOrder}
-          className={`w-full py-4 rounded-none font-black text-sm cursor-pointer flex items-center justify-center gap-2 transition-all ${
-            cart.length === 0 
-              ? 'bg-neutral-200 text-neutral-400 dark:bg-white/10 dark:text-neutral-500 cursor-not-allowed' 
-              : 'bg-black text-white dark:bg-white dark:text-black hover:opacity-90 shadow-none'
+          disabled={cart.length === 0}
+          className={`w-full h-[44px] py-3 rounded-[20px] font-bold text-sm sm:text-base transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm ${
+            cart.length > 0
+              ? 'bg-black text-white dark:bg-white dark:text-black hover:opacity-90'
+              : 'bg-[#f7f7f7] text-neutral-400 dark:bg-white/5 border border-neutral-200 cursor-not-allowed'
           }`}
         >
-          <Check className="w-4 h-4" />
-          <span>5분 선점 락 주문 결제하기</span>
+          <Check className="w-5 h-5 text-[#0381fe]" />
+          <span>Samsung Pay 주문 완료하기</span>
         </button>
       </div>
+
     </div>
   );
 }

@@ -26,27 +26,29 @@ export function DashboardKdsPane({
   onUpdateDeliveryStatus,
 }: DashboardKdsPaneProps) {
   return (
-    <div className="bg-white dark:bg-[#09090b] border border-neutral-300 dark:border-neutral-800 rounded-[3px] p-6 space-y-6 h-full text-left">
+    <div className="bg-white dark:bg-[#121214] border border-[#dddddd] dark:border-neutral-800 rounded-[20px] p-6 space-y-6 h-full text-left shadow-sm">
       
       {/* KDS Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-white/10">
+      <div className="flex items-center justify-between pb-3.5 border-b border-neutral-200 dark:border-neutral-800">
         <div>
-          <span className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest">
-            INTEGRATED KITCHEN DISPLAY SYSTEM
+          <span className="text-[10px] font-mono font-bold text-[#0381fe] uppercase tracking-widest">
+            SAMSUNG ONE UI KITCHEN DISPLAY SYSTEM
           </span>
-          <h3 className="text-lg font-black text-black dark:text-white mt-0.5">
+          <h3 className="text-lg font-bold text-neutral-900 dark:text-white mt-0.5 font-sans">
             실시간 홀 & 배달 통합 주방 조리 관제
           </h3>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-mono font-extrabold bg-neutral-100 dark:bg-white/10 px-3 py-1 rounded-[3px] text-black dark:text-white">
+        <div className="flex items-center gap-2.5">
+          <span className="text-xs font-mono font-bold bg-[#f7f7f7] dark:bg-white/10 px-3 py-1.5 rounded-[20px] text-neutral-900 dark:text-white border border-neutral-200 dark:border-white/10">
             🍽️ 홀 조리: {kdsOrders.filter(o => o.status === 'cooking').length}건
           </span>
-          <span className="text-xs font-mono font-extrabold bg-orange-500/10 text-orange-500 px-3 py-1 rounded-[3px]">
+          <span className="text-xs font-mono font-bold bg-[#0381fe]/15 text-[#0381fe] border border-[#0381fe]/30 px-3 py-1.5 rounded-[20px]">
             🛵 배달 조리: {deliveryOrders.filter(d => d.status === 'cooking' || d.status === 'received').length}건
           </span>
         </div>
       </div>
+
+
 
       {/* KDS 2-Pane Dual Section */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
