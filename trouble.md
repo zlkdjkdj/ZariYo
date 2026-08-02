@@ -1102,6 +1102,71 @@
 2. [DataInitializer.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/global/config/DataInitializer.java)의 `run` 메서드 어노테이션을 `@SuppressWarnings("unused")`로 교정.
 3. `./gradlew compileJava` 실행 결과 **`BUILD SUCCESSFUL in 1s`** (에러 0건, 경고 0건)로 자바 무결성 입증.
 
+---
+
+## 53. MySQL/Redis 도커 인프라 미기동으로 인한 JDBC 연결 거부 및 프론트엔드 API 연결 실패 (ERR_CONNECTION_REFUSED)
+
+### [이슈 개요]
+- **일시**: 2026-08-03
+- **장애 요인**: 
+  1. 프론트엔드에서 카카오 로그인 등 백엔드 API 요청 시 `net::ERR_CONNECTION_REFUSED` 에러 발생.
+  2. 백엔드에서 `./gradlew bootrun` 실행 시 `com.mysql.cj.jdbc.exceptions.CommunicationsException` 및 `java.net.ConnectException: 연결이 거부됨` 예외와 함께 구동 실패.
+- **오류 메시지**:
+  ```text
+  :8080/api/v1/auth/kakao:1  Failed to load resource: net::ERR_CONNECTION_REFUSED
+  Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+  Caused by: java.net.ConnectException: 연결이 거부됨
+  ```
+
+### [원인 분석]
+1. 백엔드(스프링 부트) 서버가 8080 포트에서 실행 중이지 않아서 프론트엔드가 접속하지 못하고 Connection Refused 연결 거부 오류가 발생했습니다.
+2. 백엔드 서버를 띄우려고 `./gradlew bootrun`을 시도했으나, 데이터베이스(MySQL 3306 포트) 및 레디스(Redis 6379 포트) 인프라 컨테이너가 켜져 있지 않아 JPA/Hibernate의 DB 연결 시도가 거부되어 백엔드 구동이 실패했습니다.
+
+### [해결 방법]
+1. 프로젝트 루트 디렉토리에서 Docker Compose로 MySQL과 Redis 컨테이너를 가동합니다.
+   ```bash
+   docker compose up -d
+   ```
+2. DB 및 Redis가 준비되면 백엔드 프로젝트 디렉토리로 이동하여 백엔드를 띄웁니다.
+   ```bash
+
+---
+
+## 54. TypeScript TS2503: Cannot find namespace 'JSX' 타입 컴파일 에러
+
+### [이슈 개요]
+- **일시**: 2026-08-03
+- **장애 요인**: `pnpm run build` 수행 시 새로 작성한 `ProtectedRoute.tsx` 컴포넌트에서 컴파일 에러 발생.
+- **오류 메시지**:
+  ```text
+  src/components/auth/ProtectedRoute.tsx:5:13 - error TS2503: Cannot find namespace 'JSX'.
+  5   children: JSX.Element;
+                ~~~
+  ```
+
+### [원인 분석]
+- `tsconfig.json` 및 최신 React TypeScript 환경 설정에서 글로벌 `JSX` 네임스페이스가 전역으로 노출되지 않는 구성일 때 `JSX.Element`를 직접 타입으로 참조하면 컴파일러가 해당 네임스페이스를 찾지 못하는 문제가 발생합니다.
+
+### [해결 방법]
+- `React.ReactNode` 또는 `React.ReactElement`를 사용하여 명시적으로 `React` 모듈의 노드 타입을 지정하도록 `ProtectedRoute.tsx`를 수정했습니다.
+  ```typescript
+  // 수정 전
+  interface ProtectedRouteProps {
+    children: JSX.Element;
+    requireAdmin?: boolean;
+  }
+
+  // 수정 후
+  import React from 'react';
+  interface ProtectedRouteProps {
+    children: React.ReactNode;
+    requireAdmin?: boolean;
+  }
+  ```
+- 수정 후 `pnpm run build`가 정상적으로 성공함을 입증하였습니다.
+
+
+
 
 
 

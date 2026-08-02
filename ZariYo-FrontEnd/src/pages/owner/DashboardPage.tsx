@@ -5,7 +5,6 @@ import { ConsoleSidebar } from '../../components/owner/ConsoleSidebar';
 import { useDashboard } from '../../hooks/useDashboard';
 import { DashboardKpi } from '../../components/owner/dashboard/DashboardKpi';
 import { DashboardCanvas } from '../../components/owner/dashboard/DashboardCanvas';
-import { TempOccupiedList } from '../../components/owner/dashboard/TempOccupiedList';
 import { ReservationList } from '../../components/owner/dashboard/ReservationList';
 import { TimelineLogs } from '../../components/owner/dashboard/TimelineLogs';
 
@@ -27,10 +26,10 @@ import {
 
 import type { PlacedElement } from '../../types/store';
 
-type WidgetId = 'canvas' | 'receipt' | 'delivery_summary' | 'bgm' | 'temp_occupied' | 'reservations' | 'timeline';
+type WidgetId = 'canvas' | 'receipt' | 'delivery_summary' | 'bgm' | 'reservations' | 'timeline';
 
 const DEFAULT_WIDGET_ORDER: WidgetId[] = [
-  'canvas', 'receipt', 'delivery_summary', 'bgm', 'temp_occupied', 'reservations', 'timeline'
+  'canvas', 'receipt', 'delivery_summary', 'bgm', 'reservations', 'timeline'
 ];
 
 import { useTheme } from '../../context/ThemeContext';
@@ -45,14 +44,9 @@ export function DashboardPage() {
   const { isDarkMode, toggleTheme } = useTheme();
 
 
-  // Realtime Notification Drawer State
+  // Realtime Notification Drawer State (100% Synced with Live Event Logs)
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-
-  const [notifications, setNotifications] = useState<NotificationItem[]>([
-    { id: 'n1', type: 'order', title: '신규 테이블 주문 접수', message: 'T-1 테이블에서 3개의 메뉴(42,000원) 주문이 접수되었습니다.', time: '방금 전', isRead: false },
-    { id: 'n2', type: 'lock', title: '5분 선점 락 발동', message: '손님이 T-3 테이블을 5분 원자성 선점 락으로 지정했습니다.', time: '2분 전', isRead: false },
-    { id: 'n3', type: 'reservation', title: '지정석 예약 확정', message: '김민준 손님 4인 지정석 예약 완료 (18:30)', time: '10분 전', isRead: true },
-  ]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
 
   const handleMarkAllAsRead = () => {
     setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
@@ -145,7 +139,6 @@ export function DashboardPage() {
 
   const {
     tableStates,
-    tempOccupations,
     reservations,
     logs,
     tableMenuSummaries,
@@ -161,6 +154,55 @@ export function DashboardPage() {
     isConnected,
     kpi
   } = useDashboard(placedElements);
+
+  // 100% Realtime Sync between Live Event Logs and Notification Center Drawer
+  useEffect(() => {
+    if (!logs || logs.length === 0) return;
+
+    setNotifications((prev) => {
+      const readMap = new Map(prev.map(n => [n.id, n.isRead]));
+
+      const syncedNotifs: NotificationItem[] = logs.map((logMsg, index) => {
+        const id = `notif-${index}-${logMsg.slice(0, 15)}`;
+        let type: NotificationItem['type'] = 'alert';
+        let title = '매장 라이브 이벤트';
+        let message = logMsg;
+        let time = '방금 전';
+
+        // Extract Timestamp [HH:mm:ss]
+        const timeMatch = logMsg.match(/\[(\d{2}:\d{2}:\d{2})\]/);
+        if (timeMatch) {
+          time = timeMatch[1];
+          message = logMsg.replace(/\[\d{2}:\d{2}:\d{2}\]/, '').trim();
+        }
+
+        if (logMsg.includes('주문') || logMsg.includes('Order') || logMsg.includes('🔔')) {
+          type = 'order';
+          title = '신규 주문 접수';
+        } else if (logMsg.includes('호출') || logMsg.includes('직원') || logMsg.includes('🙋‍♂️')) {
+          type = 'call';
+          title = '직원 호출 요청';
+        } else if (logMsg.includes('예약') || logMsg.includes('지정석') || logMsg.includes('📅')) {
+          type = 'reservation';
+          title = '지정석 예약';
+        } else {
+          type = 'alert';
+          title = '매장 이벤트 알림';
+        }
+
+        return {
+          id,
+          type,
+          title,
+          message,
+          time,
+          isRead: readMap.get(id) || false,
+        };
+      });
+
+      return syncedNotifs;
+    });
+  }, [logs]);
 
 
   // 드래그 앤 드롭 핸들러
@@ -322,16 +364,6 @@ export function DashboardPage() {
           />
         );
 
-      case 'temp_occupied':
-        return (
-          <TempOccupiedList 
-            tempOccupations={tempOccupations}
-            isDarkMode={isDarkMode}
-            onConfirm={(elId, label) => handleControlState(elId, label, 'using')}
-            onCancel={(elId, label) => handleControlState(elId, label, 'empty')}
-          />
-        );
-
       case 'reservations':
         return (
           <ReservationList 
@@ -399,7 +431,7 @@ export function DashboardPage() {
             
             {/* Left 8 Cols */}
             <div className="lg:col-span-8 space-y-6 text-left">
-              {widgetOrder.filter(id => id === 'canvas' || id === 'temp_occupied' || id === 'reservations' || id === 'timeline').map((id) => {
+              {widgetOrder.filter(id => id === 'canvas' || id === 'reservations' || id === 'timeline').map((id) => {
                 const isDragging = draggedWidgetId === id;
                 const isOver = dragOverWidgetId === id;
 

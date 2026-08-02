@@ -90,14 +90,13 @@ export function KioskCartPanel({
         <button
           onClick={onConfirmOrder}
           disabled={cart.length === 0}
-          className={`w-full h-[44px] py-3 rounded-[20px] font-bold text-sm sm:text-base transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm ${
-            cart.length > 0
+          className={`w-full h-[44px] py-3 rounded-[20px] font-bold text-sm sm:text-base transition-all cursor-pointer flex items-center justify-center gap-2 shadow-sm ${cart.length > 0
               ? 'bg-black text-white dark:bg-white dark:text-black hover:opacity-90'
               : 'bg-[#f7f7f7] text-neutral-400 dark:bg-white/5 border border-neutral-200 cursor-not-allowed'
-          }`}
+            }`}
         >
           <Check className="w-5 h-5 text-[#0381fe]" />
-          <span>Samsung Pay 주문 완료하기</span>
+          <span>주문 완료하기</span>
         </button>
       </div>
 

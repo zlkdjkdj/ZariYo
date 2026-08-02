@@ -37,7 +37,7 @@ export function LandingPage() {
 
   const handleAuthAction = () => {
     if (!token || !user) {
-      navigate('/owner/dashboard');
+      navigate('/login');
       return;
     }
 

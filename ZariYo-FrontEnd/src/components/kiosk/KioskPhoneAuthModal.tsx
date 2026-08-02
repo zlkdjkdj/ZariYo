@@ -6,10 +6,11 @@ interface KioskPhoneAuthModalProps {
   onClose: () => void;
   onSuccess: (phone: string) => void;
   tableLabel: string;
+  defaultPhone?: string;
 }
 
-export function KioskPhoneAuthModal({ isOpen, onClose, onSuccess, tableLabel }: KioskPhoneAuthModalProps) {
-  const [phoneNumber, setPhoneNumber] = useState('');
+export function KioskPhoneAuthModal({ isOpen, onClose, onSuccess, tableLabel, defaultPhone = '' }: KioskPhoneAuthModalProps) {
+  const [phoneNumber, setPhoneNumber] = useState(() => defaultPhone.replace(/\D/g, ''));
   const [errorMsg, setErrorMsg] = useState('');
 
   if (!isOpen) return null;

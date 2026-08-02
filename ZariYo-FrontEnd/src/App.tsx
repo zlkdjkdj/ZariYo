@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { LandingPage } from './pages/LandingPage';
 import { GuidePage } from './pages/GuidePage';
 import { StartPage } from './pages/StartPage';
@@ -34,19 +35,19 @@ function App() {
           <Route path="/reserve" element={<ReservePage />} />
           <Route path="/kiosk" element={<ReservePage />} />
 
-          {/* 4. Store Owner Dashboard Routes */}
-          <Route path="/owner" element={<StartPage />} />
-          <Route path="/owner/stores" element={<StoreSelectPage />} />
-          <Route path="/owner/store/new" element={<StoreBuilderPage />} />
-          <Route path="/owner/store-builder" element={<StoreBuilderPage />} />
-          <Route path="/owner/dashboard" element={<DashboardPage />} />
-          <Route path="/owner/analytics" element={<AnalyticsPage />} />
-          <Route path="/owner/menu-management" element={<MenuManagementPage />} />
-          <Route path="/owner/order-history" element={<OrderHistoryPage />} />
+          {/* 4. Store Owner Dashboard Routes (Protected) */}
+          <Route path="/owner" element={<ProtectedRoute><StartPage /></ProtectedRoute>} />
+          <Route path="/owner/stores" element={<ProtectedRoute><StoreSelectPage /></ProtectedRoute>} />
+          <Route path="/owner/store/new" element={<ProtectedRoute><StoreBuilderPage /></ProtectedRoute>} />
+          <Route path="/owner/store-builder" element={<ProtectedRoute><StoreBuilderPage /></ProtectedRoute>} />
+          <Route path="/owner/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/owner/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
+          <Route path="/owner/menu-management" element={<ProtectedRoute><MenuManagementPage /></ProtectedRoute>} />
+          <Route path="/owner/order-history" element={<ProtectedRoute><OrderHistoryPage /></ProtectedRoute>} />
 
-          {/* 5. System Admin Routes */}
-          <Route path="/admin" element={<AdminUserManagementPage />} />
-          <Route path="/admin/users" element={<AdminUserManagementPage />} />
+          {/* 5. System Admin Routes (Protected - Require Admin) */}
+          <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminUserManagementPage /></ProtectedRoute>} />
+          <Route path="/admin/users" element={<ProtectedRoute requireAdmin><AdminUserManagementPage /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

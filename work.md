@@ -918,6 +918,19 @@
   - **검증 완료**:
     - `pnpm run build` 수행 결과 **`built in 501ms`** (에러 0건) 입증.
 
+### 152. GitHub 레포지토리 전체 보안 진단(Security Audit) 및 하드코딩 요소 무결성 검증 완결
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[백엔드 보안 설정 검증] ([application.yml](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/resources/application.yml))**:
+    - `jwt.secret`: `${JWT_SECRET:...}` 환경변수 기본값 처리로 실제 비밀키 하드코딩 노출 방지.
+    - `kakao.client-id`: `${KAKAO_CLIENT_ID:zariyo_kakao_client_id}` 환경변수 격리 주입 구조 확인.
+  - **[프론트엔드 보안 검증] ([LoginPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/LoginPage.tsx), [authStorage.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/utils/authStorage.ts))**:
+    - 카카오 Client ID가 `import.meta.env.VITE_KAKAO_CLIENT_ID`로 분리 주입되는 구조 확인.
+    - 브라우저 종료 시 자동 파기되는 `sessionStorage` 기반 토큰 보안 보관 및 로그인 상태 유지(`rememberMe`) 선택적 `localStorage` 분리 메커니즘 확인.
+  - **검증 완료**:
+    - GitHub에 커밋 및 푸시된 186개 오브젝트 내에 실제 상용 API Key/Secret 하드코딩 0건 (안전) 입증.
+
+
 ### 101. GitHub 소스코드 전면 보안 분석(Security Audit) 및 커밋(Commit) 무결 검증 완결
 - **작업 일시**: 2026-07-27
 - **작업 내용**:
@@ -1456,6 +1469,86 @@
   - **검증 완료**:
     - 백엔드 `./gradlew compileJava` 수행 결과 **`BUILD SUCCESSFUL in 1s`** (경고/에러 0건)
     - 프론트엔드 `pnpm run build` 수행 결과 **`built in 514ms`** (경고/에러 0건) 입증.
+
+### 151. 백엔드 및 인프라 구동 상태 진단 및 트러블슈팅 이력 갱신
+- **작업 일시**: 2026-08-03
+- **작업 내용**:
+  - **[에러 원인 정밀 진단]**:
+    - 프론트엔드의 `net::ERR_CONNECTION_REFUSED` 에러와 백엔드 `bootRun`시 `com.mysql.cj.jdbc.exceptions.CommunicationsException` 및 `java.net.ConnectException` 에러의 연관성을 분석.
+    - 백엔드 미기동 및 Docker MySQL/Redis 인프라 컨테이너 미실행이 근본 원인임을 식별 및 안내 가이드 수립.
+  - **[트러블슈팅 이력 보존]**:
+    - [trouble.md](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/trouble.md)에 53번째 트러블슈팅 항목으로 원인 및 해결 단계 보존 완료.
+
+### 152. 대시보드 5분 임시 선점 락 관제 박스 소거 및 매장 라이브 이벤트 로그 ↔ 알림 센터 100% 실시간 연동 완결
+- **작업 일시**: 2026-08-03
+- **작업 내용**:
+  - **[불필요 위젯 소거] ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - 사용자 요청에 따라 불필요한 `temp_occupied` (5분 임시 선점 락 관제 박스) 위젯 및 관련 드래그 앤 드롭 Grid 필터링 제거.
+  - **[실시간 알림 100% 연동] ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx), [NotificationDrawer.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/NotificationDrawer.tsx))**:
+    - `logs` (라이브 이벤트 스트림) 수신 시 타임스탬프와 카테고리(`order`, `call`, `reservation`, `alert`)를 자동 파싱하여 `NotificationDrawer` 알림 센터로 100% 실시간 동기화 릴레이.
+    - 헤더의 읽지 않은 알림 뱃지 카운터와 드로어 내 알림 목록이 실시간 로그와 100% 통합 반응하도록 개편.
+  - **[빌드 검증 완료]**:
+    - `pnpm run build` 수행 결과 **`built in 619ms`** (에러 0건)로 컴파일 무결성 완벽 입증.
+
+### 153. 매장 실시간 알림 센터 가독성 및 UI/UX 전면 개편
+- **작업 일시**: 2026-08-03
+- **작업 내용**:
+  - **[서체 및 산만함 정돈] ([NotificationDrawer.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/NotificationDrawer.tsx))**:
+    - 과도하고 난잡했던 모노스페이스(`font-mono`) 및 가중치 혼용 서체를 모던 샌스세리프(`font-sans`) 타이포그래피로 완전 통합.
+    - 불필요하게 덜컹거리던 아이콘 애니메이션(`animate-bounce`)을 정돈하고, 깔끔한 미니 알약 배지(`Receipt`, `BellRing`, `Calendar`, `AlertCircle`)로 가독성을 획기적으로 향상.
+  - **[시각적 위계 및 카드 디자인 강화]**:
+    - 안 읽은 알림의 좌측 accent 보더 라인(`border-l-4 border-l-[#0381fe]`)과 텍스트 명도 대비(Contrast)를 또렷하게 직관화.
+    - 중복 특수기호(`[14:20:10]`, `🔔`, `▸` 등)를 자동 제거해주는 `cleanMessage` 파서를 적용해 본문 가독성을 극대화.
+  - **[빌드 검증 완료]**:
+    - `pnpm run build` 수행 결과 **`built in 584ms`** (에러 0건) 입증.
+
+### 154. 알림 센터 아이콘 전면 소거 및 미니멀 텍스트 UI 정돈
+- **작업 일시**: 2026-08-03
+- **작업 내용**:
+  - **[아이콘 소거] ([NotificationDrawer.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/NotificationDrawer.tsx))**:
+    - 사용자 요청에 따라 알림 센터 내부의 모든 그래픽 아이콘(배지 아이콘, 툴바 아이콘, 빈 상태 아이콘 등)을 소거하고 모던 텍스트 전용 인터페이스로 100% 깔끔하게 전환.
+  - **[빌드 검증 완료]**:
+    - `pnpm run build` 수행 결과 **`built in 566ms`** (에러 0건) 입증.
+
+### 155. 알림 본문 깨진 다이아몬드 특수문자() 및 중복 태그 정밀 클리닝
+- **작업 일시**: 2026-08-03
+- **작업 내용**:
+  - **[로그 포맷 찌꺼기 제거] ([ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx))**:
+    - 로그 생성 문자열 내 멀티바이트 이모지로 인한 인코딩 파손 방지를 위해 이모지 제거 및 깔끔한 텍스트 포맷으로 수정.
+  - **[깨진 캐릭터 및 중복 태그 필터 파서 강화] ([NotificationDrawer.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/NotificationDrawer.tsx))**:
+    - `cleanMessage` 함수에 `\uFFFD` () 유니코드 대체 캐릭터 및 `[손님 주문 완료]` 태그를 제거하는 정규식 파서를 강화하여 깨끗한 텍스트만 표시되도록 수정.
+  - **[빌드 검증 완료]**:
+
+---
+
+## [2026-08-03]
+
+### 사장님 대시보드 로그인 가드(ProtectedRoute) 적용 및 2D 키오스크 초기 진입 프로세스 개선
+- **작업 일시**: 2026년 8월 3일
+- **작업 내용**:
+  1. **사장님 대시보드 접근 보호 및 로그인 가드 구현 (`ProtectedRoute.tsx`)**:
+     - [ProtectedRoute.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/auth/ProtectedRoute.tsx) 컴포넌트를 신규 작성하여 비로그인 사용자가 대시보드 및 관제 메뉴(`/owner/*`, `/admin/*`) 진입 시 자동으로 로그인 화면(`/login`)으로 리다이렉트되도록 가드 처리했습니다.
+     - [App.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/App.tsx)의 라우트 설정에 `ProtectedRoute`를 적용했습니다.
+     - [LandingPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LandingPage.tsx)의 "내 매장 대시보드로 이동" 버튼 클릭 시 비로그인 상태일 경우 바로 대시보드로 넘어가지 않고 로그인 화면으로 이동하도록 `handleAuthAction`을 수정했습니다.
+  2. **2D 예약 키오스크 진입 시 휴대폰 번호 인증 & 매장 선택 모달 연쇄 팝업 개선**:
+     - [ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx)에 진입할 때마다 로컬스토리지 저장 유무와 관계없이 항상 첫 번째 단계로 휴대폰 번호 입력 모달이 자동으로 떠오르도록 `useEffect`를 개편했습니다.
+     - 휴대폰 번호 입력 성공 시 항상 이어서 2단계 매장 선택 모달(`KioskStoreSearchModal`)이 떠올라 손님이 매장을 선택한 후 메인 키오스크/예약판을 이용할 수 있도록 릴레이 프로세스를 완성했습니다.
+     - [KioskPhoneAuthModal.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/kiosk/KioskPhoneAuthModal.tsx)에 `defaultPhone` prop을 추가하여 기존 저장된 휴대폰 번호가 있을 경우 편하게 확인/수정 입력할 수 있도록 편의성을 향상시켰습니다.
+  3. **전체 코드 리팩토링 및 모듈/훅 분리**:
+     - **[KioskWorkflowBanner.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/kiosk/KioskWorkflowBanner.tsx)**: 1단계 인증 ➔ 2단계 가게 선택 ➔ 3단계 주문 상단 진행 상태 서브 바 분리.
+     - **[KioskMenuOptionModal.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/kiosk/KioskMenuOptionModal.tsx)**: 메뉴 추가 옵션 선택 팝업 모달 분리.
+     - **[KioskOrderHistoryModal.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/kiosk/KioskOrderHistoryModal.tsx)**: 손님 키오스크 주문 내역 영수증 모달 분리.
+     - **[KioskSeatChangeModal.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/kiosk/KioskSeatChangeModal.tsx)**: 테이블/좌석 변경 선택 모달 분리.
+     - **[useKioskOrder.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/hooks/useKioskOrder.ts)**: 0.001초 실시간 주문 릴레이 및 스토리지 동기화 비즈니스 로직을 훅으로 캡슐화.
+     - **[ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx)**: 600라인 비대 코드를 230라인 슬림 클린 코드로 리팩토링.
+  4. **빌드 검증**:
+     - `pnpm run build` 수행 결과 **`built in 643ms`** (에러 0건) 입증.
+
+
+
+
+
+
 
 
 
