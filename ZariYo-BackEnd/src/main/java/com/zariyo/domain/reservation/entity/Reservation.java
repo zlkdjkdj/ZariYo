@@ -1,16 +1,15 @@
 package com.zariyo.domain.reservation.entity;
 
-import com.zariyo.domain.seat.entity.Seat;
-import com.zariyo.domain.user.entity.User;
+import com.zariyo.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 /**
- * 최종 예약이 완료된 내역을 보존하는 영속성 엔티티입니다.
- * 프론트엔드의 ReservationItem 규격에 대응합니다.
+ * 손님의 2D 좌석 지정 예약 정보를 데이터베이스에 저장하는 엔티티 클래스입니다.
  */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,48 +22,45 @@ public class Reservation {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seat_id", nullable = false)
-    private Seat seat;
+    @Column(nullable = false, length = 50)
+    private String guestName;
 
+    @Column(nullable = false, length = 20)
+    private String guestPhone;
+
+    @Column(nullable = false)
     private int peopleCount;
 
-    @Column(nullable = false)
-    private LocalDateTime reservationTime;
+    @Column(nullable = false, length = 50)
+    private String reservedTableLabel;
+
+    @Column(nullable = false, length = 20)
+    private String reservationTime; // 예: "18:30"
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ReservationStatus status;
+    @Column(nullable = false, length = 20)
+    private ReservationStatus status = ReservationStatus.PENDING;
 
-    public Reservation(User user, Seat seat, int peopleCount, LocalDateTime reservationTime, ReservationStatus status) {
-        this.user = user;
-        this.seat = seat;
-        this.peopleCount = peopleCount;
-        this.reservationTime = reservationTime;
-        this.status = status;
-    }
-
-    public void updateStatus(ReservationStatus status) {
-        this.status = status;
-    }
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public enum ReservationStatus {
-        PENDING, COMPLETED, NOSHOW;
+        PENDING, COMPLETED, NOSHOW, CANCELLED
+    }
 
-        public static ReservationStatus fromString(String statusStr) {
-            switch (statusStr.toLowerCase()) {
-                case "pending": return PENDING;
-                case "completed": return COMPLETED;
-                case "noshow": return NOSHOW;
-                default: throw new IllegalArgumentException("지원하지 않는 예약 상태 값입니다: " + statusStr);
-            }
-        }
+    public Reservation(Store store, String guestName, String guestPhone, int peopleCount, String reservedTableLabel, String reservationTime) {
+        this.store = store;
+        this.guestName = guestName;
+        this.guestPhone = guestPhone;
+        this.peopleCount = peopleCount;
+        this.reservedTableLabel = reservedTableLabel;
+        this.reservationTime = reservationTime;
+        this.status = ReservationStatus.PENDING;
+    }
 
-        public String toFrontendString() {
-            return name().toLowerCase();
-        }
+    public void updateStatus(ReservationStatus newStatus) {
+        this.status = newStatus;
     }
 }

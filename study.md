@@ -1002,6 +1002,26 @@ jwt:
 1. **대담한 개편 명시**: "파일을 처음부터 끝까지 완전히 덮어써도 좋으니 전면 재작성해줘"라고 명시해주시면 소극적 툴 호출을 해제하고 전면 수정을 단행합니다.
 2. **구체적 대상 지정**: "LandingPage, ReservePage, AnalyticsPage의 전체 JSX 레이아웃 구조를 모두 파괴하고 전면 재구성해"처럼 대상을 명확히 지정해 주시면 가장 효과적입니다.
 
+---
+
+### [2026-08-02 08:30] Q28. 로그인 창 종료 후에도 로그인 상태가 영구 유지되는 이유와 메커니즘
+**질문 (User)**:
+"지금 로그인이 계속 유지되는데 이거 왜 그럼?"
+
+**답변 (Antigravity)**:
+로그인이 브라우저를 닫거나 컴퓨터를 껐다 켜도 자동으로 유지되는 까닭은 프론트엔드의 **웹 스토리지 선택(`localStorage`)** 및 **자동 토큰 갱신(Silent Refreshing)** 구조 때문입니다.
+
+**1. `localStorage` 기반 인증 정보 보존 (Web Storage Persistence)**:
+- [LoginPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/LoginPage.tsx#L54), [KakaoCallbackPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/KakaoCallbackPage.tsx#L28) 등에서 로그인 성공 시 JWT 인증 토큰과 사용자 정보를 `sessionStorage`가 아닌 `localStorage`에 저장합니다.
+- `sessionStorage`는 탭/브라우저를 닫으면 토큰이 자동 파기되지만, `localStorage`는 사용자가 명시적으로 **[로그아웃]** 버튼을 누르거나 브라우저 데이터를 지우지 않는 이상 컴퓨터를 껐다 켜도 영구 보존됩니다.
+
+**2. 무중단 자동 토큰 재발급 (Silent Refresh Token Flow)**:
+- [client.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/api/client.ts#L40) 응답 인터셉터가 단기 Access Token만료(401 Unauthorized) 시 `localStorage`에 남아있는 `zariyo_refresh_token`을 백엔드로 자동 전달하여 유저 개입 없이 새 Access Token을 재발급받습니다.
+
+**3. 브라우저 종료 시 자동 로그아웃되게 변경하려면?**:
+- `localStorage.setItem`을 브라우저 세션 생명주기를 따르는 `sessionStorage.setItem`으로 전환하거나, 로그인 화면에 "로그인 상태 유지 (Remember Me)" 체크박스를 도입하면 됩니다.
+
+
 
 
 

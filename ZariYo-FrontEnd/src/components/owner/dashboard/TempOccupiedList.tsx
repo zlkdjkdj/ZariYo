@@ -6,6 +6,7 @@ interface TempOccupiedListProps {
   tempOccupations: TempOccupiedItem[];
   onConfirm: (elementId: string, label: string) => void;
   onCancel: (elementId: string, label: string) => void;
+  isDarkMode?: boolean;
 }
 
 const containerVariants = {
@@ -27,6 +28,7 @@ export function TempOccupiedList({
   tempOccupations,
   onConfirm,
   onCancel,
+  isDarkMode = false,
 }: TempOccupiedListProps) {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -35,10 +37,19 @@ export function TempOccupiedList({
   };
 
   return (
-    <div className="bg-white dark:bg-neutral-900/60 border border-neutral-200 dark:border-white/10 rounded-none p-5 shadow-none dark:shadow-none backdrop-blur-xl select-none font-sans">
-      <h3 className="text-xs font-extrabold text-neutral-900 dark:text-white flex items-center gap-2 mb-4 border-b border-neutral-200 dark:border-white/5 pb-2.5 uppercase font-mono tracking-wider">
-        <Clock className="w-4 h-4 text-[#000000]" />
-        Temp Occupancy List ({tempOccupations.length})
+    <div className={`border rounded-[24px] p-5 transition-colors duration-300 select-none font-sans ${
+      isDarkMode
+        ? 'bg-[#141417] border-white/10 text-white shadow-lg shadow-black/40'
+        : 'bg-[#ffffff] border-[#dddddd] text-[#000000] shadow-sm'
+    }`}>
+      <h3 className="text-xs font-black flex items-center justify-between mb-4 border-b border-neutral-200 dark:border-white/10 pb-3 uppercase font-mono tracking-wider">
+        <div className="flex items-center gap-2">
+          <Clock className="w-4 h-4 text-amber-500 animate-spin" />
+          <span>5분 임시 선점 락 관제</span>
+        </div>
+        <span className="text-[10.5px] font-bold bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-[12px]">
+          {tempOccupations.length}건 대기
+        </span>
       </h3>
 
       <motion.div 
@@ -53,38 +64,44 @@ export function TempOccupiedList({
             <motion.div
               variants={itemVariants}
               key={item.id}
-              className={`p-3 rounded-none border flex items-center justify-between transition-all ${
+              className={`p-3.5 rounded-[18px] border flex items-center justify-between transition-all ${
                 isCritical 
-                  ? 'bg-red-500/10 border-red-500/30 text-[#f6384d] animate-pulse shadow-none' 
-                  : 'bg-neutral-50 dark:bg-black/40 border-neutral-200 dark:border-white/5'
+                  ? 'bg-rose-500/10 border-rose-500/30 text-rose-500 animate-pulse' 
+                  : isDarkMode
+                    ? 'bg-black/30 border-white/5'
+                    : 'bg-[#f7f7f7] border-[#dddddd]'
               }`}
             >
               <div className="flex flex-col">
-                <span className="text-xs font-black text-neutral-900 dark:text-white">
+                <span className="text-xs font-black font-mono">
                   좌석 {item.label}
                 </span>
-                <span className="text-[8px] text-[#4e5968] dark:text-neutral-400 font-extrabold mt-0.5 uppercase tracking-widest font-mono">
-                  {isCritical ? '🚨 Time Out soon' : 'Reservation Pending'}
+                <span className="text-[9px] font-bold mt-0.5 uppercase tracking-widest font-mono text-amber-500">
+                  {isCritical ? '🚨 선점 만료 임박' : '300초 락 카운트다운'}
                 </span>
               </div>
 
               <div className="flex items-center gap-2 font-mono">
-                <span className="text-xs font-bold text-neutral-800 dark:text-white">
+                <span className="text-xs font-black text-rose-500">
                   {formatTime(item.timeLeft)}
                 </span>
                 <button
                   onClick={() => onConfirm(item.elementId, item.label)}
-                  className="p-1.5 rounded-none bg-[#000000]/10 hover:bg-[#000000] dark:bg-[#000000]/10 dark:hover:bg-[#000000] text-[#000000] hover:text-white dark:hover:text-white transition-all cursor-pointer border border-transparent"
-                  title="강제 확정(착석)"
+                  className={`p-2 rounded-full transition-all cursor-pointer border ${
+                    isDarkMode
+                      ? 'bg-[#0381fe] border-[#0381fe] text-white hover:bg-[#0381fe]/80'
+                      : 'bg-[#000000] border-[#000000] text-white hover:bg-neutral-800'
+                  }`}
+                  title="착석 강제 승인"
                 >
-                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <Play className="w-3 h-3 fill-current" />
                 </button>
                 <button
                   onClick={() => onCancel(item.elementId, item.label)}
-                  className="p-1.5 rounded-none bg-neutral-100 hover:bg-neutral-200 dark:bg-white/5 dark:hover:bg-neutral-800 text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-all cursor-pointer border border-transparent"
-                  title="선점 취소"
+                  className="p-2 rounded-full bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white transition-all cursor-pointer border border-rose-500/20"
+                  title="선점 락 강제 해제"
                 >
-                  <XCircle className="w-3.5 h-3.5" />
+                  <XCircle className="w-3 h-3" />
                 </button>
               </div>
             </motion.div>
@@ -92,13 +109,11 @@ export function TempOccupiedList({
         })}
 
         {tempOccupations.length === 0 && (
-          <p className="text-[10px] text-neutral-500 font-bold text-center py-6">
-            현재 대기중인 임시 선점 요청이 없습니다.
+          <p className="text-[11px] text-neutral-400 font-bold text-center py-6">
+            현재 대기중인 5분 임시 선점 요청이 없습니다.
           </p>
         )}
       </motion.div>
     </div>
   );
 }
-
-

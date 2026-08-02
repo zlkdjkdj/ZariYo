@@ -18,6 +18,7 @@ import { DashboardKdsPane } from '../../components/owner/dashboard/DashboardKdsP
 
 import { DashboardReceiptPane } from '../../components/owner/dashboard/DashboardReceiptPane';
 import { AddMenuModal } from '../../components/owner/dashboard/AddMenuModal';
+import { NotificationDrawer, type NotificationItem } from '../../components/owner/dashboard/NotificationDrawer';
 
 // External Mock Data Imports
 import { 
@@ -32,14 +33,38 @@ const DEFAULT_WIDGET_ORDER: WidgetId[] = [
   'canvas', 'receipt', 'delivery_summary', 'bgm', 'temp_occupied', 'reservations', 'timeline'
 ];
 
+import { useTheme } from '../../context/ThemeContext';
+
 export function DashboardPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tabParam = (searchParams.get('tab') as 'live' | 'kds' | 'delivery') || 'live';
   const [activeTab, setActiveTab] = useState<'live' | 'kds' | 'delivery'>(tabParam);
 
+  // Global Unified Theme Hook
+  const { isDarkMode, toggleTheme } = useTheme();
+
+
+  // Realtime Notification Drawer State
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+
+  const [notifications, setNotifications] = useState<NotificationItem[]>([
+    { id: 'n1', type: 'order', title: '신규 테이블 주문 접수', message: 'T-1 테이블에서 3개의 메뉴(42,000원) 주문이 접수되었습니다.', time: '방금 전', isRead: false },
+    { id: 'n2', type: 'lock', title: '5분 선점 락 발동', message: '손님이 T-3 테이블을 5분 원자성 선점 락으로 지정했습니다.', time: '2분 전', isRead: false },
+    { id: 'n3', type: 'reservation', title: '지정석 예약 확정', message: '김민준 손님 4인 지정석 예약 완료 (18:30)', time: '10분 전', isRead: true },
+  ]);
+
+  const handleMarkAllAsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+  };
+
+  const handleClearAllNotifications = () => {
+    setNotifications([]);
+  };
+
   // Drag & Drop 위젯 순서 및 편집 모드
   const [isEditMode, setIsEditMode] = useState(false);
+
   const [widgetOrder, setWidgetOrder] = useState<WidgetId[]>(() => {
     const saved = localStorage.getItem('zariyo_dashboard_widget_order');
     return saved ? JSON.parse(saved) : DEFAULT_WIDGET_ORDER;
@@ -60,13 +85,12 @@ export function DashboardPage() {
   const [discountAmount, setDiscountAmount] = useState<number>(0);
   const [youtubeVideoId, setYoutubeVideoId] = useState<string>('jfKfPfyJRdk');
 
-  // 실시간 실제 연동 주문 데이터 (목업 예시 제거)
+  // 실시간 실제 연동 주문 데이터
   const [tableBills, setTableBills] = useState<Record<string, { items: BillItem[]; paymentMethod: string }>>({});
-
-
 
   // 모달 상태
   const [isAddMenuModalOpen, setIsAddMenuModalOpen] = useState(false);
+
 
   // 동적 유저 커스텀 매장 정보 및 2D 배치도 최우선 로드
   const [storeInfo, setStoreInfo] = useState(() => {
@@ -203,16 +227,22 @@ export function DashboardPage() {
       case 'canvas':
         if (activeTab === 'live') {
           return (
-            <div className="bg-white dark:bg-[#09090b] border border-neutral-300 dark:border-neutral-800 rounded-[3px] p-6 h-full text-left">
+            <div className={`border rounded-[24px] p-6 h-full text-left transition-colors duration-300 ${
+              isDarkMode
+                ? 'bg-[#141417] border-white/10 text-white shadow-xl shadow-black/40'
+                : 'bg-[#ffffff] border-[#dddddd] text-[#000000] shadow-sm'
+            }`}>
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-neutral-200 dark:border-white/10">
                 <div>
-                  <span className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-wider">
+                  <span className="text-[10px] font-mono font-black text-[#0381fe] uppercase tracking-wider bg-[#0381fe]/10 px-2.5 py-0.5 rounded-[12px]">
                     2D REALTIME STORE CANVAS MAP
                   </span>
-                  <h3 className="text-base font-black text-black dark:text-white">실시간 좌석 관제판</h3>
+                  <h3 className="text-lg font-black tracking-tight mt-1">실시간 2D 좌석 관제판</h3>
                 </div>
-                <span className="text-[10.5px] font-bold text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-white/5 px-2.5 py-1 rounded-[3px] border border-neutral-300 dark:border-white/10">
-                  테이블 탭 시 영수증 연동
+                <span className={`text-[10.5px] font-bold px-3 py-1 rounded-[20px] border ${
+                  isDarkMode ? 'bg-white/5 border-white/10 text-neutral-300' : 'bg-[#f7f7f7] border-[#dddddd] text-[#707070]'
+                }`}>
+                  테이블 터치 시 수선서 자동 연동
                 </span>
               </div>
               <DashboardCanvas 
@@ -221,6 +251,7 @@ export function DashboardPage() {
                 tableMenuSummaries={tableMenuSummaries}
                 activeControlId={activeControlId}
                 setActiveControlId={setActiveControlId}
+                isDarkMode={isDarkMode}
                 onControlState={(elId, label, newState) => {
                   handleControlState(elId, label, newState);
                   const selectedEl = placedElements.find(e => e.id === elId);
@@ -265,8 +296,10 @@ export function DashboardPage() {
             onOpenAddMenuModal={() => setIsAddMenuModalOpen(true)}
             onControlState={handleControlState}
             onUpdateDeliveryStatus={liveUpdateDeliveryStatus}
+            isDarkMode={isDarkMode}
           />
         );
+
 
       case 'delivery_summary':
         return (
@@ -275,8 +308,10 @@ export function DashboardPage() {
             selectedDeliveryId={selectedDeliveryId}
             setSelectedDeliveryId={setSelectedDeliveryId}
             onUpdateDeliveryStatus={liveUpdateDeliveryStatus}
+            isDarkMode={isDarkMode}
           />
         );
+
 
 
       case 'bgm':
@@ -291,6 +326,7 @@ export function DashboardPage() {
         return (
           <TempOccupiedList 
             tempOccupations={tempOccupations}
+            isDarkMode={isDarkMode}
             onConfirm={(elId, label) => handleControlState(elId, label, 'using')}
             onCancel={(elId, label) => handleControlState(elId, label, 'empty')}
           />
@@ -300,13 +336,14 @@ export function DashboardPage() {
         return (
           <ReservationList 
             reservations={reservations}
+            isDarkMode={isDarkMode}
             onComplete={handleCompleteReservation}
             onNoShow={handleNoShowReservation}
           />
         );
 
       case 'timeline':
-        return <TimelineLogs logs={logs} />;
+        return <TimelineLogs logs={logs} isDarkMode={isDarkMode} />;
 
       default:
         return null;
@@ -314,30 +351,36 @@ export function DashboardPage() {
   };
 
   return (
-    <div className="flex h-screen bg-[var(--bg-main)] text-[var(--text-main)] overflow-hidden font-sans select-none transition-colors duration-300">
+    <div className={`flex h-screen overflow-hidden font-sans select-none transition-colors duration-300 ${
+      isDarkMode ? 'bg-[#09090b] text-white' : 'bg-[#f7f7f7] text-[#000000]'
+    }`}>
       
       {/* Console Sidebar */}
       <ConsoleSidebar />
 
       {/* Main Area */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[var(--bg-main)]">
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         
         <DashboardHeader 
           storeName={storeInfo?.name || '내 매장 관제판'}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           deliveryCount={liveDeliveryOrders.length}
-
           isEditMode={isEditMode}
           setIsEditMode={setIsEditMode}
           onResetWidgetOrder={handleResetWidgetOrder}
           isConnected={isConnected}
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
+          onOpenNotifications={() => setIsNotificationOpen(true)}
+          unreadNotificationCount={notifications.filter(n => !n.isRead).length}
         />
 
         {/* Dashboard Content Container */}
         <div className="p-6 space-y-6 max-w-[1600px] mx-auto w-full">
           
-          <DashboardKpi {...kpi} />
+          <DashboardKpi {...kpi} isDarkMode={isDarkMode} />
+
 
           {isEditMode && (
             <div className="p-3.5 rounded-[3px] bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold flex items-center justify-between animate-pulse">
@@ -433,6 +476,17 @@ export function DashboardPage() {
         onAddMenuItem={handleAddMenuItem}
       />
 
+      {/* Realtime Notification Center Drawer Component */}
+      <NotificationDrawer 
+        isOpen={isNotificationOpen}
+        onClose={() => setIsNotificationOpen(false)}
+        notifications={notifications}
+        onMarkAllAsRead={handleMarkAllAsRead}
+        onClearAll={handleClearAllNotifications}
+        isDarkMode={isDarkMode}
+      />
+
     </div>
   );
 }
+

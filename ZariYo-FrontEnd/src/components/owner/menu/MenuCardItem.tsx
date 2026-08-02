@@ -21,6 +21,7 @@ interface MenuCardItemProps {
   onToggleSoldOut: (id: string) => void;
   onDeleteMenu: (id: string) => void;
   onEditMenu: (menu: MenuManagementItem) => void;
+  isDarkMode?: boolean;
 }
 
 export function MenuCardItem({
@@ -28,53 +29,66 @@ export function MenuCardItem({
   onToggleSoldOut,
   onDeleteMenu,
   onEditMenu,
+  isDarkMode = false,
 }: MenuCardItemProps) {
   return (
     <div 
-      className={`relative p-5 rounded-none border transition-all duration-300 flex flex-col justify-between select-none ${
+      className={`relative p-5 rounded-[24px] border transition-all duration-300 flex flex-col justify-between select-none font-sans ${
         menu.isSoldOut 
-          ? 'bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/5 opacity-60' 
-          : 'bg-white dark:bg-[#09090b] border-neutral-200 dark:border-white/10 hover:border-black dark:hover:border-white shadow-none'
+          ? isDarkMode
+            ? 'bg-[#141417]/50 border-white/5 opacity-60 text-white'
+            : 'bg-neutral-100 border-[#dddddd] opacity-70 text-[#000000]'
+          : isDarkMode
+            ? 'bg-[#141417] border-white/10 text-white hover:border-[#0381fe] shadow-lg shadow-black/40'
+            : 'bg-[#ffffff] border-[#dddddd] text-[#000000] hover:border-[#000000] shadow-sm'
       }`}
     >
       {/* Sold Out Watermark Badge */}
       {menu.isSoldOut && (
-        <div className="absolute top-3 right-3 bg-red-500 text-white text-[9px] font-black font-mono px-2 py-0.5 rounded-full z-10">
+        <div className="absolute top-4 right-4 bg-rose-500 text-white text-[9.5px] font-black font-mono px-2.5 py-0.5 rounded-[12px] shadow-sm z-10">
           SOLD OUT (품절)
         </div>
       )}
 
       <div>
-        <div className="flex gap-4 items-start mb-4">
+        <div className="flex gap-4 items-start mb-4 text-left">
           <img 
             src={menu.image} 
             alt={menu.name} 
-            className="w-20 h-20 rounded-none object-cover shrink-0 border border-neutral-200 dark:border-white/5 shadow-none" 
+            className="w-20 h-20 rounded-[18px] object-cover shrink-0 border border-neutral-200 dark:border-white/10 shadow-sm" 
           />
           <div className="text-left">
-            <span className="text-[10px] font-bold text-black dark:text-white font-mono bg-black/10 dark:bg-white/10 px-2 py-0.5 rounded-full">
+            <span className={`text-[10px] font-bold font-mono px-2.5 py-0.5 rounded-[12px] ${
+              isDarkMode ? 'bg-[#0381fe]/10 text-[#0381fe]' : 'bg-[#000000]/10 text-[#000000]'
+            }`}>
               {menu.category}
             </span>
-            <h3 className="text-base font-black text-neutral-900 dark:text-white mt-1">{menu.name}</h3>
-            <p className="text-xs font-black text-neutral-800 dark:text-neutral-200 mt-1">
+            <h3 className="text-base font-black mt-1.5 tracking-tight">{menu.name}</h3>
+            <p className="text-sm font-black font-mono text-[#0381fe] mt-0.5">
               ₩ {menu.price.toLocaleString()}
             </p>
           </div>
         </div>
 
-        <p className="text-[11px] text-neutral-500 dark:text-neutral-400 font-semibold leading-relaxed text-left line-clamp-2 mb-3">
+        <p className={`text-xs font-medium leading-relaxed text-left line-clamp-2 mb-4 ${
+          isDarkMode ? 'text-neutral-300' : 'text-neutral-600'
+        }`}>
           {menu.description}
         </p>
 
         {/* Display Registered Options */}
         {menu.options && menu.options.length > 0 && (
-          <div className="mb-4 text-left border-t border-neutral-100 dark:border-white/5 pt-3">
-            <span className="text-[10px] font-extrabold text-neutral-400 block mb-1.5">선택 가능 커스텀 옵션:</span>
-            <div className="flex flex-wrap gap-1.5">
+          <div className="mb-4 text-left border-t border-neutral-200/50 dark:border-white/10 pt-3">
+            <span className="text-[10px] font-black text-[#0381fe] uppercase font-mono block mb-1.5">선택 가능 커스텀 옵션:</span>
+            <div className="flex flex-wrap gap-1.5 font-mono">
               {menu.options.map((opt, idx) => (
                 <span 
                   key={idx} 
-                  className="text-[9.5px] font-bold text-black dark:text-white bg-black/5 dark:bg-white/10 px-2 py-0.5 rounded-none border border-black/10 dark:border-white/10"
+                  className={`text-[10px] font-bold px-2.5 py-1 rounded-[12px] border ${
+                    isDarkMode 
+                      ? 'bg-white/5 border-white/10 text-neutral-200' 
+                      : 'bg-[#f7f7f7] border-[#dddddd] text-neutral-800'
+                  }`}
                 >
                   +{opt.name} {opt.extraPrice > 0 ? `(+₩${opt.extraPrice.toLocaleString()})` : ''}
                 </span>
@@ -85,23 +99,23 @@ export function MenuCardItem({
       </div>
 
       {/* Control Buttons (Sold Out Toggle & Delete) */}
-      <div className="flex items-center justify-between pt-3 border-t border-neutral-100 dark:border-white/5 mt-2">
+      <div className="flex items-center justify-between pt-3 border-t border-neutral-200/50 dark:border-white/10 mt-2 font-mono">
         <button
           onClick={() => onToggleSoldOut(menu.id)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-none text-xs font-extrabold cursor-pointer transition-all ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[20px] text-xs font-black cursor-pointer transition-all ${
             menu.isSoldOut 
-              ? 'bg-neutral-200 text-neutral-700 dark:bg-white/10 dark:text-neutral-300' 
-              : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
+              ? 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20' 
+              : 'bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'
           }`}
         >
           {menu.isSoldOut ? (
             <>
-              <ToggleLeft className="w-4 h-4 text-neutral-500" />
+              <ToggleLeft className="w-4 h-4 text-emerald-500" />
               <span>품절 해제하기</span>
             </>
           ) : (
             <>
-              <ToggleRight className="w-4 h-4 text-red-500" />
+              <ToggleRight className="w-4 h-4 text-rose-500" />
               <span>실시간 품절(Sold-Out) 설정</span>
             </>
           )}
@@ -110,14 +124,14 @@ export function MenuCardItem({
         <div className="flex items-center gap-1">
           <button
             onClick={() => onEditMenu(menu)}
-            className="p-1.5 rounded-none text-neutral-400 hover:text-emerald-500 hover:bg-emerald-500/10 transition-colors cursor-pointer"
+            className="p-2 rounded-full text-neutral-400 hover:text-[#0381fe] hover:bg-[#0381fe]/10 transition-colors cursor-pointer"
             title="메뉴 정보 및 이미지 수정"
           >
             <Edit className="w-4 h-4" />
           </button>
           <button
             onClick={() => onDeleteMenu(menu.id)}
-            className="p-1.5 rounded-none text-neutral-400 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+            className="p-2 rounded-full text-neutral-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
             title="메뉴 삭제"
           >
             <Trash2 className="w-4 h-4" />

@@ -60,6 +60,15 @@ public class MenuController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "메뉴 품절 1초 원터치 토글", description = "사장님 대시보드 및 관제판에서 메뉴의 품절 상태를 원터치 토글(반전)합니다.")
+    @PatchMapping("/menus/{menuId}/toggle-sold-out")
+    public ResponseEntity<MenuDto.ItemResponse> toggleSoldOut(
+            @Parameter(description = "메뉴 ID", example = "101") @PathVariable("menuId") Long menuId) {
+        MenuDto.ItemResponse response = menuService.toggleSoldOutAuto(menuId);
+        return ResponseEntity.ok(response);
+    }
+
+
     @Operation(summary = "메뉴 삭제", description = "특정 메뉴 항목을 삭제합니다.")
     @DeleteMapping("/menus/{menuId}")
     public ResponseEntity<Void> deleteMenuItem(

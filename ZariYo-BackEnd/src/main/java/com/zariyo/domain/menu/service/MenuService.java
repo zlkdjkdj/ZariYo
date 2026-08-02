@@ -89,8 +89,21 @@ public class MenuService {
         return MenuDto.ItemResponse.from(menuItem);
     }
 
+    /**
+     * 사장님 원터치 품절 상태 토글 스위치 (true <-> false)
+     */
+    @Transactional
+    public MenuDto.ItemResponse toggleSoldOutAuto(Long menuItemId) {
+        MenuItem menuItem = menuItemRepository.findById(menuItemId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 메뉴입니다. ID: " + menuItemId));
+
+        menuItem.toggleSoldOut(!menuItem.isSoldOut());
+        return MenuDto.ItemResponse.from(menuItem);
+    }
+
     @Transactional
     public void deleteMenuItem(Long menuItemId) {
+
         MenuItem menuItem = menuItemRepository.findById(menuItemId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 메뉴입니다. ID: " + menuItemId));
         menuItemRepository.delete(menuItem);

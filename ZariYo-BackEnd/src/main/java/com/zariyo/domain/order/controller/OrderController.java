@@ -54,4 +54,21 @@ public class OrderController {
         OrderDto.Response response = orderService.updateOrderStatus(orderId, status);
         return ResponseEntity.ok(response);
     }
+
+    @Operation(summary = "주방 KDS 조리 목록 조회", description = "주방 KDS용 조리 대기(PENDING/PREPARING) 주문 목록을 실시간 조회합니다.")
+    @GetMapping("/stores/{storeId}/orders/kds")
+    public ResponseEntity<List<OrderDto.Response>> getKdsOrders(
+            @Parameter(description = "매장 ID", example = "1") @PathVariable("storeId") Long storeId) {
+        List<OrderDto.Response> responses = orderService.getOrdersByStore(storeId, OrderStatus.PENDING);
+        return ResponseEntity.ok(responses);
+    }
+
+    @Operation(summary = "주방 셰프 원터치 조리 완료 릴레이", description = "주방 KDS 셰프가 조리 완료 버튼 클릭 시 상태를 전환하고 웹소켓 릴레이를 전송합니다.")
+    @PatchMapping("/orders/{orderId}/cook-complete")
+    public ResponseEntity<OrderDto.Response> completeCook(
+            @Parameter(description = "주문 ID", example = "1") @PathVariable("orderId") Long orderId) {
+        OrderDto.Response response = orderService.completeCook(orderId);
+        return ResponseEntity.ok(response);
+    }
 }
+

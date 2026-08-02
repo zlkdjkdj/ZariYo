@@ -7,6 +7,7 @@ import * as z from 'zod';
 import { AuthInput } from '../../components/auth/AuthInput';
 import { Button } from '../../components/ui/Button';
 import { authApi } from '../../api/authApi';
+import { authStorage } from '../../utils/authStorage';
 
 const signupSchema = z.object({
   name: z.string().min(1, '이름을 입력해주세요.'),
@@ -48,10 +49,10 @@ export function SignupPage() {
         role: rolePayload,
       });
 
-      localStorage.setItem('zariyo_token', res.accessToken);
-      localStorage.setItem('zariyo_user', JSON.stringify(res.user));
+      authStorage.setSession(res.accessToken, res.refreshToken, res.user, false);
 
       alert(`${role === 'owner' ? '사장님' : '손님'} 회원가입에 성공했습니다! 매장 선택 게이트웨이로 이동합니다.`);
+
       if (role === 'owner') navigate('/owner/stores');
       else navigate('/reserve');
     } catch (err: any) {

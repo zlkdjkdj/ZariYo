@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Mail, Lock, LayoutGrid } from 'lucide-react';
+import { ArrowLeft, Mail, Lock, LayoutGrid, ShieldCheck } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { AuthInput } from '../../components/auth/AuthInput';
 import { Button } from '../../components/ui/Button';
 import { authApi } from '../../api/authApi';
+import { authStorage } from '../../utils/authStorage';
 
 const loginSchema = z.object({
   email: z.string().min(1, '이메일을 입력해주세요.').email('올바른 이메일 형식이 아닙니다.'),
@@ -18,22 +19,18 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export function LoginPage() {
   const navigate = useNavigate();
   const [role, setRole] = useState<'owner' | 'admin'>('owner');
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('zariyo_token');
-    const userStr = localStorage.getItem('zariyo_user');
-    if (token && userStr) {
-      try {
-        const user = JSON.parse(userStr);
-        if (user.role === 'ROLE_ADMIN') {
-          navigate('/admin/users');
-        } else {
-          navigate('/owner/stores');
-        }
-      } catch (e) {
-        // ignore
+    const token = authStorage.getAccessToken();
+    const user = authStorage.getUser();
+    if (token && user) {
+      if (user.role === 'ROLE_ADMIN') {
+        navigate('/admin/users');
+      } else {
+        navigate('/owner/stores');
       }
     }
   }, [navigate]);
@@ -51,9 +48,7 @@ export function LoginPage() {
     setApiError(null);
     try {
       const res = await authApi.login({ email: data.email });
-      localStorage.setItem('zariyo_token', res.accessToken);
-      localStorage.setItem('zariyo_refresh_token', res.refreshToken);
-      localStorage.setItem('zariyo_user', JSON.stringify(res.user));
+      authStorage.setSession(res.accessToken, res.refreshToken, res.user, rememberMe);
 
       if (role === 'admin') navigate('/admin/users');
       else navigate('/owner/stores');
@@ -64,6 +59,7 @@ export function LoginPage() {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="bg-slate-50 dark:bg-[#030303] text-neutral-900 dark:text-[#f5f5f7] font-sans selection:bg-[#000000]/20 min-h-screen flex transition-colors duration-300 relative overflow-hidden">
@@ -192,6 +188,26 @@ export function LoginPage() {
                 </a>
               }
             />
+
+            {/* Remember Me Security Checkbox */}
+            <div className="flex items-center justify-between px-1 select-none">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-neutral-300 dark:border-neutral-700 text-[#0381fe] focus:ring-[#0381fe] cursor-pointer"
+                />
+                <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300">
+                  로그인 상태 유지 (Remember Me)
+                </span>
+              </label>
+              <span className="text-[10.5px] font-mono font-bold text-[#0381fe] bg-[#0381fe]/10 px-2 py-0.5 rounded-[20px] flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3" />
+                {rememberMe ? 'PERSISTENT' : 'SESSION ONLY (SAFE)'}
+              </span>
+            </div>
+
 
             <Button
               type="submit"

@@ -1,132 +1,170 @@
 import { motion } from 'framer-motion';
 import { Monitor, ChefHat, Bike, Lock, CheckCircle } from 'lucide-react';
 
-export function LandingCoreFeaturesSection() {
+interface LandingCoreFeaturesSectionProps {
+  isDarkMode?: boolean;
+}
+
+export function LandingCoreFeaturesSection({ isDarkMode = false }: LandingCoreFeaturesSectionProps) {
   return (
-    <section className="py-24 max-w-7xl mx-auto px-6 text-left space-y-16 select-none">
-      
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="flex flex-col md:flex-row md:items-end justify-between gap-6"
-      >
-        <div>
-          <span className="text-[10.5px] font-mono font-black tracking-widest text-emerald-400 uppercase bg-emerald-500/10 px-3 py-1 rounded-[3px]">
-            CORE OS FEATURES
-          </span>
-          <h2 className="text-3xl md:text-5xl font-black text-white mt-3">
-            독보적인 4대 관제 엔진
-          </h2>
-        </div>
-        <p className="text-xs md:text-sm text-neutral-400 font-semibold max-w-md">
-          매장 좌석도 배치부터 주문 릴레이, 수선서 연동, 주방 KDS 조리 릴레이까지 하나의 단일 시스템으로 관제합니다.
-        </p>
-      </motion.div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <section className={`py-24 border-t border-b select-none transition-colors duration-300 ${
+      isDarkMode 
+        ? 'bg-[#09090b] border-white/10 text-white' 
+        : 'bg-[#ffffff] border-[#dddddd] text-[#000000]'
+    }`}>
+      <div className="max-w-7xl mx-auto px-6 text-left space-y-16">
         
-        {/* Card 1: Left Slide-In (x: -60) */}
         <motion.div 
-          initial={{ opacity: 0, x: -60 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          whileHover={{ scale: 1.03, borderColor: '#ffffff' }}
-          className="p-8 rounded-[3px] bg-[#111113] border border-white/10 transition-all space-y-5 shadow-none"
+          transition={{ duration: 0.6 }}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-6"
         >
-          <div className="p-3 rounded-[3px] bg-white/10 text-white w-fit">
-            <Monitor className="w-7 h-7" />
+          <div>
+            <span className="text-[10.5px] font-mono font-bold tracking-wider text-[#0381fe] uppercase bg-[#0381fe]/10 border border-[#0381fe]/20 px-3.5 py-1.5 rounded-[20px]">
+              CORE OS FEATURES
+            </span>
+            <h2 className={`text-3xl md:text-5xl font-bold mt-4 font-display ${
+              isDarkMode ? 'text-white' : 'text-[#000000]'
+            }`}>
+              독보적인 4대 관제 엔진
+            </h2>
           </div>
-          <div className="space-y-2">
-            <span className="text-[10px] font-mono font-bold text-neutral-500">FEATURE #01</span>
-            <h3 className="text-2xl font-black text-white">2D 실시간 매장 좌석도 관제판</h3>
-            <p className="text-xs md:text-sm text-neutral-400 font-semibold leading-relaxed">
-              매장 좌석 배치를 2D 도면으로 한눈에 파악하고, 테이블 클릭 시 Side-by-Side 실시간 영수증 수선서가 즉시 펼쳐집니다.
-            </p>
-          </div>
-          <div className="pt-2 text-xs font-mono text-emerald-400 font-bold flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4" />
-            <span>실시간 입금 & 퇴석 원터치 완료</span>
-          </div>
+          <p className={`text-xs md:text-sm font-normal max-w-md leading-relaxed ${
+            isDarkMode ? 'text-neutral-400' : 'text-[#707070]'
+          }`}>
+            매장 좌석도 배치부터 주문 릴레이, 수선서 연동, 주방 KDS 조리 릴레이까지 하나의 단일 시스템으로 관제합니다.
+          </p>
         </motion.div>
 
-        {/* Card 2: Right Slide-In (x: 60) */}
-        <motion.div 
-          initial={{ opacity: 0, x: 60 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          whileHover={{ scale: 1.03, borderColor: '#ffffff' }}
-          className="p-8 rounded-[3px] bg-[#111113] border border-white/10 transition-all space-y-5 shadow-none"
-        >
-          <div className="p-3 rounded-[3px] bg-white/10 text-white w-fit">
-            <Lock className="w-7 h-7 text-emerald-400" />
-          </div>
-          <div className="space-y-2">
-            <span className="text-[10px] font-mono font-bold text-neutral-500">FEATURE #02</span>
-            <h3 className="text-2xl font-black text-white">0.001초 실시간 2D 동기화 엔진</h3>
-            <p className="text-xs md:text-sm text-neutral-400 font-semibold leading-relaxed">
-              BroadcastChannel 기반 0.001초 초고속 동기화로 이중 예약을 완벽하게 방지하고 모든 탭 및 디바이스에 즉각 전파됩니다.
-            </p>
-          </div>
-          <div className="pt-2 text-xs font-mono text-emerald-400 font-bold flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4" />
-            <span>이중예약 0건 완벽 방어</span>
-          </div>
-        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          {/* Card 1 */}
+          <motion.div 
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className={`p-8 rounded-[20px] border transition-all space-y-5 shadow-none ${
+              isDarkMode 
+                ? 'bg-[#141417] border-white/10 hover:border-[#0381fe]' 
+                : 'bg-[#ffffff] border-[#dddddd] hover:border-[#0381fe]'
+            }`}
+          >
+            <div className="p-3.5 rounded-[20px] bg-[#0381fe]/10 text-[#0381fe] w-fit">
+              <Monitor className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-[#000000]'}`}>
+                2D 실시간 도면 관제 파이프라인
+              </h3>
+              <p className={`text-xs md:text-sm font-normal leading-relaxed mt-2 ${
+                isDarkMode ? 'text-neutral-400' : 'text-[#707070]'
+              }`}>
+                20px 스냅 격자 도면 빌더로 실시간 매장 좌석 배치를 구축하고 테이블 상태 및 입금/퇴석을 직관적으로 관리합니다.
+              </p>
+            </div>
+            <div className="space-y-2 pt-2 border-t border-inherit text-xs font-semibold">
+              <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#0381fe]" /> 20px 격자 스냅 2D 도면 빌더 마법사</div>
+              <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#0381fe]" /> 영수증 결제 & 현금영수증 원터치 발급</div>
+            </div>
+          </motion.div>
 
+          {/* Card 2 */}
+          <motion.div 
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className={`p-8 rounded-[20px] border transition-all space-y-5 shadow-none ${
+              isDarkMode 
+                ? 'bg-[#141417] border-white/10 hover:border-[#0381fe]' 
+                : 'bg-[#ffffff] border-[#dddddd] hover:border-[#0381fe]'
+            }`}
+          >
+            <div className="p-3.5 rounded-[20px] bg-[#0381fe]/10 text-[#0381fe] w-fit">
+              <Lock className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-[#000000]'}`}>
+                5분 원자성 Redis 선점 락
+              </h3>
+              <p className={`text-xs md:text-sm font-normal leading-relaxed mt-2 ${
+                isDarkMode ? 'text-neutral-400' : 'text-[#707070]'
+              }`}>
+                키오스크 주문 및 예약 착석 시 Redis Redisson 원자성 락을 통해 5분간 이중 예약을 완벽 차단하고 노쇼 시 자동 공석 원복됩니다.
+              </p>
+            </div>
+            <div className="space-y-2 pt-2 border-t border-inherit text-xs font-semibold">
+              <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#0381fe]" /> Redis Redisson 원자성 분산 락 탑재</div>
+              <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#0381fe]" /> 5분 선점 카운트다운 타이머 펄스 경고</div>
+            </div>
+          </motion.div>
 
-        {/* Card 3: Left Slide-In (x: -60) */}
-        <motion.div 
-          initial={{ opacity: 0, x: -60 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          whileHover={{ scale: 1.03, borderColor: '#ffffff' }}
-          className="p-8 rounded-[3px] bg-[#111113] border border-white/10 transition-all space-y-5 shadow-none"
-        >
-          <div className="p-3 rounded-[3px] bg-white/10 text-white w-fit">
-            <ChefHat className="w-7 h-7 text-sky-400" />
-          </div>
-          <div className="space-y-2">
-            <span className="text-[10px] font-mono font-bold text-neutral-500">FEATURE #03</span>
-            <h3 className="text-2xl font-black text-white">통합 주방 조리 관제 (KDS)</h3>
-            <p className="text-xs md:text-sm text-neutral-400 font-semibold leading-relaxed">
-              단일 박스 안에 홀 매장 테이블 요리와 배달/포장 주문 요리를 2분할로 깔끔히 배치하여 셰프의 조리 효율을 조율합니다.
-            </p>
-          </div>
-          <div className="pt-2 text-xs font-mono text-sky-400 font-bold flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4" />
-            <span>원터치 조리 완료 릴레이 승인</span>
-          </div>
-        </motion.div>
+          {/* Card 3 */}
+          <motion.div 
+            initial={{ opacity: 0, x: -60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className={`p-8 rounded-[20px] border transition-all space-y-5 shadow-none ${
+              isDarkMode 
+                ? 'bg-[#141417] border-white/10 hover:border-[#0381fe]' 
+                : 'bg-[#ffffff] border-[#dddddd] hover:border-[#0381fe]'
+            }`}
+          >
+            <div className="p-3.5 rounded-[20px] bg-[#0381fe]/10 text-[#0381fe] w-fit">
+              <ChefHat className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-[#000000]'}`}>
+                주방 KDS 2분할 스마트 조리 릴레이
+              </h3>
+              <p className={`text-xs md:text-sm font-normal leading-relaxed mt-2 ${
+                isDarkMode ? 'text-neutral-400' : 'text-[#707070]'
+              }`}>
+                종이 수선서 없이 주방 KDS 화면으로 직통 전달되며 홀 테이블 요리와 배달/포장 요리가 2분할로 깔끔히 정돈됩니다.
+              </p>
+            </div>
+            <div className="space-y-2 pt-2 border-t border-inherit text-xs font-semibold">
+              <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#0381fe]" /> 소스따로 / 미디엄 웰던 등 특이사항 하이라이트</div>
+              <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#0381fe]" /> 원터치 조리완료 시 POS 자동 전파</div>
+            </div>
+          </motion.div>
 
-        {/* Card 4: Right Slide-In (x: 60) */}
-        <motion.div 
-          initial={{ opacity: 0, x: 60 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          whileHover={{ scale: 1.03, borderColor: '#ffffff' }}
-          className="p-8 rounded-[3px] bg-[#111113] border border-white/10 transition-all space-y-5 shadow-none"
-        >
-          <div className="p-3 rounded-[3px] bg-white/10 text-white w-fit">
-            <Bike className="w-7 h-7 text-orange-400" />
-          </div>
-          <div className="space-y-2">
-            <span className="text-[10px] font-mono font-bold text-neutral-500">FEATURE #04</span>
-            <h3 className="text-2xl font-black text-white">배달 & 방문 포장 라이브 릴레이</h3>
-            <p className="text-xs md:text-sm text-neutral-400 font-semibold leading-relaxed">
-              배달의민족, 쿠팡이츠, 요기요 및 방문포장 주문 수신부터 라이더 호출 승인까지 관제판에서 클릭 한 번으로 통제합니다.
-            </p>
-          </div>
-          <div className="pt-2 text-xs font-mono text-orange-400 font-bold flex items-center gap-1.5">
-            <CheckCircle className="w-4 h-4" />
-            <span>라이더 자동 배차 API 수신</span>
-          </div>
-        </motion.div>
+          {/* Card 4 */}
+          <motion.div 
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className={`p-8 rounded-[20px] border transition-all space-y-5 shadow-none ${
+              isDarkMode 
+                ? 'bg-[#141417] border-white/10 hover:border-[#0381fe]' 
+                : 'bg-[#ffffff] border-[#dddddd] hover:border-[#0381fe]'
+            }`}
+          >
+            <div className="p-3.5 rounded-[20px] bg-[#0381fe]/10 text-[#0381fe] w-fit">
+              <Bike className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-[#000000]'}`}>
+                배달 & 포장 통합 관제 시스템
+              </h3>
+              <p className={`text-xs md:text-sm font-normal leading-relaxed mt-2 ${
+                isDarkMode ? 'text-neutral-400' : 'text-[#707070]'
+              }`}>
+                배달의민족, 쿠팡이츠, 요기요 수신부터 라이더 배차 호출까지 단 하나의 스크린으로 통합 관제합니다.
+              </p>
+            </div>
+            <div className="space-y-2 pt-2 border-t border-inherit text-xs font-semibold">
+              <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#0381fe]" /> 배달 라이더 자동 지점 배차 연동</div>
+              <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-[#0381fe]" /> 원클릭 메뉴 1초 품절 처리 스위치</div>
+            </div>
+          </motion.div>
+
+        </div>
 
       </div>
     </section>

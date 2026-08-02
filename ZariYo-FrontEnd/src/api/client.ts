@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { authStorage } from '../utils/authStorage';
 
 // 백엔드 Spring Boot REST API 기본 URL
 export const API_BASE_URL = 'http://localhost:8080';
@@ -10,10 +11,10 @@ export const apiClient = axios.create({
   },
 });
 
-// Request Interceptor: LocalStorage에 저정된 JWT Access Token을 Bearer 헤더로 자동 부착
+// Request Interceptor: authStorage에서 JWT Access Token을 가져와 Bearer 헤더로 자동 부착
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('zariyo_token');
+    const token = authStorage.getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -30,27 +31,25 @@ apiClient.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('/api/v1/auth/refresh')) {
       originalRequest._retry = true;
-      const refreshToken = localStorage.getItem('zariyo_refresh_token');
+      const refreshToken = authStorage.getRefreshToken();
 
       if (refreshToken) {
         try {
           const res = await axios.post(`${API_BASE_URL}/api/v1/auth/refresh`, { refreshToken });
           const { accessToken, refreshToken: newRefreshToken, user } = res.data;
 
-          localStorage.setItem('zariyo_token', accessToken);
-          localStorage.setItem('zariyo_refresh_token', newRefreshToken);
-          if (user) localStorage.setItem('zariyo_user', JSON.stringify(user));
+          const isRemembered = !!localStorage.getItem('zariyo_token');
+          authStorage.setSession(accessToken, newRefreshToken, user, isRemembered);
 
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return apiClient(originalRequest);
         } catch (refreshErr) {
-          localStorage.removeItem('zariyo_token');
-          localStorage.removeItem('zariyo_refresh_token');
-          localStorage.removeItem('zariyo_user');
+          authStorage.clearSession();
           window.location.href = '/login';
         }
       }
     }
+
 
     if (error.response) {
       console.error(`[API Error ${error.response.status}]`, error.response.data);

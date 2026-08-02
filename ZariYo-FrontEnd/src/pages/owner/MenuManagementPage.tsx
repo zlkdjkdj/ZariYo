@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { ConsoleSidebar } from '../../components/owner/ConsoleSidebar';
-import { UtensilsCrossed, PlusCircle } from 'lucide-react';
+import { UtensilsCrossed, PlusCircle, Sun, Moon } from 'lucide-react';
 import { MenuCardItem, type MenuManagementItem } from '../../components/owner/menu/MenuCardItem';
 import { AddMenuFormModal } from '../../components/owner/menu/AddMenuFormModal';
 import { EditMenuFormModal } from '../../components/owner/menu/EditMenuFormModal';
 import { INITIAL_MENU_ITEMS } from '../../data/mockMenuManagement';
 import { menuApi } from '../../api/menuApi';
+
+import { useTheme } from '../../context/ThemeContext';
 
 export function MenuManagementPage() {
   const [menuItems, setMenuItems] = useState<MenuManagementItem[]>(INITIAL_MENU_ITEMS);
@@ -13,6 +15,11 @@ export function MenuManagementPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [editingMenu, setEditingMenu] = useState<MenuManagementItem | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+
+  // Global Unified Theme Hook
+  const { isDarkMode, toggleTheme } = useTheme();
+
+
 
   // 메뉴 수정 모달 열기 핸들러
   const handleOpenEditModal = (menu: MenuManagementItem) => {
@@ -98,45 +105,71 @@ export function MenuManagementPage() {
     : menuItems.filter((item) => item.category === selectedCategory);
 
   return (
-    <div className="flex h-screen bg-[var(--bg-main)] text-[var(--text-main)] overflow-hidden font-sans select-none transition-colors duration-300">
+    <div className={`flex h-screen overflow-hidden font-sans select-none transition-colors duration-300 ${
+      isDarkMode ? 'bg-[#09090b] text-white' : 'bg-[#f7f7f7] text-[#000000]'
+    }`}>
       
       {/* Sidebar Navigation */}
       <ConsoleSidebar />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[var(--bg-main)] p-8">
+      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto p-8">
         
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-neutral-200 dark:border-neutral-800 select-none">
+        {/* Header - Samsung One UI Style */}
+        <div className={`flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b transition-colors duration-300 ${
+          isDarkMode ? 'border-white/10' : 'border-[#dddddd]'
+        }`}>
           <div className="text-left">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-[20px] bg-[#0381fe]/10 text-[#0381fe] border border-[#0381fe]/30 text-[10px] font-bold font-mono mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[20px] bg-[#0381fe]/10 text-[#0381fe] border border-[#0381fe]/30 text-[10px] font-mono font-black mb-2">
               <UtensilsCrossed className="w-3.5 h-3.5" /> SAMSUNG STORE MENU ENGINE
             </div>
-            <h1 className="text-2xl font-bold text-neutral-900 dark:text-white font-sans">메뉴 & 품절 관리</h1>
-            <p className="text-xs text-[#707070] dark:text-neutral-400 font-normal mt-1">
+            <h1 className="text-2xl font-black tracking-tight font-sans">메뉴 & 품절 관리 콘솔</h1>
+            <p className={`text-xs font-bold mt-1 ${isDarkMode ? 'text-neutral-400' : 'text-neutral-600'}`}>
               매장의 전체 메뉴 가격, 이미지 및 실시간 품절(Sold Out) 상태를 클릭 한 번으로 통제합니다.
             </p>
           </div>
 
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="h-[40px] px-5 bg-black text-white dark:bg-white dark:text-black font-bold text-xs cursor-pointer hover:opacity-90 flex items-center gap-2 transition-all rounded-[20px] shadow-sm"
-          >
-            <PlusCircle className="w-4 h-4 text-[#0381fe]" />
-            <span>신규 메뉴 등록</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className={`p-2.5 rounded-[20px] border transition-all cursor-pointer ${
+                isDarkMode 
+                  ? 'bg-white/10 text-amber-400 border-white/20 hover:bg-white/20' 
+                  : 'bg-[#ffffff] text-neutral-800 border-[#dddddd] hover:bg-neutral-100'
+              }`}
+              title={isDarkMode ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            >
+              {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+
+            <button
+              onClick={() => setIsAddModalOpen(true)}
+              className={`h-[42px] px-5 font-black text-xs cursor-pointer hover:opacity-90 flex items-center gap-2 transition-all rounded-[20px] shadow-md border ${
+                isDarkMode
+                  ? 'bg-white text-black border-white'
+                  : 'bg-black text-white border-black'
+              }`}
+            >
+              <PlusCircle className="w-4 h-4 text-[#0381fe]" />
+              <span>신규 메뉴 등록</span>
+            </button>
+          </div>
         </div>
 
-        {/* Category Tabs - Samsung 40px Pill Chips */}
+        {/* Category Tabs - Samsung 20px Pill Chips */}
         <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none select-none">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`h-[40px] px-6 py-2 rounded-[20px] text-xs font-bold transition-all cursor-pointer whitespace-nowrap border ${
+              className={`h-[40px] px-6 py-2 rounded-[20px] text-xs font-black transition-all cursor-pointer whitespace-nowrap border ${
                 selectedCategory === cat
-                  ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-sm'
-                  : 'bg-[#f7f7f7] dark:bg-white/5 text-neutral-800 dark:text-neutral-200 border-neutral-200 dark:border-white/10 hover:border-[#0381fe]'
+                  ? isDarkMode
+                    ? 'bg-white text-black border-white shadow-sm'
+                    : 'bg-black text-white border-black shadow-sm'
+                  : isDarkMode
+                    ? 'bg-white/5 text-neutral-300 border-white/10 hover:border-[#0381fe]'
+                    : 'bg-[#ffffff] text-neutral-700 border-[#dddddd] hover:border-[#000000]'
               }`}
             >
               {cat} ({cat === '전체' ? menuItems.length : menuItems.filter(i => i.category === cat).length})
@@ -153,12 +186,12 @@ export function MenuManagementPage() {
               onToggleSoldOut={handleToggleSoldOut}
               onDeleteMenu={handleDeleteMenu}
               onEditMenu={handleOpenEditModal}
+              isDarkMode={isDarkMode}
             />
           ))}
         </div>
 
       </main>
-
 
       {/* Add Menu Modal Component */}
       <AddMenuFormModal 

@@ -109,5 +109,22 @@ public class OrderService {
 
         return response;
     }
+
+    /**
+     * 주방 KDS 셰프의 원터치 조리 완료 처리 릴레이
+     */
+    @Transactional
+    public OrderDto.Response completeCook(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 주문입니다. ID: " + orderId));
+
+        order.updateStatus(OrderStatus.PREPARING);
+        OrderDto.Response response = OrderDto.Response.from(order);
+
+        messagingTemplate.convertAndSend("/topic/stores/" + order.getStore().getId() + "/kds", response);
+
+        return response;
+    }
 }
+
 

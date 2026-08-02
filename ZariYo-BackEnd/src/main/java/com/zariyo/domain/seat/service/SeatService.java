@@ -71,9 +71,9 @@ public class SeatService {
             }
 
             // DB에서 예약 완료 또는 사용 중인 최종 예약 정보 가져오기
-            List<Reservation> reservations = reservationRepository.findBySeatStoreId(storeId);
+            List<Reservation> reservations = reservationRepository.findByStoreIdOrderByCreatedAtDesc(storeId);
             Optional<Reservation> activeRes = reservations.stream()
-                    .filter(r -> r.getSeat().getElementId().equals(elementId) && r.getStatus() == Reservation.ReservationStatus.PENDING)
+                    .filter(r -> r.getReservedTableLabel().equals(elementId) && r.getStatus() == Reservation.ReservationStatus.PENDING)
                     .findFirst();
 
             String status = "available"; // 기본값: 공석
@@ -84,7 +84,8 @@ public class SeatService {
                 status = "reserved"; // 예약이 최종 확정됨
             }
 
-            Long activeUserId = tempUserId != null ? tempUserId : (activeRes.map(r -> r.getUser().getId()).orElse(null));
+            Long activeUserId = tempUserId;
+
 
             return new SeatReservationDto.SeatStatusResponse(
                     elementId,
@@ -136,11 +137,12 @@ public class SeatService {
                 return new SeatReservationDto.ReserveResponse(false, "다른 사용자가 이미 선점 중인 좌석입니다.", seatId, userId, 0, null);
             }
 
-            List<Reservation> activeRes = reservationRepository.findBySeatStoreId(seat.getStore().getId());
-            boolean isAlreadyReserved = activeRes.stream()
-                    .anyMatch(r -> r.getSeat().getElementId().equals(seatId) && r.getStatus() == Reservation.ReservationStatus.PENDING);
+            List<Reservation> activeRes = reservationRepository.findByStoreIdOrderByCreatedAtDesc(seat.getStore().getId());
+            boolean isReservedInDb = activeRes.stream()
+                    .anyMatch(r -> r.getReservedTableLabel().equals(seatId) && r.getStatus() == Reservation.ReservationStatus.PENDING);
+
             
-            if (isAlreadyReserved) {
+            if (isReservedInDb) {
                 return new SeatReservationDto.ReserveResponse(false, "이미 최종 예약 확정이 완료된 좌석입니다.", seatId, userId, 0, null);
             }
 
@@ -207,11 +209,12 @@ public class SeatService {
         User user = findUserOrThrow(userId);
 
         Reservation reservation = new Reservation(
-                user,
-                seat,
+                seat.getStore(),
+                user.getName(),
+                user.getEmail(),
                 request.getPeopleCount(),
-                LocalDateTime.now(),
-                Reservation.ReservationStatus.PENDING
+                seat.getElementId(),
+                "실시간"
         );
         Reservation savedReservation = reservationRepository.save(reservation);
 
@@ -237,15 +240,16 @@ public class SeatService {
         }
         
         Seat seat = findSeatOrThrow(seatId);
-        List<Reservation> reservations = reservationRepository.findBySeatStoreId(seat.getStore().getId());
+        List<Reservation> reservations = reservationRepository.findByStoreIdOrderByCreatedAtDesc(seat.getStore().getId());
         
         Optional<Reservation> activeRes = reservations.stream()
-                .filter(r -> r.getSeat().getElementId().equals(seatId) && r.getStatus() == Reservation.ReservationStatus.PENDING)
+                .filter(r -> r.getReservedTableLabel().equals(seatId) && r.getStatus() == Reservation.ReservationStatus.PENDING)
                 .findFirst();
 
         if (activeRes.isEmpty()) {
             return new SeatReservationDto.ReturnResponse(false, "반납할 활성화된 예약 내역이 없습니다.");
         }
+
 
         Reservation reservation = activeRes.get();
         reservation.updateStatus(Reservation.ReservationStatus.COMPLETED);

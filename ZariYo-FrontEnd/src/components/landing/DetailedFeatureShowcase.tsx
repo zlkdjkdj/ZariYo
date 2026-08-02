@@ -22,26 +22,26 @@ export function DetailedFeatureShowcase() {
   const currentSpec = FEATURE_SPECS[activeTab];
 
   return (
-    <section className="py-24 bg-[var(--bg-main)] text-[var(--text-main)] transition-colors duration-300 border-t border-neutral-300 dark:border-white/10 select-none">
+    <section className="py-24 bg-[#ffffff] text-[#000000] transition-colors duration-300 border-t border-[#dddddd] select-none">
       <div className="max-w-7xl mx-auto px-6 text-left">
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
           <div>
-            <span className="text-[10px] font-black tracking-widest text-black dark:text-white uppercase font-mono bg-black/10 dark:bg-white/10 px-3 py-1 rounded-full border border-black/20 dark:border-white/20">
+            <span className="text-[10.5px] font-bold tracking-wider text-[#0381fe] uppercase font-mono bg-[#0381fe]/10 px-3.5 py-1.5 rounded-[20px] border border-[#0381fe]/20">
               DETAILED FEATURE SPECIFICATION
             </span>
-            <h2 className="text-3xl md:text-5xl font-black text-black dark:text-white mt-3">
+            <h2 className="text-3xl md:text-5xl font-bold text-[#000000] mt-4 font-display">
               ZariYo 세분화 핵심 기능 명세
             </h2>
           </div>
-          <p className="text-xs md:text-sm text-neutral-700 dark:text-neutral-300 font-semibold max-w-md">
+          <p className="text-xs md:text-sm text-[#707070] font-normal max-w-md leading-relaxed">
             실전 매장에서 검증된 4대 독립 모듈과 16가지 세부 기능 스펙을 실시간 인터랙티브 시뮬레이터로 확인하세요.
           </p>
         </div>
 
-        {/* 4 Module Tabs Switcher */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-14">
+        {/* 4 Module Tabs Switcher - DESIGN.md 0px Selected Tab Title Pattern */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-14 border-b border-[#dddddd] pb-3">
           {[
             { id: 'kiosk', label: '1. 테이블 키오스크', icon: UtensilsCrossed },
             { id: 'pos', label: '2. 사장님 관제 POS', icon: Monitor },
@@ -54,13 +54,13 @@ export function DetailedFeatureShowcase() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`py-4 px-6 rounded-[3px] border font-black text-xs md:text-sm flex items-center justify-center gap-2.5 transition-all duration-200 cursor-pointer ${
+                className={`py-3.5 px-6 rounded-none font-bold text-xs md:text-sm flex items-center justify-center gap-2.5 transition-all duration-200 cursor-pointer ${
                   isActive 
-                    ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white shadow-none scale-[1.02]' 
-                    : 'bg-neutral-100 dark:bg-white/5 text-neutral-800 dark:text-neutral-200 border-neutral-300 dark:border-white/10 hover:border-black dark:hover:border-white'
+                    ? 'bg-[#000000] text-white border-b-2 border-[#0381fe]' 
+                    : 'bg-[#f7f7f7] text-[#000000] hover:bg-[#eeeeee] border-b-2 border-transparent'
                 }`}
               >
-                <Icon className="w-4 h-4 shrink-0" />
+                <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#0381fe]' : 'text-[#707070]'}`} />
                 <span>{tab.label}</span>
               </button>
             );
@@ -73,13 +73,13 @@ export function DetailedFeatureShowcase() {
           {/* Left 6 cols: 4 Detailed Specs Cards */}
           <div className="lg:col-span-6 space-y-6">
             <div className="mb-4">
-              <span className="text-[10.5px] font-extrabold font-mono tracking-widest text-emerald-600 dark:text-emerald-400">
+              <span className="text-[10.5px] font-bold font-mono tracking-wider text-[#0381fe]">
                 {currentSpec.badge}
               </span>
-              <h3 className="text-xl md:text-2xl font-black text-black dark:text-white mt-1">
+              <h3 className="text-xl md:text-2xl font-bold text-[#000000] mt-1">
                 {currentSpec.title}
               </h3>
-              <p className="text-xs md:text-sm text-neutral-600 dark:text-neutral-400 font-semibold mt-1">
+              <p className="text-xs md:text-sm text-[#707070] font-normal mt-1">
                 {currentSpec.subtitle}
               </p>
             </div>
@@ -130,3 +130,4 @@ export function DetailedFeatureShowcase() {
     </section>
   );
 }
+

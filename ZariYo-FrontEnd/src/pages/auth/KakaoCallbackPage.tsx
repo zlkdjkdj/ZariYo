@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { authApi } from '../../api/authApi';
+import { authStorage } from '../../utils/authStorage';
 
 export function KakaoCallbackPage() {
   const [searchParams] = useSearchParams();
@@ -25,10 +26,9 @@ export function KakaoCallbackPage() {
     authApi
       .kakaoLogin({ code })
       .then((res) => {
-        localStorage.setItem('zariyo_token', res.accessToken);
-        localStorage.setItem('zariyo_refresh_token', res.refreshToken);
-        localStorage.setItem('zariyo_user', JSON.stringify(res.user));
+        authStorage.setSession(res.accessToken, res.refreshToken, res.user, false);
         setStatus('success');
+
 
         setTimeout(() => {
           if (res.user.role === 'ROLE_ADMIN') navigate('/admin/users');

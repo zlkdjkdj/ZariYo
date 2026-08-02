@@ -53,6 +53,13 @@ public class StaffCallService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 미조치된 직원 호출 목록만 실시간 조회합니다.
+     */
+    public List<StaffCallDto.Response> getUnresolvedStaffCalls(Long storeId) {
+        return getStaffCalls(storeId, false);
+    }
+
     @Transactional
     public StaffCallDto.Response resolveStaffCall(Long callId) {
         StaffCall staffCall = staffCallRepository.findById(callId)
@@ -66,5 +73,6 @@ public class StaffCallService {
 
         return response;
     }
+
 }
 

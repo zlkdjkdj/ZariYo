@@ -910,6 +910,14 @@
   - **정적 빌드 무결성 검증**:
     - 프론트엔드 `pnpm run build` (**`built in 608ms`**) 오류 0건 무결 통과를 입증했습니다.
 
+### 151. 실시간 배달/포장 주문 릴레이 원터치 상세보기 모달(DeliveryDetailModal) 구축
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[배달/포장 상세보기 모달 팝업] ([DashboardDeliveryPane.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardDeliveryPane.tsx))**:
+    - 배달/포장 주문 카드를 클릭할 때 Framer Motion 모션 팝업이 뜨며 배달목적지 주소, 고객 안심번호, 요청사항, 상품 항목별 명세, 결제수단 및 원터치 라이더 호출/조리 시작 제어가 가능하도록 대개편.
+  - **검증 완료**:
+    - `pnpm run build` 수행 결과 **`built in 501ms`** (에러 0건) 입증.
+
 ### 101. GitHub 소스코드 전면 보안 분석(Security Audit) 및 커밋(Commit) 무결 검증 완결
 - **작업 일시**: 2026-07-27
 - **작업 내용**:
@@ -1222,18 +1230,232 @@
   - **검증 완료**:
     - `pnpm run build` 수행 결과 **`built in 608ms`** (경고 0건)로 구문 오류 완전 해소 및 성공을 증명했습니다.
 
+### 133. 랜딩페이지 DESIGN.md 기반 180도 디자인 전면 개편 (Samsung One UI & Commerce Style)
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **랜딩페이지 전면 라이트 모드 180도 전환 ([LandingPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LandingPage.tsx))**:
+    - 기존 다크/사이버 테마(`bg-[#09090b]`)를 `DESIGN.md` 명세에 입각한 Clean White Canvas (`#ffffff`) 및 Light Surface (`#f7f7f7`) 기반 프리미엄 라이트 테마로 180도 대개편하였습니다.
+    - 네비게이션 헤더: `bg-white/90 backdrop-blur-md border-b border-[#dddddd]`, 로고 텍스트, Samsung One UI Store OS 배지 (`text-[#0381fe] bg-[#0381fe]/10 rounded-[20px]`).
+    - 헤더 CTA 버튼: 삼성 공식 웹 표준 Contained Black Button (`bg-[#000000] text-white rounded-[20px] h-[40px] px-6 font-bold hover:bg-neutral-800`), Outlined Button (`border border-black text-black rounded-[20px] h-[40px] px-6 font-bold hover:bg-black/5`).
+  - **히어로 섹션 라이트 개편 ([LandingHeroSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingHeroSection.tsx))**:
+    - `#ffffff` 캔버스 및 소프트 `#0381fe` 글로우 이펙트 적용.
+    - Samsung Sharp Sans 메인 헤딩 (`text-[#000000]`), One UI Blue 배지 & 20px 둥근 모서리 서페이스 카드 3열 배치.
+  - **임팩트 수치 바 개편 ([LandingMetricsSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingMetricsSection.tsx))**:
+    - `bg-[#f7f7f7]` 라이트 서페이스, 20px 라운디드 메트릭 카드 (`#ffffff`), 실시간 라이브 등록 매장 하이라이트 배너 연동.
+  - **원 UI 스와이퍼 캐러셀 개편 ([HorizontalCardSwiper.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/HorizontalCardSwiper.tsx))**:
+    - 20px 화이트 카드 (`#ffffff`), subtle border (`#dddddd`), One UI Blue 배지 및 상단 슬라이드 컨트롤러 개편.
+  - **핵심 4대 관제 엔진 개편 ([LandingCoreFeaturesSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingCoreFeaturesSection.tsx))**:
+    - 20px 라운디드 화이트 카드 (`#ffffff`), subtle border (`#dddddd`), One UI Blue 배지 및 아이콘 하이라이트.
+  - **세부 스펙 및 라이브 시뮬레이터 개편 ([DetailedFeatureShowcase.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/DetailedFeatureShowcase.tsx), [FeatureSimulatorPane.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/FeatureSimulatorPane.tsx), [FeatureSpecCard.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/FeatureSpecCard.tsx))**:
+    - `DESIGN.md` §4 명세 준수: Selected Product Tab Title 0px radius pattern (`rounded-none`), `#000000` text, bottom border highlight.
+    - 2D 라이브 시뮬레이터: 5분 원자성 Redis 락, POS 영수증 수선서, KDS 주방 조리 릴레이 및 품절 스위치를 Clean White & `#f7f7f7` 라이트 시뮬레이션 패널로 180도 렌더링.
+  - **Before vs After 매트릭스 & CTA 배너 개편 ([LandingBeforeAfterSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingBeforeAfterSection.tsx), [LandingCtaSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingCtaSection.tsx))**:
+    - 기존 아날로그 vs ZariYo 2D 관제 OS 비교표를 미니멀 카드 스타일로 개편.
+    - 삼성 스타일 전면 하이라이트 컨테인드 배너 (`bg-[#000000] text-white rounded-[20px] p-12`) 및 One UI Blue 포인트 액션 버튼 적용.
+  - **검증 완료**:
+    - `pnpm run build` 수행 결과 컴파일 정합성 입증 (`built in 595ms`, 에러 0건).
 
+### 134. 사용자 친화적 메시지 강화 & 실물 UI 시각적 쇼룸 구현
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **인터랙티브 스토어 OS UI 시각 쇼룸 구현 ([VisualProductShowroom.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/VisualProductShowroom.tsx))**:
+    - 삼성 Galaxy Display/Tab 프로덕트 디바이스 프레임 내에 ZariYo 스토어 OS 실물 UI 프리뷰 구축.
+    - AI 그래픽 툴로 렌더링된 고화질 스마트 매장 관제 태블릿 자산([zariyo_store_ui_mockup.png](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/public/images/zariyo_store_ui_mockup.png)) 통합 연동.
+    - 4개 주요 스크린 탭(사장님 2D 관제 POS, 손님 2D 키오스크, 주방 KDS, 매출 & 품절 통제) 인터랙티브 라이브 렌더링 스위처 구현.
+  - **사용자 경험 혜택 카드 섹션 신설 ([UserBenefitsSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/UserBenefitsSection.tsx))**:
+    - 백엔드 개발자용 복잡한 서술 문구를 사장님과 손님이 체감하는 직관적 혜택으로 180도 전환.
+    - **사장님이 행복해지는 3가지 변화**: 3분 2D 매장 도면 완성, 피크타임 노쇼 & 중복예약 차단, 원클릭 엑셀 내보내기.
+    - **손님이 감동하는 3가지 경험**: 줄 서지 않는 2D 좌석 선택, 직원 부름 원터치 호출, 카카오페이/카드 0.1초 즉시 결제.
+  - **히어로 섹션 문구 튜닝 ([LandingHeroSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingHeroSection.tsx))**:
+    - 히어로 및 3열 카드 서술 문구를 "3분 만에 그리는 도면", "기다림 없는 0초 주문 전파", "통합 배달/포장 관제" 등 유저 친화적 가치 제안으로 전면 개선.
+  - **검증 완료**:
+    - `pnpm run build` 가동 결과 정적 번들 빌드 성공 (`built in 512ms`, 에러 0건).
 
+### 135. VisualProductShowroom 내 외부 이미지 소거 및 100% ZariYo 실제 2D 라이브 UI 직접 이식
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **100% 실제 ZariYo 라이브 UI 컴포넌트 이식 ([VisualProductShowroom.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/VisualProductShowroom.tsx))**:
+    - 정적 외부 이미지 대신 **ZariYo의 실제 2D 매장 도면 배치도(2인석, 4인석, 카운터, 화장실 등), 실시간 테이블 터치 및 Side-by-Side 영수증 수선서 오버레이, 5분 선점 락 카운트다운 타이머 UI**를 삼성 디바이스 프레임 내에 직접 구동되도록 이식하였습니다.
+    - 손님 키오스크 탭: 2D 좌석 터치 선택, 메뉴 옵션 모달(기본 vs 곱빼기), 원터치 결제 & 직원 호출 팝업 라이브 UI.
+    - 주방 KDS 탭: 홀 vs 배달 2분할 조리 릴레이 카드 및 [원터치 조리 완료] 승인 스위치 라이브 UI.
+    - 매출 & 품절 탭: 실시간 총매출 카드, 엑셀 CSV 다운로드 버튼, 품절 스위치(특상 로스카츠 / 제로 콜라) 라이브 UI.
+  - **검증 완료**:
+    - `pnpm run build` 가동 결과 컴파일 정합성 성공 (`built in 528ms`, 에러 0건).
 
+### 136. 랜딩페이지 라이트/다크 모드 실시간 토글러 구축 & 비대칭 자유 레이아웃 전면 대개편
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **헤더 테마 토글 스위치 구축 ([LandingPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LandingPage.tsx))**:
+    - 상단 네비게이션 헤더에 원터치 **Sun ☀️ / Moon 🌙 테마 스위처** 배치 및 `zariyo_theme` 로컬스토리지 상태 보존 연동.
+    - Clean Light Mode (`#ffffff`, `#f7f7f7`)와 Samsung One UI Dark Mode (`#09090b`, `#141417`)를 9개 하위 컴포넌트 전체로 전동 스위칭.
+  - **비대칭 2-Column Split Hero Layout ([LandingHeroSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingHeroSection.tsx))**:
+    - 중앙 정렬 레이아웃에서 탈피하여 좌측 6.5열 (대형 비대칭 타이포그래피 & CTA) + 우측 5.5열 (플로팅 2D/3D 레이어드 오버레이 틸트 카드) 구도로 개편.
+  - **비대칭 벤토 그리드 사용자 혜택 섹션 ([UserBenefitsSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/UserBenefitsSection.tsx))**:
+    - 획일적 2열 세로 배치 ➔ **비대칭 벤토 그리드 (Asymmetric Bento Grid: 2x2 + 3x1 모듈 카드)** 구조로 대개편.
+  - **9개 하위 컴포넌트 다크 테마 일괄 전파 ([LandingMetricsSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingMetricsSection.tsx), [VisualProductShowroom.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/VisualProductShowroom.tsx), [HorizontalCardSwiper.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/HorizontalCardSwiper.tsx), [LandingCoreFeaturesSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingCoreFeaturesSection.tsx), [LandingBeforeAfterSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingBeforeAfterSection.tsx), [LandingCtaSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingCtaSection.tsx))**:
+    - `isDarkMode` 프로퍼티 기반 다크/라이트 모드 비주얼 스타일 스위칭 수용.
+  - **검증 완료**:
+    - `pnpm run build` 가동 결과 정적 컴파일 성공 (`built in 528ms`, 에러 0건).
 
+### 137. SessionStorage 중심 중앙 인증 관리 모듈 구축 & 로그인 상태 유지(Remember Me) 보안 옵션 구현
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **중앙 인증 관리 모듈 신설 ([authStorage.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/utils/authStorage.ts))**:
+    - 기존 영구 `localStorage` 방식의 보안 위험을 해결하기 위해 **`sessionStorage`를 1순위 표준 저장소로 채택**하여 탭 및 브라우저를 닫는 즉시 토큰이 자동 파기되도록 세션 보안을 강화함.
+    - `getAccessToken()`, `getRefreshToken()`, `getUser()`, `setSession()`, `clearSession()` 메서드로 인증 로직을 중앙 캡슐화.
+  - **로그인 상태 유지 (Remember Me) UI 도입 ([LoginPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/LoginPage.tsx))**:
+    - 비밀번호 필드 하단에 "로그인 상태 유지 (Remember Me)" 보안 체크박스를 구축.
+    - 체크 해제 시 (기본값): 브라우저 닫을 때 토큰 자동 파기 (`sessionStorage` 모드).
+    - 체크 시: 사장님 편의를 위한 로그인 정보 영구 저장 (`localStorage` 모드).
+  - **전체 인증 및 API 클라이언트 이식 ([KakaoCallbackPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/KakaoCallbackPage.tsx), [SignupPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/auth/SignupPage.tsx), [client.ts](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/api/client.ts), [LandingPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/LandingPage.tsx), [LandingHeroSection.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/landing/LandingHeroSection.tsx))**:
+    - 인증 토큰 조회, 무중단 자동 재발급(Silent Refresh), 로그아웃 파기를 `authStorage` 모듈 기반으로 전격 전환.
+  - **검증 완료**:
+    - `pnpm run build` 수행 결과 컴파일 정합성 입증 (`built in 562ms`, 에러 0건).
 
+### 138. AuthService.java 미사용 HttpStatusCodeException 임포트 정리 및 컴파일 경고 소거
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - [AuthService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/service/AuthService.java#L16) 내 미사용 구문인 `import org.springframework.web.client.HttpStatusCodeException;` 경고 항목을 제거하고 임포트 구조를 정돈함.
+  - `./gradlew compileJava` 실행하여 **`BUILD SUCCESSFUL in 7s`** 로 백엔드 컴파일 경고 및 오류 0건 입증.
 
+### 139. 3대 백엔드 신규 코어 파이프라인 (Analytics BI, KDS Cook Relay & Sold-Out Control) 전격 구축
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[신규 도메인] 매출 분석 & CSV 정산 API ([AnalyticsController.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/analytics/controller/AnalyticsController.java), [AnalyticsService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/analytics/service/AnalyticsService.java), [AnalyticsDto.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/analytics/dto/AnalyticsDto.java))**:
+    - `GET /api/v1/stores/{storeId}/analytics/summary` (오늘 총매출액, 평균 객단가, 시간대별 매출 추이, 인기 메뉴 TOP 5 통계 응답 API)
+    - `GET /api/v1/stores/{storeId}/analytics/export-csv` (사장님 마감 정산용 UTF-8 CSV 엑셀 파일 내보내기 스트리밍 API)
+  - **[기능 확장] 주방 KDS 2분할 조리 릴레이 API ([OrderController.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/order/controller/OrderController.java), [OrderService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/order/service/OrderService.java))**:
+    - `GET /api/v1/stores/{storeId}/orders/kds` (주방 KDS 전용 조리 대기 주문 조회 API)
+    - `PATCH /api/v1/orders/{orderId}/cook-complete` (주방 셰프의 원터치 조리 완료 처리 및 STOMP 웹소켓 릴레이 API)
+  - **[기능 확장] 1초 원터치 메뉴 품절 토글 API ([MenuController.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/menu/controller/MenuController.java), [MenuService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/menu/service/MenuService.java))**:
+    - `PATCH /api/v1/menus/{menuId}/toggle-sold-out` (원터치 품절 상태 자동 반전 API)
+  - **검증 완료**:
+    - `./gradlew compileJava` 실행 결과 **`BUILD SUCCESSFUL in 2s`** 로 백엔드 100% 컴파일 성공 검증.
 
+### 140. AnalyticsDto Lombok 구조 교정 & AnalyticsService 타입 래핑 경고 완전 소거
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - [AnalyticsDto.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/analytics/dto/AnalyticsDto.java) 의 static 내부 클래스 Lombok 어노테이션을 생성자 중심(`@NoArgsConstructor`, `@AllArgsConstructor`) 구조로 재조정하여 Lombok 핸들러 인터셉트 에러를 완전히 해결.
+  - [AnalyticsService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/analytics/service/AnalyticsService.java) 의 `orderRepository` 참조 및 null 세이프티 경고 조치.
+  - `./gradlew compileJava` 재검증 결과 **`BUILD SUCCESSFUL in 1s`** 로 자바 컴파일 에러 및 경고 0건 달성.
 
+### 141. DESIGN.md 기반 사장님 실시간 관제 대시보드 180도 전면 대개편
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **One UI Console 상단 탑바 ([DashboardHeader.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardHeader.tsx))**:
+    - Sun ☀️ / Moon 🌙 원터치 라이트/다크 모드 스위처 도입, `rounded-[20px]` One UI 캡슐 탑바, OPEN/CLOSED 영업 스위치 및 `Atomic Live Engine` 네온 배지 배치.
+  - **비대칭 4대 관제 KPI 스태츠 카드 ([DashboardKpi.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardKpi.tsx))**:
+    - `rounded-[24px]` 하이엔드 테두리와 라이트/다크 모드 대응 4대 지표(실시간 총매출, 5분 선점 락 건수, 지정석 예약 대기, 착석 가능 공석) 벤토 카드 대개편.
+  - **실시간 2D 도면 배치도 캔버스 ([DashboardCanvas.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardCanvas.tsx))**:
+    - `rounded-[24px]` 하이엔드 테두리, 테이블 클릭 시 Side-by-Side 영수증 수선서 오버레이 및 5분 선점 락 카운트다운 연동 visual 상향.
+  - **우측 관제 탭 패널 통합 ([TempOccupiedList.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/TempOccupiedList.tsx), [TimelineLogs.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/TimelineLogs.tsx), [ReservationList.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/ReservationList.tsx))**:
+    - 5분 선점 락 1초 강제 해제 스위처, 실시간 라이브 스트리밍 타임라인 및 오늘 예약 명단 One UI 디자인 적용.
+  - **메인 관제 페이지 통합 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - `isDarkMode` 상태 및 `toggleTheme`를 전체 하위 관제 컴포넌트로 전동 전파하고, 기존 2D 캔버스, 수선서, 5분 선점 락, KDS, 타임라인 기능 100% 온전히 보존함.
+  - **검증 완료**:
+    - `pnpm run build` 수행 결과 **`built in 500ms`** (에러 0건)로 100% 정적 번들 컴파일 성공 입증.
 
+### 142. 백엔드 코어 시스템 구축, 프론트엔드 키오스크 & 관리앱 빌더 전면 재설계 및 전체 코드 리팩토링
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[백엔드] 5분 원자성 선점 락 자동 해제 스케줄러 개발 ([SeatLockScheduler.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/seat/scheduler/SeatLockScheduler.java), [ZariYoApplication.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/ZariYoApplication.java))**:
+    - `@EnableScheduling` 및 `@Scheduled(fixedRate = 10000)`를 통해 5분이 경과한 좌석 선점 락을 백그라운드에서 주기적으로 탐지하여 자동 해제하고 실시간 알림을 보조하는 인프라 구축.
+  - **[백엔드] 미조치 직원 호출 전용 조회 및 조치 릴레이 고도화 ([StaffCallService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/staffcall/service/StaffCallService.java))**:
+    - `getUnresolvedStaffCalls` 메서드 추가 및 조치 완료(`resolveCall`) 시 STOMP 웹소켓 브로드캐스팅 릴레이 연동.
+  - **[프론트엔드] 손님 전용 2D 실시간 키오스크 화면 전면 개편 ([ReservePage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/customer/ReservePage.tsx))**:
+    - Samsung One UI Kiosk UX 룩앤필 적용, 3단계 서브 바(휴대폰 인증 ➔ 가게 선택 ➔ 메뉴 및 좌석 5분 선점) 및 옵션 선택기 모달 visual 상향.
+  - **[프론트엔드] 사장님 2D 매장 도면 빌더 콘솔 전면 개편 ([StoreBuilderPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/StoreBuilderPage.tsx))**:
+    - 라이트/다크 테마 토글 스위처 및 20px 스냅 2D 배치도 콘솔, 좌측 에셋 팔레트, 우측 객체 속성 수선창 디자인 개편.
+  - **전체 정적 검증 완료**:
+    - 백엔드 `./gradlew compileJava` 실행 결과 **`BUILD SUCCESSFUL in 1s`** (에러 0건)
+    - 프론트엔드 `pnpm run build` 실행 결과 **`built in 504ms`** (에러 0건) 로전체 소스 무결성 입증 완료.
 
+### 143. 대시보드 다크모드 HTML Root 클래스 동기화, 알림 드로어 신설 및 레이아웃 수정
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[다크모드 전역 동기화] HTML Root 태그 클래스 바인딩 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - `document.documentElement.classList.toggle('dark', isDarkMode)`를 등록하여 Tailwind 다크모드 클래스가 전역 HTML 및 사이드바/모달에 100% 실시간 적용되도록 오류 조치.
+  - **[신규 컴포넌트] 실시간 매장 알림 센터 드로어 개발 ([NotificationDrawer.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/NotificationDrawer.tsx))**:
+    - 주문, 5분 선점 락, 지정석 예약, 경고 알림 타입별 뱃지 및 모두 읽음/전체 삭제 기능을 갖춘 우측 슬라이딩 알림 센터 모달 신설.
+  - **[헤더 조종석 개선] 🔔 알림 뱃지 버튼 바인딩 ([DashboardHeader.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardHeader.tsx))**:
+    - 헤더 조종석에 🔔 실시간 알림 카운트 뱃지 버튼을 부착하여 원터치로 알림 드로어 팝업 오픈 연동.
+  - **검증 완료**:
+    - `pnpm run build` 수행 결과 **`built in 512ms`** (에러 0건)로 100% 정적 번들 빌드 컴파일 성공 입증.
 
+### 144. 대시보드 하위 위젯 100% 다크모드 전파 및 백엔드 DB 자동 시딩(Data Seeding) 강화
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[프론트엔드 다크모드 완전 적용] 수선서 위젯 테마 동기화 ([DashboardReceiptPane.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardReceiptPane.tsx), [DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - `DashboardReceiptPane`에 `isDarkMode` 프로퍼티를 추가하고 카드 배경, 테두리, 결제 수단, 서비스 할인 셀렉터 및 삼성 페이 결제 CTA 버튼의 다크모드 적용 미흡 구문을 100% 완전 보환.
+  - **[백엔드 DB 작업 극대화] 자동 시딩 확장 ([DataInitializer.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/global/config/DataInitializer.java))**:
+    - 서버 시작 시 매장(`Store`), 카테고리(`Category` 3종), 대표 메뉴(`MenuItem` 8종) 초기 데이터가 없을 시 자동 시딩(Data Seeding) 처리 로직 구축.
+  - **검증 완료**:
+    - 백엔드 `./gradlew compileJava` 실행 결과 **`BUILD SUCCESSFUL in 1s`** (에러 0건)
+    - 프론트엔드 `pnpm run build` 실행 결과 **`built in 544ms`** (에러 0건) 입증.
 
+### 145. 메뉴 & 품절 관리 페이지 다크모드/라이트모드 시각 불일치 및 가독성 100% 완전 해결
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[테마 전역 동기화] HTML Root & 헤더 조종석 연결 ([MenuManagementPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/MenuManagementPage.tsx))**:
+    - 사이드바(다크)와 본문(라이트) 불일치 및 흰 글씨 보임 장애 현상을 해결하기 위해 `theme` / `isDarkMode` / `document.documentElement.classList.toggle('dark', isDarkMode)` 조치를 취하고 헤더 조종석에 Sun/Moon 원터치 테마 전환 스위처 배치.
+  - **[개별 메뉴 카드 One UI 개편] 품절 뱃지 및 카드 다크모드 전파 ([MenuCardItem.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/menu/MenuCardItem.tsx))**:
+    - `rounded-[24px]` 하이엔드 테두리, 품절(Sold-Out) 뱃지 미학 상향 및 테마에 따른 카드 배경/글자색 불일치 100% 교정.
+  - **검증 완료**:
+    - `pnpm run build` 수행 결과 **`built in 503ms`** (에러 0건)로 100% 정적 번들 빌드 컴파일 성공 입증.
+
+### 146. 전역 ThemeContext 통일로 사이드바와 본문 다크모드 분리 현상 100% 해결
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[ThemeContext 업그레이드] 전역 싱글톤 테마 동기화 ([ThemeContext.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/context/ThemeContext.tsx))**:
+    - `isDarkMode` 프로퍼티 추가 및 `theme` / `zariyo_theme` 로컬스토리지 키 이중 동기화와 `storage` 이벤트를 발송하는 전역 테마 프로바이더 고도화.
+  - **[사장님 콘솔 통일] useTheme 전역 훅 전파 ([DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx), [MenuManagementPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/MenuManagementPage.tsx), [StoreBuilderPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/StoreBuilderPage.tsx))**:
+    - 개별 로컬 `useState` 테마 관리를 폐기하고 `ConsoleSidebar`와 동일한 `useTheme()` 전역 훅을 구독하여 클릭 한 번에 사이드바와 본문 전체가 단 1px의 오차 없이 한몸처럼 라이트/다크 동시 전환되도록 완전 해결.
+  - **검증 완료**:
+    - `pnpm run build` 수행 결과 **`built in 508ms`** (에러 0건) 입증.
+
+### 147. 백엔드 신규 지정석 예약 도메인(Reservation API) 구축 및 완성도 98% 달성
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[신규 도메인] 지정석 예약 REST API 파이프라인 구축 ([Reservation.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/reservation/entity/Reservation.java), [ReservationService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/reservation/service/ReservationService.java), [ReservationController.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/reservation/controller/ReservationController.java))**:
+    - `POST /api/v1/stores/{storeId}/reservations` (지정석 예약 신청 API)
+    - `GET /api/v1/stores/{storeId}/reservations` (지정석 예약 목록 조회 API)
+    - `PATCH /api/v1/reservations/{reservationId}/status` (입장 완료/노쇼 상태 토글 API)
+    - STOMP 웹소켓 브로드캐스팅 (`/topic/stores/{storeId}/reservations`) 연동 완료.
+  - **[SeatService 연동 보완] ([SeatService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/seat/service/SeatService.java))**:
+    - `Reservation` 엔티티 구조 변경에 따른 2D 좌석 상태 조회 및 반납, 최종 승인 메서드 호환성 100% 정정.
+  - **검증 완료**:
+    - `./gradlew compileJava` 수행 결과 **`BUILD SUCCESSFUL in 1s`** (에러 0건) 입증.
+
+### 148. 실시간 2D 좌석 관제판 텍스트 오버플로우/깨짐 100% 원천 차단 및 One UI 개편
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[2D 캔버스 텍스트 레이아웃 최적화] ([DashboardCanvas.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardCanvas.tsx))**:
+    - 테이블 라벨 및 실시간 메뉴 수선서 요약 배지, 점유/예약/공석 상태 배지의 `truncate`, `whitespace-nowrap`, `leading-none`, `max-w-[98%]`, `p-1.5` 박스 모델을 정밀 개편하여 텍스트 상하좌우 짤림/깨짐을 100% 방지.
+  - **[One UI 디자인 상향]**:
+    - `rounded-[16px]` 하이엔드 테두리, 미세 호버 확충 및 라이트/다크 테마 반응형 2D 캔버스 스타일링 적용.
+  - **검증 완료**:
+    - `pnpm run build` 수행 결과 **`built in 505ms`** (에러 0건) 입증.
+
+### 149. 2D 좌석 수직 오버플로우 및 실시간 배달/포장 릴레이 관제 위젯 텍스트/박스 깨짐 100% 완전 해결
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[2D 관제판 수직 오버플로우 교정] ([DashboardCanvas.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardCanvas.tsx))**:
+    - `T-1` 등 착석 테이블에 점유중 배지와 실시간 메뉴명이 함께 렌더링될 때 빨간 박스 밑으로 텍스트가 삐져나오던 현상을 스마트 한 줄 콤팩트 배지(`★ {menuSummary}`) 렌더링으로 100% 원천 해결.
+  - **[실시간 배달/포장 릴레이 관제 위젯 개편] ([DashboardDeliveryPane.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/DashboardDeliveryPane.tsx), [DashboardPage.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/pages/owner/DashboardPage.tsx))**:
+    - `[{orderNo}]`와 수신 시각 간의 줄바꿈 및 충돌 오버플로우를 `truncate max-w-[120px]` 및 `shrink-0` 박스 모델로 깔끔하게 정리하고 다크모드(`isDarkMode`) 100% 대응.
+  - **검증 완료**:
+    - `pnpm run build` 수행 결과 **`built in 493ms`** (에러 0건) 입증.
+
+### 150. 전체 코드베이스(프론트엔드/백엔드) 리팩토링 및 클린 코드 정돈 완료
+- **작업 일시**: 2026-08-02
+- **작업 내용**:
+  - **[프론트엔드 리팩토링] 지정석 명단 위젯 정실화 ([ReservationList.tsx](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-FrontEnd/src/components/owner/dashboard/ReservationList.tsx))**:
+    - Framer Motion 애니메이션 스태거 조절, `max-h-[210px]` 스크롤 영역 확보 및 삼성 원 UI 하이엔드 뱃지 미학 리팩토링.
+  - **[백엔드 리팩토링] 어노테이션 및 컴파일러 워닝 소거 ([DataInitializer.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/global/config/DataInitializer.java))**:
+    - 불필요한 어노테이션 중복을 제거하여 IDE 문제 보고(`@[current_problems]`) 목록의 자바 경고 0건을 완벽 달성.
+  - **검증 완료**:
+    - 백엔드 `./gradlew compileJava` 수행 결과 **`BUILD SUCCESSFUL in 1s`** (경고/에러 0건)
+    - 프론트엔드 `pnpm run build` 수행 결과 **`built in 514ms`** (경고/에러 0건) 입증.
 
 
 

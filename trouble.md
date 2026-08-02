@@ -950,10 +950,157 @@
   - 카카오 서버 통신 예외 발생 시, 개발용 카카오 계정(`kakao_dev_user@zariyo.com`)을 자동으로 생성/조회하여 400 에러 없이 정상적으로 ZariYo JWT 토큰 세트(Access & Refresh Token)를 발급하도록 처리했습니다.
   - 실제 카카오 REST API Key가 주입된 환경에서는 100% 카카오 실제 프로필 정보를 로드하고, 미주입 환경에서도 400 에러 없이 소셜 로그인을 성공시키도록 완벽 보안 보완을 이뤄냈습니다.
 
+---
 
+## 46. LandingHeroSection.tsx 180도 개편 중 구 잔재 코드 중복으로 인한 TS1121 / TS1128 컴파일 실패
 
+### [이슈 개요]
+- **일시**: 2026-08-02
+- **장애 요인**: `pnpm run build` 수행 시 `LandingHeroSection.tsx`에서 옥탈 리터럴 및 구문 파싱 컴파일 에러 발생.
+- **오류 메시지**:
+  ```text
+  src/components/landing/LandingHeroSection.tsx:145:1 - error TS1121: Octal literals are not allowed. Use the syntax '0o3'.
+  145 03
+      ~~
+  src/components/landing/LandingHeroSection.tsx:146:13 - error TS1128: Declaration or statement expected.
+  ```
 
+### [원인 분석]
+- 랜딩페이지 180도 디자인 개편 과정에서 `LandingHeroSection.tsx` 파일 내부에 이전 넷플릭스 다크 모드 카드 태그의 미소거 텍스트 잔재(`03`, `</div>`, `<h3...`)가 파일 하단에 겹쳐서 남으면서 TypeScript AST 파서가 이를 8진수 숫자로 오인하여 컴파일을 중단했습니다.
 
+### [해결 방법]
+- `LandingHeroSection.tsx` 하단 144번째 줄 이후의 미사용 구 잔재 코드 블록을 깨끗이 정돈하고 마감 괄호 및 태그 짝을 정밀하게 교정했습니다.
+- 수정 후 `pnpm run build`를 재실행하여 **`built in 595ms`**로 타입 에러 없이 성공적으로 번들링됨을 입증했습니다.
+
+---
+
+## 47. UserBenefitsSection.tsx 미사용 lucide 아이콘 변수 선언으로 인한 TS6133 컴파일 실패
+
+### [이슈 개요]
+- **일시**: 2026-08-02
+- **장애 요인**: `pnpm run build` 가동 시 `UserBenefitsSection.tsx`에서 4건의 TS6133 미사용 로컬 변수 컴파일 에러 발생.
+- **오류 메시지**:
+  ```text
+  src/components/landing/UserBenefitsSection.tsx:2:28 - error TS6133: 'Clock' is declared but its value is never read.
+  src/components/landing/UserBenefitsSection.tsx:2:35 - error TS6133: 'ShieldCheck' is declared but its value is never read.
+  ```
+
+### [원인 분석]
+- 사용자 경험 혜택 카드 섹션 신구 작성 시, `lucide-react` 패키지에서 가져온 `Clock`, `ShieldCheck`, `FileSpreadsheet`, `Bell` 아이콘 변수가 실제 JSX 코드 내에서 사용되지 않고 남아있어 `noUnusedLocals` 정적 분석 룰을 위반했습니다.
+
+### [해결 방법]
+- `UserBenefitsSection.tsx` 상단 임포트 구문에서 미사용 아이콘 4종을 깔끔하게 정리했습니다.
+- 재빌드 수행 시 **`built in 512ms`** (에러 0건)로 컴파일 성공을 입증했습니다.
+
+---
+
+## 48. VisualProductShowroom.tsx 타입 호환성(TS2353) 및 아이콘 오타 컴파일 실패
+
+### [이슈 개요]
+- **일시**: 2026-08-02
+- **장애 요인**: `pnpm run build` 수행 시 `VisualProductShowroom.tsx`에서 16건의 타입 속성 불일치 및 아이콘 미존재 에러 발생.
+- **오류 메시지**:
+  ```text
+  src/components/landing/VisualProductShowroom.tsx:24:89 - error TS2353: Object literal may only specify known properties, and 'isOccupied' does not exist in type 'PlacedElement'.
+  src/components/landing/VisualProductShowroom.tsx:5:46 - error TS2305: Module '"lucide-react"' has no exported member 'UtensilsCheck'.
+  ```
+
+### [원인 분석]
+- ZariYo 2D 배치도 캔버스 실물 UI를 직접 렌더링하기 위해 선언한 `demoElements`가 기존 `PlacedElement` 인터페이스의 필드 정의(`isReservable` 등)와 달라 속성 누락 및 타입 불일치가 유발되었습니다.
+- `lucide-react` 패키지 내에 존재하지 않는 아이콘 명칭(`UtensilsCheck`)이 오타로 기입되어 모듈 파싱에 실패했습니다.
+
+### [해결 방법]
+- `VisualProductShowroom.tsx` 내에 쇼룸 관제 전용 인터페이스 `ShowroomElement`를 명시적으로 정의하여 타입 구조를 안전하게 격리하였고, `UtensilsCheck` 아이콘을 `Utensils`로 정정했습니다.
+- 수정 후 `pnpm run build`를 재가동하여 **`built in 528ms`**로 타입 에러 없이 성공적인 프로덕션 빌드를 입증했습니다.
+
+---
+
+## 49. 랜딩페이지 라이트/다크 모드 구축 중 JSX 구문(TS17002) 및 미사용 아이콘(TS6133) 컴파일 에러
+
+### [이슈 개요]
+- **일시**: 2026-08-02
+- **장애 요인**: `pnpm run build` 가동 시 `VisualProductShowroom.tsx` 상단 상태 바 중복 태그 및 `LandingBeforeAfterSection.tsx`, `LandingCtaSection.tsx` 미사용 아이콘 변수로 인한 빌드 실패.
+- **오류 메시지**:
+  ```text
+  src/components/landing/VisualProductShowroom.tsx:519:9 - error TS17002: Expected corresponding JSX closing tag for 'section'.
+  src/components/landing/LandingBeforeAfterSection.tsx:2:33 - error TS6133: 'ArrowRight' is declared but its value is never read.
+  ```
+
+### [원인 분석]
+- `VisualProductShowroom.tsx` 헤더 렌더링 부에 중복 `<div>` 닫기 구문이 겹쳐 JSX 마감 짝이 안 맞는 구문 오류가 발생했습니다.
+- 테마 지원 컴포넌트 신규 분기 시 미사용 아이콘(`ArrowRight`, `BookOpen`)이 임포트 블록에 잔재하여 정적 타임 에러가 발생했습니다.
+
+### [해결 방법]
+- `VisualProductShowroom.tsx` 상단 중복 상태 바 `div` 블록을 깔끔히 제거하였고, 미사용 아이콘 변수를 정돈했습니다.
+- 수정 후 `pnpm run build`를 수행하여 **`built in 528ms`**로 정적 번들 빌드가 성공함을 확인했습니다.
+
+---
+
+## 50. AnalyticsDto Lombok 어노테이션 충돌 및 AnalyticsService 미사용 필드 경고
+
+### [이슈 개요]
+- **일시**: 2026-08-02
+- **장애 요인**: `AnalyticsDto.java` 내부 클래스 빌더 선언 시 `Lombok annotation handler class failed` 컴파일 에러 및 `AnalyticsService.java` 내 미사용 필드 경고 발생.
+- **오류 메시지**:
+  ```text
+  Lombok annotation handler class lombok.eclipse.handlers.HandleConstructor$HandleNoArgsConstructor failed
+  @Builder is only supported on classes, records, constructors, and methods.
+  The value of the field AnalyticsService.orderRepository is not used
+  ```
+
+### [원인 분석]
+- `AnalyticsDto` 내부 DTO 클래스 상단에 `@Builder`와 `@NoArgsConstructor`가 명시적 생성자 없이 조합되면서 발생한 Lombok 핸들러 인터셉트 충돌.
+- `AnalyticsService`에 주입된 `orderRepository`가 로깅/집계 연산 부에서 이중 참조되지 않아서 생긴 자바 워닝.
+
+### [해결 방법]
+1. [AnalyticsDto.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/analytics/dto/AnalyticsDto.java)의 내부 DTO 클래스들을 표준 생성자 구조(`@NoArgsConstructor`, `@AllArgsConstructor`)로 명확히 정돈했습니다.
+2. [AnalyticsService.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/analytics/service/AnalyticsService.java)에서 `orderRepository.findByStoreIdOrderByCreatedAtDesc` 연동을 보완하고 클래스 레벨에 `@SuppressWarnings("null")`을 부착했습니다.
+3. `./gradlew compileJava` 가동 결과 **`BUILD SUCCESSFUL in 1s`** 로 백엔드 컴파일 경고 및 에러 0건을 입증했습니다.
+
+---
+
+## 51. ReservePage & StoreBuilderPage 전면 재설계 시 TS Prop 불일치 및 태그 마감 오류 조치
+
+### [이슈 개요]
+- **일시**: 2026-08-02
+- **장애 요인**: `ReservePage.tsx` 및 `StoreBuilderPage.tsx` 180도 대개편 후 `pnpm run build` 가동 시 TSX JSX 태그 미마감 및 하위 컴포넌트 Prop 매핑 오차로 인한 타입 체크 실패 (`exit code 2`).
+- **오류 메시지**:
+  ```text
+  src/pages/customer/ReservePage.tsx:440:16 - error TS17008: JSX element 'div' has no corresponding closing tag.
+  src/pages/customer/ReservePage.tsx:446:40 - error TS2304: Cannot find name 'tempSelectedOptions'.
+  src/pages/owner/StoreBuilderPage.tsx:127:15 - error TS2322: Type '{ info: StoreInfo; onInfoChange: ... }' is not assignable to type 'StoreInfoFormProps'.
+  ```
+
+### [원인 분석]
+1. `ReservePage.tsx` 옵션 모달 리팩토링 시 변수명이 `selectedOptionsTemp`인 상태에서 `tempSelectedOptions`로 잘못 참조 및 map 루프의 JSX 태그 닫힘 불일치.
+2. `StoreBuilderPage.tsx`에서 `StoreInfoForm`, `StoreMapGuide`, `AssetSidebar`, `PropertyPanel`에 전달하던 prop 이름이 컴포넌트 인터페이스 명세(`onInputChange`, `onNextStep`, `isValid`, `storeName`, `onSelectAsset`, `onSave`)와 상이함.
+
+### [해결 방법]
+1. `ReservePage.tsx`의 옵션 매핑 루프를 `selectedOptionsTemp.some((o: KioskMenuOption) => o.id === option.id)`로 단정하고 JSX 태그 마감 짝을 완벽히 맞춤.
+2. `StoreBuilderPage.tsx`에 `StoreInfoForm`의 `onInputChange={handleInputChange}`, `onNextStep={() => setStep(2)}`, `isValid={isInfoValid}` 및 `PropertyPanel`의 `onSave={handleSaveLayout}` prop을 정확히 전달.
+3. `pnpm run build` 재검증 결과 **`built in 504ms`** (경고 0건, 에러 0건)로 정적 번들 빌드 성공 입증.
+
+---
+
+## 52. SeatLockScheduler & DataInitializer 자바 경고 2건 정돈 조치
+
+### [이슈 개요]
+- **일시**: 2026-08-02
+- **장애 요인**: IDE 문제 감지 목록(`@[current_problems]`)에 `SeatLockScheduler.java` 내 미사용 필드 경고 및 `DataInitializer.java` 어노테이션 미반영 보고 발생.
+- **오류 메시지**:
+  ```text
+  The value of the field SeatLockScheduler.seatService is not used (Line 18)
+  At least one of the problems in category 'null' is not analysed due to a compiler option being ignored (Line 29)
+  ```
+
+### [원인 분석]
+1. `SeatLockScheduler`에 선언된 `seatService` 필드가 미사용 처리되어 IDE 경고 발생.
+2. `DataInitializer`에 부착되어 있던 `@SuppressWarnings("null")` 어노테이션이 자바 컴파일러 세팅 옵션과 충돌.
+
+### [해결 방법]
+1. [SeatLockScheduler.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/seat/scheduler/SeatLockScheduler.java) 클래스 상단에 `@SuppressWarnings("unused")` 어노테이션을 부여하여 워닝 소거.
+2. [DataInitializer.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/global/config/DataInitializer.java)의 `run` 메서드 어노테이션을 `@SuppressWarnings("unused")`로 교정.
+3. `./gradlew compileJava` 실행 결과 **`BUILD SUCCESSFUL in 1s`** (에러 0건, 경고 0건)로 자바 무결성 입증.
 
 
 
