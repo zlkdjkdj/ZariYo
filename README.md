@@ -10,6 +10,12 @@
 
 <br/>
 
+<div align="center">
+  <img src="docs/assets/zariyo_real_landing.png" alt="ZariYo Dark Mode Actual Landing Page" width="90%"/>
+</div>
+
+<br/>
+
 > **자리요(ZariYo)**는 관리자(매장 오너)가 2D GUI 드래그 앤 드롭 캔버스를 통해 매장 레이아웃과 좌석 배치를 자유롭게 설계하고, 손님은 휴대폰 간편 인증 및 카카오 소셜 로그인을 바탕으로 실시간 2D 공간 예약, 무인 주문 및 결제, 직원 호출 서비스를 통합하여 이용할 수 있는 차세대 풀스택 공간 제어 및 스마트 오더 솔루션입니다.
 
 ---
@@ -108,6 +114,7 @@
 
 ```
 ZariYo/
+├── docs/assets/             # README 전용 사용자 지정 실제 다크모드 서비스 스크린샷 자산 (zariyo_real_landing.png)
 ├── ZariYo-FrontEnd/         # React 19 + Vite + TypeScript 프론트엔드
 │   ├── src/
 │   │   ├── api/            # REST API 통합 클라이언트
@@ -122,7 +129,7 @@ ZariYo/
 │   └── .env                # 백엔드 시크릿 환경변수 (Git 추적 제외)
 ├── study-notes/             # 일자별 기술 학습 노트 (2026-07-07 ~ 2026-08-04)
 ├── docker-compose.yml       # MySQL 8.0 & Redis 7.2 로컬 가상화 컨테이너
-├── work.md                  # 마일스톤 및 173단계 전체 개발 일지
+├── work.md                  # 마일스톤 및 174단계 전체 개발 일지
 └── trouble.md               # 문제 해결 및 트러블슈팅 이력 (43개 항목)
 ```
 
