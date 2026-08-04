@@ -11,7 +11,7 @@
 <br/>
 
 <div align="center">
-  <img src="docs/assets/zariyo_ipad_showcase.png" alt="ZariYo Product Showcase Apple Style Toss Blue Canvas" width="85%"/>
+  <img src="docs/assets/zariyo_ipad_showcase.png?v=3" alt="ZariYo Landscape iPad Showcase Apple Style" width="85%"/>
 </div>
 
 <br/>
@@ -114,7 +114,7 @@
 
 ```
 ZariYo/
-├── docs/assets/             # ZariYo 서비스 브랜드 시그니처 시각 자산 (zariyo_ipad_showcase.png)
+├── docs/assets/             # 가로형 iPad Pro 스타일 ZariYo 비주얼 자산 (zariyo_ipad_showcase.png)
 ├── ZariYo-FrontEnd/         # React 19 + Vite + TypeScript 프론트엔드
 │   ├── src/
 │   │   ├── api/            # REST API 통합 클라이언트
@@ -129,7 +129,7 @@ ZariYo/
 │   └── .env                # 백엔드 시크릿 환경변수 (Git 추적 제외)
 ├── study-notes/             # 일자별 기술 학습 노트 (2026-07-07 ~ 2026-08-04)
 ├── docker-compose.yml       # MySQL 8.0 & Redis 7.2 로컬 가상화 컨테이너
-├── work.md                  # 마일스톤 및 180단계 전체 개발 일지
+├── work.md                  # 마일스톤 및 181단계 전체 개발 일지
 └── trouble.md               # 문제 해결 및 트러블슈팅 이력 (43개 항목)
 ```
 
