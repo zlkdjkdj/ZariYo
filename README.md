@@ -1,14 +1,28 @@
-# 자리요 (ZariYo) - 차세대 실시간 2D 공간 관제 & 무인 키오스크/테이블 오더 통합 시스템
+<div align="center">
 
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.1-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
-![React](https://img.shields.io/badge/React-19.0.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.7.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-7.2-DC382D?style=for-the-badge&logo=redis&logoColor=white)
-![Pretendard](https://img.shields.io/badge/Typography-Pretendard%20Variable-111111?style=for-the-badge)
+  <img src="docs/assets/zariyo_logo_banner.png" alt="ZariYo Logo Banner" width="70%"/>
 
-**자리요(ZariYo)**는 관리자(매장 오너)가 2D GUI 드래그 앤 드롭 캔버스를 통해 매장 레이아웃과 좌석 배치를 자유롭게 설계하고, 손님은 휴대폰 간편 인증 및 카카오 소셜 로그인을 바탕으로 실시간 2D 공간 예약, 무인 주문 및 결제, 직원 호출 서비스를 통합하여 이용할 수 있는 차세대 풀스택 공간 제어 및 스마트 오더 솔루션입니다.
+  # 자리요 (ZariYo) - 차세대 실시간 2D 공간 관제 & 무인 키오스크/테이블 오더 통합 시스템
+
+  ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.1-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+  ![React](https://img.shields.io/badge/React-19.0.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-5.7.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+  ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+  ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+  ![Redis](https://img.shields.io/badge/Redis-7.2-DC382D?style=for-the-badge&logo=redis&logoColor=white)
+  ![Pretendard](https://img.shields.io/badge/Typography-Pretendard%20Variable-111111?style=for-the-badge)
+
+</div>
+
+<br/>
+
+> **자리요(ZariYo)**는 관리자(매장 오너)가 2D GUI 드래그 앤 드롭 캔버스를 통해 매장 레이아웃과 좌석 배치를 자유롭게 설계하고, 손님은 휴대폰 간편 인증 및 카카오 소셜 로그인을 바탕으로 실시간 2D 공간 예약, 무인 주문 및 결제, 직원 호출 서비스를 통합하여 이용할 수 있는 차세대 풀스택 공간 제어 및 스마트 오더 솔루션입니다.
+
+<br/>
+
+<div align="center">
+  <img src="docs/assets/zariyo_dashboard_preview.png" alt="ZariYo Live Dashboard Preview" width="85%"/>
+</div>
 
 ---
 
@@ -106,6 +120,7 @@
 
 ```
 ZariYo/
+├── docs/assets/             # README 리포지토리 로고 배너 & 대시보드 시각 그래픽 자산
 ├── ZariYo-FrontEnd/         # React 19 + Vite + TypeScript 프론트엔드
 │   ├── src/
 │   │   ├── api/            # REST API 통합 클라이언트
@@ -120,7 +135,7 @@ ZariYo/
 │   └── .env                # 백엔드 시크릿 환경변수 (Git 추적 제외)
 ├── study-notes/             # 일자별 기술 학습 노트 (2026-07-07 ~ 2026-08-04)
 ├── docker-compose.yml       # MySQL 8.0 & Redis 7.2 로컬 가상화 컨테이너
-├── work.md                  # 마일스톤 및 159단계 전체 개발 일지
+├── work.md                  # 마일스톤 및 161단계 전체 개발 일지
 └── trouble.md               # 문제 해결 및 트러블슈팅 이력 (43개 항목)
 ```
 

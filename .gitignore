@@ -20,12 +20,16 @@ ZariYo-FrontEnd/.env
 ZariYo-FrontEnd/.vite/
 ZariYo-FrontEnd/.vscode/
 
-# BackEnd Build & Caches
+# BackEnd Build & Caches & Security Files
 ZariYo-BackEnd/.env
 ZariYo-BackEnd/build/
 ZariYo-BackEnd/bin/
+ZariYo-BackEnd/out/
 ZariYo-BackEnd/.gradle/
+ZariYo-BackEnd/.idea/
 ZariYo-BackEnd/application-secret.yml
+ZariYo-BackEnd/src/main/resources/application-*.yml
+ZariYo-BackEnd/src/main/resources/application-*.properties
 ZariYo-BackEnd/.classpath
 ZariYo-BackEnd/.project
 ZariYo-BackEnd/.settings/

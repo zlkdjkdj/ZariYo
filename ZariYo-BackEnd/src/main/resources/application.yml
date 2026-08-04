@@ -5,11 +5,11 @@ spring:
   application:
     name: zariyo-backend
 
-  # Database Setup (MySQL)
+  # Database Setup (MySQL) - Enhanced Security via Environment Variables
   datasource:
-    url: jdbc:mysql://localhost:3306/zariyo_db?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
-    username: zariyo
-    password: zariyo_password
+    url: ${DB_URL:jdbc:mysql://localhost:3306/zariyo_db?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&characterEncoding=UTF-8}
+    username: ${DB_USERNAME:zariyo}
+    password: ${DB_PASSWORD:zariyo_password}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   # JPA & Hibernate Settings
@@ -25,8 +25,8 @@ spring:
   # Redis Settings (Temporary session locks and broadcasts)
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
 logging:
   level:
@@ -39,12 +39,8 @@ jwt:
   access-token-expiration: ${JWT_ACCESS_EXPIRATION:1800000} # 30분 (초강력 보안 단기 토큰)
   refresh-token-expiration: ${JWT_REFRESH_EXPIRATION:1800000} # 30분 (자동 갱신 토큰)
 
-
 # Kakao OAuth Settings
 kakao:
   client-id: ${KAKAO_CLIENT_ID:zariyo_kakao_client_id}
   client-secret: ${KAKAO_CLIENT_SECRET:}
   redirect-uri: ${KAKAO_REDIRECT_URI:http://localhost:5173/auth/kakao/callback}
-
-
-
