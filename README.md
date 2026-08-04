@@ -21,11 +21,11 @@
 <br/>
 
 <div align="center">
-  <h3>✨ ZariYo 서비스 메인 랜딩 & 2D 공간 관제 인터랙티브 플랫폼 ✨</h3>
+  <h3>✨ ZariYo 실제 랜딩페이지 & 2D 키오스크 화면 ✨</h3>
   <br/>
-  <img src="docs/assets/zariyo_hero_showcase.png" alt="ZariYo Service Hero Landing Showcase" width="88%"/>
+  <img src="docs/assets/zariyo_real_landing.png" alt="ZariYo Real Landing Page" width="88%"/>
   <br/><br/>
-  <img src="docs/assets/zariyo_dashboard_preview.png" alt="ZariYo Live Dashboard Preview" width="88%"/>
+  <img src="docs/assets/zariyo_real_kiosk.png" alt="ZariYo Real Kiosk Screen" width="88%"/>
 </div>
 
 ---
@@ -124,7 +124,7 @@
 
 ```
 ZariYo/
-├── docs/assets/             # README 서비스 로고 배너, 랜딩 메인 화면 & 대시보드 시각 자산
+├── docs/assets/             # README 서비스 실제 랜딩 & 키오스크 스크린샷 자산
 ├── ZariYo-FrontEnd/         # React 19 + Vite + TypeScript 프론트엔드
 │   ├── src/
 │   │   ├── api/            # REST API 통합 클라이언트
@@ -139,7 +139,7 @@ ZariYo/
 │   └── .env                # 백엔드 시크릿 환경변수 (Git 추적 제외)
 ├── study-notes/             # 일자별 기술 학습 노트 (2026-07-07 ~ 2026-08-04)
 ├── docker-compose.yml       # MySQL 8.0 & Redis 7.2 로컬 가상화 컨테이너
-├── work.md                  # 마일스톤 및 166단계 전체 개발 일지
+├── work.md                  # 마일스톤 및 168단계 전체 개발 일지
 └── trouble.md               # 문제 해결 및 트러블슈팅 이력 (43개 항목)
 ```
 
