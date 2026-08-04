@@ -1165,6 +1165,26 @@
   ```
 - 수정 후 `pnpm run build`가 정상적으로 성공함을 입증하였습니다.
 
+---
+
+## 43. GuidePage 개편 중 useNavigate 패키지 잘못된 Import (TS2305) 빌드 오류
+
+### [이슈 개요]
+- **일시**: 2026-08-04
+- **장애 요인**: `pnpm build` 수행 시 컴파일 오류 발생.
+- **오류 메시지**:
+  ```text
+  src/components/guide/GuideFaqSection.tsx:1:10 - error TS2305: Module '"react"' has no exported member 'useNavigate'.
+  src/pages/GuidePage.tsx:1:10 - error TS2305: Module '"react"' has no exported member 'useNavigate'.
+  ```
+
+### [원인 분석]
+- `GuidePage.tsx` 및 `GuideFaqSection.tsx` 파일 작성 시 React Router의 라우팅 훅인 `useNavigate`를 `'react-router-dom'`이 아닌 `'react'` 패키지 모듈로부터 임포트하도록 코드를 작성하여 타입스크립트 모듈 내보내기 멤버 미존재 에러가 발생함.
+
+### [해결 방법]
+- 임포트 구문을 `import { useNavigate } from 'react-router-dom';`로 정합 변경하여 `pnpm build`가 **`built in 673ms`** 성공하도록 조치했습니다.
+
+
 
 
 

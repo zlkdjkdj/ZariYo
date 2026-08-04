@@ -115,7 +115,7 @@ export function InteractiveStoreMap({ address, storeName }: InteractiveStoreMapP
             <div style="width: 38px; height: 38px; background: #09090b; border: 3px solid #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(16,185,129,0.7);">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="#10b981" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3" fill="#ffffff"/></svg>
             </div>
-            <div style="margin-top: 6px; padding: 4px 10px; background: #09090b; border: 2px solid #10b981; font-size: 11px; font-weight: 900; color: #ffffff; border-radius: 4px; white-space: nowrap; font-family: sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+            <div style="margin-top: 6px; padding: 4px 10px; background: #09090b; border: 2px solid #10b981; font-size: 11px; font-weight: 900; color: #ffffff; border-radius: 4px; white-space: nowrap; font-family: var(--font-sans), sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
               📍 ${storeName || '내 매장 지점'}
             </div>
           </div>

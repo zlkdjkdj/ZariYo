@@ -3,9 +3,10 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.1-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
 ![React](https://img.shields.io/badge/React-19.0.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.7.2-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-7.2-DC382D?style=for-the-badge&logo=redis&logoColor=white)
-![Kakao OAuth](https://img.shields.io/badge/Kakao%20OAuth-2.0-FEE500?style=for-the-badge&logo=kakao&logoColor=black)
+![Pretendard](https://img.shields.io/badge/Typography-Pretendard%20Variable-111111?style=for-the-badge)
 
 **자리요(ZariYo)**는 관리자(매장 오너)가 2D GUI 드래그 앤 드롭 캔버스를 통해 매장 레이아웃과 좌석 배치를 자유롭게 설계하고, 손님은 휴대폰 간편 인증 및 카카오 소셜 로그인을 바탕으로 실시간 2D 공간 예약, 무인 주문 및 결제, 직원 호출 서비스를 통합하여 이용할 수 있는 차세대 풀스택 공간 제어 및 스마트 오더 솔루션입니다.
 
@@ -31,38 +32,38 @@
 - **직관적인 2D GUI 공간 건축 마법사**: 마우스 드래그 앤 드롭으로 카운터, 입구, 테이블, 바석 등을 실시간으로 배치 및 수정하고 이를 JSON 좌표 데이터 구조로 변환해 동기화합니다.
 - **Redis Redisson 분산 락 기반 5분 임시 선점 시스템**: 동시성 제어 기술을 통해 0.001초 단위의 동시 접근을 제어하고, 선점 성공 시 300초(5분)의 TTL을 부여하여 결제 진행 중 좌석을 안전하게 보호합니다.
 - **카카오 OAuth 2.0 소셜 로그인 & 무가입 방문 인증**: 카카오 원클릭 소셜 로그인 및 휴대폰 번호 기반 방문 로그 릴레이 파이프라인을 구축하여 고객 접근성을 극대화했습니다.
-- **초강력 JWT 보안 & Silent Refresh 토큰 체계**: Access Token 유효 수명을 30분 단기 토큰으로 단축하여 보안 노출 수명을 최소화하고, Axios Response Interceptor가 7일 수명의 Refresh Token으로 백그라운드 자동 갱신(Silent Refresh)을 수행합니다.
+- **Pretendard Variable 기반 최우선 서체 & 초고화질 가독성 UX**: 안티에일리어싱(`-webkit-font-smoothing`), 최적 한글 자간(`-0.018em`), 행간(`1.55`), 단어 단위 잘림 방지(`word-break: keep-all`)를 전역 적용하여 렌더링 선명도를 극대화했습니다.
+- **실전 사용설명서 & 셋업 가이드북 (`/guide`)**: 매장 2D 드래그 배치, 대시보드 관제, 키오스크 이용순서 및 현장 운영 트러블슈팅 FAQ를 포함한 인터랙티브 가이드를 내장했습니다.
 
 ---
 
 ## 2. 주요 핵심 기능 상세
 
-### 🔐 카카오 OAuth 2.0 소셜 로그인 & JWT 보안 파이프라인
-- **카카오 REST API 연동**: 카카오 인가 코드(Authorization Code) 교환 ➔ 카카오 회원 프로필 수신 ➔ ZariYo DB 회원 자동 가입 및 JWT 발급을 1초 만에 완료합니다.
-- **React StrictMode 중복 요청 방지**: React 개발 모드의 컴포넌트 이중 마운트로 인한 1회용 카카오 인가 코드 `401 KOE320` 오류를 `useRef` 가드로 원천 차단합니다.
-- **환경변수 100% 격리 보안**: 모든 시크릿 키는 `.env` 및 시스템 환경변수(`${KAKAO_CLIENT_ID}`, `${JWT_SECRET}`)로 분리되어 Git 코드베이스상에 민감 키가 0.1자도 노출되지 않습니다.
-
-### 🗺️ 위치 기반 지오코딩 (Geocoding) 지점 매핑 엔진
-- **Google Maps & OpenStreetMap 하이브리드 지오코딩**: 주소 입력 시 0.1초 내에 위도와 경도 좌표(Latitude, Longitude)를 정밀 계산하여 지도 캔버스 카메라를 좌표 중심으로 부드럽게 이동(flyTo)시킵니다.
-- **자동 안전 전환(Fallback) 파이프라인**: 환경변수에 Google Maps API 키가 존재할 경우 고해상도 Google Maps 엔진을 가동하며, 키가 미설정되거나 호출 실패 시 CartoDB High Contrast OpenStreetMap 엔진으로 자동 전환되어 예외를 방지합니다.
-
-### 📱 손님 4단계 릴레이 순차 UX (무가입 방문 인증)
-- **1단계 (휴대폰 번호 입력)**: 페이지 진입 즉시 0.01초 만에 터치패드 모달이 강제 팝업되어 방문 이력 로그를 남깁니다.
-- **2단계 (방문 매장 검색 및 선택)**: 번호 인증 후 방문하고자 하는 매장을 실시간 검색 및 선택합니다. (단, 테이블 QR 코드 스캔 진입 시 매장이 자동 지정되어 3단계로 직행합니다)
-- **3단계 (선택 매장 2D 좌석 선점 및 메뉴판)**: 2D 배치도 상에서 좌석을 선택하여 5분 임시 선점 타이머를 가동하고 메뉴 목록을 조회합니다.
-- **4단계 (주문 결제 및 직원 호출)**: 주문 데이터를 전송하고, 필요시 얼음물/집기 등의 편의 요소를 실시간 호출합니다.
-
-### 🖼️ 메뉴 이미지 드래그 앤 드롭 (Drag & Drop) 업로더
-- **HTML5 Drag & Drop API 및 FileReader 인코딩**: 컴퓨터 탐색기의 사진 파일을 모달 드롭존으로 끌어다 놓으면 자바스크립트 FileReader가 바이너리를 Data URL(Base64)로 인코딩하여 1초 만에 미리보기 렌더링 및 저장을 수행합니다.
-- **4원화 입력 방식 지원**: 드래그 앤 드롭 파일 업로드, 클릭 파일 선택, 인터넷 이미지 URL 직접 입력, 추천 이미지 샘플 선택 방식을 모두 제공합니다.
-
-### 🔒 Redis Redisson 분산 락 동시성 제어
+### 🔒 Redis Redisson 분산 락 동시성 제어 (5분 원자성 선점)
 - **상호 배제(Mutual Exclusion) 보장**: Redis 분산 락(RLock)을 활용해 동일 좌석에 대한 중복 요청을 원천 차단합니다.
-- **자동 데드락 방지**: tryLock(5s, 10s) 타임아웃 설정을 적용해 시스템 장애 시 10초 후 락이 자동 해제되도록 안전장치를 구축했습니다.
+- **자동 데드락 방지**: `tryLock(5s, 10s)` 타임아웃 설정을 적용해 시스템 장애 시 10초 후 락이 자동 해제되도록 안전장치를 구축했습니다.
+- **5분 TTL 공석 자동 원복**: 선점 후 5분 이내 미결제 시 노쇼 방지를 위해 자동으로 좌석이 공석으로 원복됩니다.
 
-### 👑 시스템 어드민 & 사장님 대시보드 관제
-- **어드민 회원 관리 대시보드 (`/admin/users`)**: 전체 등록 유저 목록 조회, 사장님/고객 역할 변경, 계정 정지(SUSPENDED) 및 활성화 조치 기능 탑재.
-- **사장님 멀티 매장 게이트웨이 (`/owner/stores`)**: 자신이 소유한 여러 매장의 목록 조회, 신규 매장 도면 제작(`/owner/store/new`), 특정 매장 관제 대시보드(`/owner/dashboard`) 진입 게이트웨이 제공.
+### 🖼️ 사장님 2D GUI 스토어 빌더 (`/owner/store/builder`)
+- **드래그 앤 드롭 캔버스**: 2인석, 4인석, 바 테이블, 카운터, 출입구 위치를 1분 만에 시각적으로 배치합니다.
+- **속성 및 락 설정**: 테이블 식별 번호(예: T-01), 식별 라벨, 예약 가능 여부 및 5분 임시 선점 타임아웃 락 여부를 커스텀 편집합니다.
+
+### 🖥️ 사장님 실시간 관제 대시보드 (`/owner/dashboard`)
+- **2D 라이브 지도 관제**: 초록(공석), 주황(5분 선점 진행 중), 파랑(착석 완료), 빨강(노쇼/경고) 등 실시간 좌석 현황을 한눈에 파악합니다.
+- **인라인 테이블 제어**: 테이블 클릭 시 팝업을 통해 [강제 공석 처리], [입정 확정], [퇴실 완료], [좌석 이동]을 수동 조치합니다.
+- **알림 센터 드로어**: 실시간 선점 신호, 결제 완료, 5분 타임아웃 만료 알림을 실시간 스트리밍으로 수신합니다.
+
+### 📱 손님 2D 키오스크 & 좌석 예약 (`/reserve`)
+- **4단계 릴레이 순차 UX**: 휴대폰 번호 입력 ➔ 매장 선택 ➔ 2D 좌석 선택/5분 선점 락 ➔ 메뉴 및 옵션 선택 ➔ 주문 결제 과정 제공.
+- **실시간 좌석 변경**: 주문 완료 후 손님이 원하는 경우 빈 테이블로 원터치 좌석 이동을 제어합니다.
+
+### 🍳 주방 KDS (Kitchen Display System) & 배달 릴레이
+- **2분할 관제 뷰**: 주방 태블릿 모니터에서 홀 주문과 배달 주문을 2분할 릴레이 카드로 수신합니다.
+- **실시간 품절(Sold-Out) 스위치**: 재료 소진 시 버튼 클릭 1초 만에 전 키오스크 및 배달 플랫폼 메뉴판에 품절 상태를 동기화합니다.
+
+### 📘 실전 이용 & 셋업 가이드 매뉴얼 (`/guide`)
+- **역할/상황별 탭 매뉴얼**: 사장님 셋업, 대시보드 관제, 키오스크 이용, 주방 KDS 릴레이 가이드를 탭 인터페이스로 상세 안내합니다.
+- **실전 트러블슈팅 FAQ**: 재배치 조치, 미결제 강제 공석 조치, 품절 설정 방법 등 현장 응급 조치 팁을 제공합니다.
 
 ---
 
@@ -70,7 +71,7 @@
 
 ### Frontend
 - **Core Framework**: React 19, TypeScript, Vite
-- **Styling**: Vanilla Tailwind CSS v4, Lucide Icons, Framer Motion
+- **Typography & Styling**: Pretendard Variable, Vanilla Tailwind CSS v4, Lucide Icons, Framer Motion
 - **Map & Geocoding Engine**: Leaflet OpenStreetMap API, Google Maps JavaScript API
 - **Realtime Networking**: @stomp/stompjs, sockjs-client, Axios
 
@@ -101,25 +102,26 @@
 
 ---
 
-## 5. 프로젝트 폴더 구조
+## 5. 프로젝트 디렉토리 구조
 
 ```
 ZariYo/
 ├── ZariYo-FrontEnd/         # React 19 + Vite + TypeScript 프론트엔드
 │   ├── src/
-│   │   ├── api/            # REST API 통합 클라이언트 (index.ts 모듈화)
-│   │   ├── components/     # 지오코딩 지도, Drag&Drop 업로더, 모달, 2D 캔버스
-│   │   ├── hooks/          # useWebSocket, useStoreBuilder, useDashboard
-│   │   └── pages/          # 랜딩, 어드민, 사장님 대시보드, 손님 예약/키오스크
+│   │   ├── api/            # REST API 통합 클라이언트
+│   │   ├── components/     # 2D 캔버스, 가이드, 대시보드, 키오스크, 지오코딩 지도
+│   │   ├── hooks/          # useWebSocket, useStoreBuilder, useDashboard, useKioskOrder
+│   │   ├── pages/          # 랜딩, 어드민, 사장님 대시보드/빌더, 손님 예약, 가이드
+│   │   └── index.css       # Pretendard Variable & Tailwind v4 전역 Typography
 ├── ZariYo-BackEnd/          # Spring Boot 3.3.1 백엔드
 │   ├── src/main/java/com/zariyo/
 │   │   ├── domain/         # user, store, seat, reservation, menu, order, staffcall
 │   │   └── global/         # Security 6, JWT, Redisson, WebSocket STOMP, Exception
 │   └── .env                # 백엔드 시크릿 환경변수 (Git 추적 제외)
-├── study-notes/             # 일자별 기술 학습 노트 (2026-07-07 ~ 2026-07-29)
+├── study-notes/             # 일자별 기술 학습 노트 (2026-07-07 ~ 2026-08-04)
 ├── docker-compose.yml       # MySQL 8.0 & Redis 7.2 로컬 가상화 컨테이너
-├── work.md                  # 전체 마일스톤 및 개발 일지
-└── trouble.md               # 문제 해결 및 트러블슈팅 이력 (40개 항목)
+├── work.md                  # 마일스톤 및 159단계 전체 개발 일지
+└── trouble.md               # 문제 해결 및 트러블슈팅 이력 (43개 항목)
 ```
 
 ---

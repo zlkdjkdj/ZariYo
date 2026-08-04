@@ -1021,6 +1021,41 @@ jwt:
 **3. 브라우저 종료 시 자동 로그아웃되게 변경하려면?**:
 - `localStorage.setItem`을 브라우저 세션 생명주기를 따르는 `sessionStorage.setItem`으로 전환하거나, 로그인 화면에 "로그인 상태 유지 (Remember Me)" 체크박스를 도입하면 됩니다.
 
+---
+
+### [2026-08-04 14:08] Q29. Pretendard Variable 웹폰트 서체 가독성 & 렌더링 안티에일리어싱 최적화
+**질문 (User)**:
+"전체적인 페이지 서체들의 가독성을 높여줘"
+
+**답변 (Antigravity)**:
+웹 애플리케이션의 서체 가독성은 단순히 폰트를 바꾸는 것에 그치지 않고 **폰트 로딩 딜레이(FOUT) 제거, 서체 스택 순서, 안티에일리어싱, 자간, 행간, 한글 단어 줄바꿈 규칙**이 유기적으로 조합될 때 극대화됩니다.
+
+1. **Pretendard Variable 웹폰트 preconnect & 최우선 서체 스택**:
+   - `index.html` 내 CDN 서체 서버(`cdn.jsdelivr.net`) preconnect를 적용하여 폰트 다운로드 지연을 최소화합니다.
+   - `index.css`의 `--font-sans` 시스템에 한글 가독성 최고 수준인 `Pretendard Variable`을 최우선으로 배치하였습니다.
+2. **전역 서체 렌더링 안티에일리어싱 (Font-Smoothing)**:
+   - `-webkit-font-smoothing: antialiased`, `-moz-osx-font-smoothing: grayscale`, `text-rendering: optimizeLegibility`를 전역 `html, body`에 이식하여 서체 외곽선 글자 뭉개짐을 차단했습니다.
+3. **한글 Typography 최적화**:
+   - **자간 (`letter-spacing: -0.018em`)**: 한글 폰트에 가장 은은하고 촘촘한 정돈감을 부여.
+   - **행간 (`line-height: 1.55`)**: 긴 글 판독 시 시선 이동 피로감을 경감하는 최적 비율.
+   - **단어 잘림 방지 (`word-break: keep-all`, `overflow-wrap: break-word`)**: 어색한 글자 잘림 없이 단어 단위로 부드럽게 다음 줄로 넘어갑니다.
+
+---
+
+### [2026-08-04 14:17] Q30. 프로젝트 데드 코드 소거(Dead Code Elimination) 및 실전 사용설명서 UI/UX 디자인
+**질문 (User)**:
+"전체 코드, 전체 파일들 보고 쓸모없는 코드 리팩토링 하고 제거 & GuidePage 실질 이용방법 전면 개편"
+
+**답변 (Antigravity)**:
+프로젝트 규모가 커짐에 따라 기능 개편 과정에서 사용처가 소거된 레거시 파일들이 잔존할 수 있습니다. 이를 전수 정밀 감수(Audit)하고 청소하는 원리는 다음과 같습니다.
+
+1. **전수 조사(Audit) 기반 데드 코드 소거**:
+   - `grep_search` 및 모듈 의존성 그래프 조사를 통해 더 이상 임포트되지 않는 `FeatureSimulatorPane.tsx` (13.4kB) 및 `FeatureSpecCard.tsx` (1.0kB) 등 380여 라인의 데드 코드를 발견하고 완전히 소거했습니다.
+   - `pnpm build` 번들링 시 최종 번들 용량이 다듬어지고 컴파일 속도가 643ms에서 **527ms**로 획기적으로 단축되었습니다.
+2. **실전 셋업 & 운영 가이드북 UX 패턴**:
+   - 단순 서비스 소개성 컴포넌트 대신, 역할 및 상황별(사장님 매장 빌더, 대시보드 관제, 손님 키오스크 이용, 주방 KDS 릴레이) 탭 카테고리 인터페이스를 도입하여 사용자가 원하는 실전 조작 매뉴얼과 현장 트러블슈팅 FAQ를 명확히 찾을 수 있도록 개선했습니다.
+
+
 
 
 

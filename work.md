@@ -977,7 +977,7 @@
 - **작업 일시**: 2026-07-29
 - **작업 내용**:
   - **로그인 페이지(`LoginPage.tsx`) 개편**:
-    - 로그인 화면에서 기존 "손님 로그인" 탭을 완전히 제거하고, "사장님 로그인"과 "관리자 로그인" 선택 탭 구조로 전환했습니다.
+- **로그인 화면에서 기존 "손님 로그인" 탭을 완전히 제거하고, "사장님 로그인"과 "관리자 로그인" 선택 탭 구조로 전환했습니다.
     - 역할군 선택에 따른 이동 경로를 분기하여 사장님 로그인 시 `/owner/stores`, 관리자 로그인 시 `/admin/users`로 이동하도록 연동했습니다.
   - **백엔드 유저 도메인 확장 및 Admin User API 구축**:
     - [User.java](file:///home/jaehyeon/바탕화면/portfolio/ZariYo/ZariYo-BackEnd/src/main/java/com/zariyo/domain/user/entity/User.java): `Role` Enum에 `ROLE_ADMIN` 추가, `UserStatus` Enum(`ACTIVE`, `SUSPENDED`, `INACTIVE`) 추가, `status` 및 `createdAt` 필드 및 도메인 업데이트 메서드(`updateRole`, `updateStatus`)를 추가했습니다.
